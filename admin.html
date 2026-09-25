@@ -1,672 +1,1223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QwidNews — Staff Administration Terminal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background-color:#090b0e;color:#d1d5db;font-family:'Inter',sans-serif;line-height:1.5;min-height:100vh}
-a{color:inherit;text-decoration:none}
-button,input,select,textarea{font-family:inherit;font-size:inherit}
-.container{max-width:1440px;margin:0 auto;padding:0 24px}
-.auth-overlay{position:fixed;inset:0;background:#06080a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-.auth-box{background:#0e1117;border:1px solid #1f2633;border-radius:6px;width:100%;max-width:400px;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,0.8)}
-.auth-brand{display:flex;align-items:center;gap:10px;margin-bottom:24px}
-.auth-mark{width:32px;height:32px;background:#e63946;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;border-radius:4px}
-.auth-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;letter-spacing:1px;color:#fff}
-.auth-title span{color:#e63946}
-.input-label{display:block;font-size:11px;font-family:'Chakra Petch',sans-serif;font-weight:700;color:#9ca3af;margin-bottom:6px;letter-spacing:0.5px}
-.text-input{width:100%;background:#141923;border:1px solid #232c3d;color:#fff;padding:10px 14px;border-radius:4px;outline:none;font-size:14px;margin-bottom:16px}
-.text-input:focus{border-color:#e63946}
-.auth-btn{width:100%;background:#e63946;color:#fff;border:none;padding:11px;border-radius:4px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer}
-.auth-btn:hover{background:#d62839}
-.auth-error{color:#ef4444;font-size:12px;margin-top:10px;display:none;font-weight:500}
-.admin-header{background:#0d1117;border-bottom:1px solid #1a2230;position:sticky;top:0;z-index:40}
-.header-row{display:flex;align-items:center;justify-content:space-between;height:64px}
-.header-brand{display:flex;align-items:center;gap:12px}
-.admin-badge{background:#e63946;color:#fff;font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:1px}
-.header-actions{display:flex;align-items:center;gap:12px}
-.btn-sm{padding:7px 14px;border-radius:4px;font-size:12px;font-family:'Chakra Petch',sans-serif;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border:1px solid transparent}
-.btn-outline{border-color:#2a3445;background:#131822;color:#d1d5db}
-.btn-outline:hover{background:#1b2332;color:#fff}
-.btn-danger{background:#dc2626;color:#fff}
-.btn-danger:hover{background:#b91c1c}
-.tab-strip{background:#0a0d12;border-bottom:1px solid #181f2c;display:flex;gap:4px;padding:8px 0}
-.tab-btn{padding:8px 18px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.5px;color:#6b7280;border-radius:4px;cursor:pointer;background:none;border:none;display:flex;align-items:center;gap:6px}
-.tab-btn.active{background:#151c27;color:#fff;border-bottom:2px solid #e63946}
-.metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0}
-.metric-card{background:#0f131a;border:1px solid #1a2332;border-radius:6px;padding:18px}
-.metric-name{font-size:11px;font-family:'Chakra Petch',sans-serif;font-weight:700;color:#9ca3af;letter-spacing:0.5px;text-transform:uppercase}
-.metric-val{font-size:28px;font-family:'Chakra Petch',sans-serif;font-weight:700;color:#fff;margin-top:4px}
-.panel{background:#0f131a;border:1px solid #1a2332;border-radius:6px;overflow:hidden;margin-bottom:40px}
-.panel-head{padding:16px 20px;border-bottom:1px solid #1a2332;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.panel-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;color:#fff;display:flex;align-items:center;gap:8px}
-.filter-group{display:flex;align-items:center;gap:10px}
-.filter-input{background:#141923;border:1px solid #232c3d;color:#fff;padding:6px 12px;border-radius:4px;font-size:12px;outline:none}
-.table-wrap{width:100%;overflow-x:auto}
-.data-table{width:100%;border-collapse:collapse;font-size:13px;text-align:left}
-.data-table th{background:#0c0f14;padding:12px 16px;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;color:#9ca3af;border-bottom:1px solid #1a2332}
-.data-table td{padding:14px 16px;border-bottom:1px solid #161c27;vertical-align:middle}
-.data-table tr:hover td{background:#131821}
-.badge-chip{font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;display:inline-block;letter-spacing:0.5px}
-.badge-red{background:#e63946;color:#fff}
-.badge-gold{background:#d97706;color:#fff}
-.badge-gray{background:#1e2635;color:#9ca3af}
-.badge-blue{background:#2563eb;color:#fff}
-.badge-green{background:#059669;color:#fff}
-.badge-purple{background:#7c3aed;color:#fff}
-.action-cell{display:flex;align-items:center;gap:8px}
-.icon-btn{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid #232c3d;background:#141923;color:#d1d5db;cursor:pointer}
-.icon-btn:hover{background:#1e2635;color:#fff}
-.icon-btn.danger:hover{background:#dc2626;border-color:#dc2626;color:#fff}
-.modal-overlay{position:fixed;inset:0;background:rgba(4,6,9,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-box{background:#0e1219;border:1px solid #222d3f;border-radius:6px;width:100%;max-width:580px;padding:24px;max-height:90vh;overflow-y:auto}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid #1a2332;padding-bottom:12px}
-.modal-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#fff}
-.user-avatar{width:36px;height:36px;border-radius:4px;background:#242d3d;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-family:'Chakra Petch',sans-serif}
-.badges-container{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.empty-tab{padding:50px 20px;text-align:center;color:#6b7280;font-size:14px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QwidNews Terminal — Command Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            display: ['"Chakra Petch"', 'sans-serif'],
+          },
+          colors: {
+            qn: {
+              black: '#0a0c0f',
+              dark: '#11141a',
+              card: '#181d26',
+              cardHover: '#1f2530',
+              border: '#242b38',
+              borderLight: '#374152',
+              red: '#e63946',
+              redHover: '#d62839',
+              orange: '#f35b04',
+              muted: '#8590a3',
+              text: '#e2e8f0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0a0c0f;
+      color: #cbd5e1;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0c0f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #242b38;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e63946;
+    }
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col text-[13px]">
 
-<div class="auth-overlay" id="authGate">
-  <div class="auth-box">
-    <div class="auth-brand">
-      <div class="auth-mark">Q</div>
-      <div class="auth-title">QWID<span>ADMIN</span></div>
-    </div>
-    <label class="input-label" for="passcode">SECURITY PASSKEY REQUIRED</label>
-    <input type="password" id="passcodeInput" class="text-input" placeholder="Enter administrative key..." onkeydown="if(event.key==='Enter')verifyPasscode()">
-    <button class="auth-btn" onclick="verifyPasscode()">AUTHENTICATE</button>
-    <div class="auth-error" id="authErrorMsg">Access denied: Invalid administrative passkey.</div>
-  </div>
-</div>
-
-<header class="admin-header">
-  <div class="container header-row">
-    <div class="header-brand">
-      <a href="index.html" style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;color:#fff">QWID<span style="color:#e63946">NEWS</span></a>
-      <span class="admin-badge">COMMAND TERMINAL</span>
-    </div>
-    <div class="header-actions">
-      <a href="index.html" class="btn-sm btn-outline">
-        <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span> Live Site
-      </a>
-      <button class="btn-sm btn-danger" onclick="logoutAdmin()">
-        <span class="material-symbols-outlined" style="font-size:16px">lock</span> Terminate
-      </button>
-    </div>
-  </div>
-</header>
-
-<div class="tab-strip">
-  <div class="container" style="display:flex;gap:8px">
-    <button class="tab-btn active" id="tabBtnArticles" onclick="switchView('articles')">
-      <span class="material-symbols-outlined" style="font-size:16px">article</span> News & Dispatches
-    </button>
-    <button class="tab-btn" id="tabBtnAccounts" onclick="switchView('accounts')">
-      <span class="material-symbols-outlined" style="font-size:16px">manage_accounts</span> Accounts & Titles
-    </button>
-  </div>
-</div>
-
-<main class="container">
-  <div class="metric-row">
-    <div class="metric-card">
-      <div class="metric-name">Total Dispatches</div>
-      <div class="metric-val" id="countStories">0</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-name">Spotlight Promos</div>
-      <div class="metric-val" id="countSpotlight">0</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-name">Registered Accounts</div>
-      <div class="metric-val" id="countUsers">0</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-name">Gross Wire Views</div>
-      <div class="metric-val" id="countViews">0</div>
-    </div>
-  </div>
-
-  <section id="articlesSection" class="panel">
-    <div class="panel-head">
-      <div class="panel-title">
-        <span class="material-symbols-outlined" style="color:#e63946">feed</span> Published Dispatches Ledger
+  <div id="loginGate" class="fixed inset-0 z-50 bg-[#0a0c0f] flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-qn-dark border border-qn-border p-6 shadow-2xl relative">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-3 h-3 bg-qn-red"></span>
+        <h1 class="font-display font-black text-xl text-white tracking-wider uppercase">Qwid<span class="text-qn-red">News</span> Admin Gate</h1>
       </div>
-      <div class="filter-group">
-        <input type="text" id="postSearch" class="filter-input" placeholder="Search headline, reporter..." oninput="renderPostsTable()">
-        <select id="postCatFilter" class="filter-input" onchange="renderPostsTable()">
-          <option value="ALL">All Categories</option>
-          <option value="GAMING">Gaming</option>
-          <option value="ANIME">Anime</option>
-          <option value="MOVIES">Movies</option>
-          <option value="TV SHOWS">TV Shows</option>
-          <option value="REVIEWS">Reviews</option>
-        </select>
+      <p class="text-xs text-qn-muted leading-relaxed mb-5">
+        Restricted editorial command console. Enter the root editorial passkey to manage, moderate, or remove wire dispatches.
+      </p>
+
+      <form onsubmit="handleAdminLogin(event)" class="flex flex-col gap-3.5">
+        <div>
+          <label class="block text-[10px] font-mono uppercase text-qn-muted tracking-wider mb-1">Passkey Authentication</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="adminKeyInput" 
+              required 
+              placeholder="Enter administrator key..." 
+              class="w-full bg-qn-black border border-qn-border px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-qn-red pr-10" 
+              autocomplete="current-password"
+            >
+            <span class="material-symbols-sharp absolute right-2.5 top-1/2 -translate-y-1/2 text-qn-muted text-base pointer-events-none">lock</span>
+          </div>
+        </div>
+
+        <div id="loginErrorMsg" class="hidden text-[11px] text-qn-red bg-red-950/40 border border-red-900/60 p-2 font-mono">
+          Authentication failed. Passkey rejected.
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-2 bg-qn-red hover:bg-qn-redHover text-white font-display font-bold uppercase text-xs tracking-wider transition flex items-center justify-center gap-1.5 shadow"
+        >
+          <span class="material-symbols-sharp text-sm">key</span>
+          <span>Authenticate Session</span>
+        </button>
+
+        <div class="pt-2 border-t border-qn-border/60 flex items-center justify-between text-[10px] font-mono text-qn-muted">
+          <a href="index.html" class="hover:text-white transition flex items-center gap-1">
+            <span class="material-symbols-sharp text-xs">arrow_back</span> Return to Frontpage
+          </a>
+          <span>SYS_ID: SEC-2026</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="adminPanel" class="hidden min-h-screen flex-col">
+
+    <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
+      <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold">SUPERUSER ACTIVE</span>
+          <span class="text-qn-text text-[11px] font-mono hidden sm:inline">ROOT PRIVILEGES GRANTED // LOCAL WIRE MANAGER</span>
+        </div>
+        <div class="flex items-center gap-3 font-mono text-[10px] text-qn-muted">
+          <span id="storageByteCount">STORAGE: 0 KB</span>
+          <span id="liveDateStamp">SEP 2026</span>
+        </div>
       </div>
     </div>
-    <div class="table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>HEADLINE / CATEGORY</th>
-            <th>REPORTER</th>
-            <th>DATE</th>
-            <th>VIEWS</th>
-            <th>STATUS</th>
-            <th style="text-align:right">MODERATION ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody id="postsTableBody"></tbody>
-      </table>
-    </div>
-  </section>
 
-  <section id="accountsSection" class="panel" style="display:none">
-    <div class="panel-head">
-      <div class="panel-title">
-        <span class="material-symbols-outlined" style="color:#e63946">badge</span> User Profiles & Editorial Roster
+    <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
+      <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="flex items-baseline gap-1 group">
+            <span class="font-display font-black text-2xl tracking-tight text-white uppercase group-hover:text-qn-red transition-colors">Qwid<span class="text-qn-red">News</span></span>
+          </a>
+          <div class="h-4 w-[1px] bg-qn-border hidden sm:block"></div>
+          <span class="font-mono text-[11px] uppercase tracking-wider text-qn-muted hidden sm:inline font-bold text-qn-red">Admin Terminal</span>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <a href="index.html" class="hidden md:flex items-center gap-1 px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-xs font-semibold uppercase tracking-wider transition">
+            <span class="material-symbols-sharp text-sm text-qn-red">home</span>
+            <span>Frontpage</span>
+          </a>
+          <a href="post.html" class="hidden sm:flex items-center gap-1 px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-xs font-semibold uppercase tracking-wider transition">
+            <span class="material-symbols-sharp text-sm text-qn-muted">edit_note</span>
+            <span>New Post</span>
+          </a>
+          <button 
+            type="button" 
+            onclick="handleAdminLogout()" 
+            class="flex items-center gap-1 px-3 py-1.5 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-200 text-xs font-display font-bold uppercase tracking-wider transition"
+          >
+            <span class="material-symbols-sharp text-sm">logout</span>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
-      <div class="filter-group">
-        <input type="text" id="userSearch" class="filter-input" placeholder="Search usernames, titles..." oninput="renderAccountsTable()">
-        <button class="btn-sm btn-outline" onclick="openCreateUserModal()">
-          <span class="material-symbols-outlined" style="font-size:16px">person_add</span> Add Staff Member
+    </header>
+
+    <div class="bg-qn-dark border-b border-qn-border">
+      <div class="max-w-[1440px] mx-auto px-3 sm:px-4 flex items-center gap-2">
+        <button 
+          id="tabBtnPosts" 
+          onclick="switchAdminTab('posts')" 
+          class="flex items-center gap-1.5 px-3 py-2 border-b-2 border-qn-red text-white font-display font-bold uppercase text-xs tracking-wider transition"
+        >
+          <span class="material-symbols-sharp text-sm">article</span>
+          <span>Wire Dispatches</span>
+        </button>
+        <button 
+          id="tabBtnUsers" 
+          onclick="switchAdminTab('users')" 
+          class="flex items-center gap-1.5 px-3 py-2 border-b-2 border-transparent text-qn-muted hover:text-white font-display font-bold uppercase text-xs tracking-wider transition"
+        >
+          <span class="material-symbols-sharp text-sm">badge</span>
+          <span>Accounts & Titles</span>
         </button>
       </div>
     </div>
-    <div class="table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>ACCOUNT</th>
-            <th>EDITORIAL TITLE</th>
-            <th>ROLE</th>
-            <th>BADGES</th>
-            <th>JOIN DATE</th>
-            <th style="text-align:right">ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody id="accountsTableBody"></tbody>
-      </table>
-    </div>
-  </section>
-</main>
 
-<div class="modal-overlay" id="editPostModal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <div class="modal-title">Edit News Dispatch</div>
-      <button class="icon-btn" onclick="closeModal('editPostModal')"><span class="material-symbols-outlined">close</span></button>
-    </div>
-    <input type="hidden" id="editPostId">
-    <label class="input-label">HEADLINE</label>
-    <input type="text" id="editPostTitle" class="text-input">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <label class="input-label">CATEGORY</label>
-        <select id="editPostCategory" class="text-input">
-          <option value="GAMING">Gaming</option>
-          <option value="ANIME">Anime</option>
-          <option value="MOVIES">Movies</option>
-          <option value="TV SHOWS">TV Shows</option>
-          <option value="REVIEWS">Reviews</option>
-        </select>
-      </div>
-      <div>
-        <label class="input-label">REPORTER</label>
-        <input type="text" id="editPostAuthor" class="text-input">
-      </div>
-    </div>
-    <label class="input-label">IMAGE URL</label>
-    <input type="text" id="editPostImage" class="text-input">
-    <label class="input-label">SUMMARY EXCERPT</label>
-    <textarea id="editPostExcerpt" class="text-input" rows="2" style="resize:vertical"></textarea>
-    <label class="input-label">FULL ARTICLE BODY</label>
-    <textarea id="editPostBody" class="text-input" rows="6" style="resize:vertical"></textarea>
-    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
-      <button class="btn-sm btn-outline" onclick="closeModal('editPostModal')">Cancel</button>
-      <button class="btn-sm" style="background:#e63946;color:#fff" onclick="saveEditedPost()">Save Changes</button>
-    </div>
-  </div>
-</div>
+    <main class="max-w-[1440px] mx-auto px-3 sm:px-4 py-4 w-full flex-1 flex flex-col gap-4">
 
-<div class="modal-overlay" id="userModal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <div class="modal-title" id="userModalTitle">Edit User Titles & Badges</div>
-      <button class="icon-btn" onclick="closeModal('userModal')"><span class="material-symbols-outlined">close</span></button>
-    </div>
-    <input type="hidden" id="userIdField">
-    <label class="input-label">USERNAME</label>
-    <input type="text" id="userNameField" class="text-input" placeholder="e.g. WireEditor99">
-    <label class="input-label">CUSTOM EDITORIAL TITLE</label>
-    <input type="text" id="userTitleField" class="text-input" placeholder="e.g. Senior Gaming Editor, Anime Correspondent">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <label class="input-label">ACCOUNT ROLE</label>
-        <select id="userRoleField" class="text-input">
-          <option value="READER">Reader</option>
-          <option value="SCOUT">Wire Scout</option>
-          <option value="REPORTER">Reporter</option>
-          <option value="EDITOR">Editor</option>
-          <option value="ADMIN">Administrator</option>
-        </select>
-      </div>
-      <div>
-        <label class="input-label">STATUS</label>
-        <select id="userStatusField" class="text-input">
-          <option value="ACTIVE">Active</option>
-          <option value="SUSPENDED">Suspended</option>
-        </select>
-      </div>
-    </div>
-    <label class="input-label">ASSIGN BADGES</label>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;background:#141923;padding:12px;border:1px solid #232c3d;border-radius:4px">
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#d1d5db"><input type="checkbox" id="badgeVerified"> Verified</label>
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#d1d5db"><input type="checkbox" id="badgeStaff"> Staff</label>
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#d1d5db"><input type="checkbox" id="badgeTopReporter"> Top Reporter</label>
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#d1d5db"><input type="checkbox" id="badgeCritic"> Critic</label>
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#d1d5db"><input type="checkbox" id="badgeFounder"> Founder</label>
-    </div>
-    <div style="display:flex;justify-content:flex-end;gap:10px">
-      <button class="btn-sm btn-outline" onclick="closeModal('userModal')">Cancel</button>
-      <button class="btn-sm" style="background:#e63946;color:#fff" onclick="saveUserRecord()">Save Account</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const PASS_HASH = 'Diallo1-(-)';
-
-function checkAuth() {
-  if (sessionStorage.getItem('qwidnews_admin_auth') === 'true') {
-    document.getElementById('authGate').style.display = 'none';
-    initAdmin();
-  }
-}
-
-function verifyPasscode() {
-  const input = document.getElementById('passcodeInput');
-  const errorMsg = document.getElementById('authErrorMsg');
-  if (input.value === PASS_HASH) {
-    sessionStorage.setItem('qwidnews_admin_auth', 'true');
-    document.getElementById('authGate').style.display = 'none';
-    errorMsg.style.display = 'none';
-    initAdmin();
-  } else {
-    errorMsg.style.display = 'block';
-    input.value = '';
-    input.focus();
-  }
-}
-
-function logoutAdmin() {
-  sessionStorage.removeItem('qwidnews_admin_auth');
-  window.location.reload();
-}
-
-function switchView(view) {
-  const btnArticles = document.getElementById('tabBtnArticles');
-  const btnAccounts = document.getElementById('tabBtnAccounts');
-  const secArticles = document.getElementById('articlesSection');
-  const secAccounts = document.getElementById('accountsSection');
-
-  if (view === 'articles') {
-    btnArticles.classList.add('active');
-    btnAccounts.classList.remove('active');
-    secArticles.style.display = 'block';
-    secAccounts.style.display = 'none';
-    renderPostsTable();
-  } else {
-    btnArticles.classList.remove('active');
-    btnAccounts.classList.add('active');
-    secArticles.style.display = 'none';
-    secAccounts.style.display = 'block';
-    renderAccountsTable();
-  }
-}
-
-function getStoredPosts() {
-  try {
-    return JSON.parse(localStorage.getItem('qwidnews_posts')) || [];
-  } catch(e) {
-    return [];
-  }
-}
-
-function savePosts(posts) {
-  localStorage.setItem('qwidnews_posts', JSON.stringify(posts));
-  updateMetrics();
-}
-
-function getStoredAccounts() {
-  try {
-    return JSON.parse(localStorage.getItem('qwidnews_accounts')) || [];
-  } catch(e) {
-    return [];
-  }
-}
-
-function saveAccounts(accs) {
-  localStorage.setItem('qwidnews_accounts', JSON.stringify(accs));
-  updateMetrics();
-}
-
-function updateMetrics() {
-  const posts = getStoredPosts();
-  const accounts = getStoredAccounts();
-
-  document.getElementById('countStories').textContent = posts.length;
-  document.getElementById('countSpotlight').textContent = posts.filter(p => p.isTop10Sponsored).length;
-  document.getElementById('countUsers').textContent = accounts.length;
-  
-  const views = posts.reduce((sum, p) => sum + (parseInt(p.views, 10) || 0), 0);
-  document.getElementById('countViews').textContent = views;
-}
-
-function renderPostsTable() {
-  const tbody = document.getElementById('postsTableBody');
-  const query = document.getElementById('postSearch').value.trim().toLowerCase();
-  const cat = document.getElementById('postCatFilter').value;
-  const posts = getStoredPosts();
-
-  let filtered = posts.slice();
-  if (cat !== 'ALL') {
-    filtered = filtered.filter(p => (p.category || '').toUpperCase() === cat);
-  }
-  if (query) {
-    filtered = filtered.filter(p => 
-      (p.title || '').toLowerCase().includes(query) ||
-      (p.author || '').toLowerCase().includes(query)
-    );
-  }
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-tab">No dispatches match criteria.</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = filtered.map(p => `
-    <tr>
-      <td>
-        <div style="font-weight:600;color:#fff">${escapeHtml(p.title)}</div>
-        <div style="font-size:11px;color:#9ca3af;margin-top:2px">
-          <span class="badge-chip badge-gray">${escapeHtml(p.category || 'WIRE')}</span>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Total Wire Stories</span>
+            <span class="material-symbols-sharp text-sm text-qn-red">newspaper</span>
+          </div>
+          <div class="text-2xl font-display font-black text-white mt-1" id="statTotalPosts">0</div>
         </div>
-      </td>
-      <td>${escapeHtml(p.author || 'Staff Wire')}</td>
-      <td style="color:#9ca3af;font-size:12px">${formatDate(p.date)}</td>
-      <td style="font-family:'Chakra Petch',sans-serif;font-weight:600">${p.views || 0}</td>
-      <td>
-        <div style="display:flex;flex-wrap:wrap;gap:4px">
-          ${p.isTop10Sponsored ? '<span class="badge-chip badge-gold">SPOTLIGHT</span>' : ''}
-          ${p.isBreaking ? '<span class="badge-chip badge-red">BREAKING</span>' : ''}
-          ${!p.isTop10Sponsored && !p.isBreaking ? '<span class="badge-chip badge-gray">STANDARD</span>' : ''}
+
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Breaking Ticker Items</span>
+            <span class="material-symbols-sharp text-sm text-qn-red">bolt</span>
+          </div>
+          <div class="text-2xl font-display font-black text-qn-red mt-1" id="statBreakingPosts">0</div>
         </div>
-      </td>
-      <td style="text-align:right">
-        <div class="action-cell" style="justify-content:flex-end">
-          <button class="icon-btn" title="Toggle Spotlight" onclick="togglePostProp('${p.id}', 'isTop10Sponsored')">
-            <span class="material-symbols-outlined" style="font-size:16px;color:${p.isTop10Sponsored ? '#f59e0b' : '#6b7280'}">hotel_class</span>
-          </button>
-          <button class="icon-btn" title="Toggle Breaking" onclick="togglePostProp('${p.id}', 'isBreaking')">
-            <span class="material-symbols-outlined" style="font-size:16px;color:${p.isBreaking ? '#ef4444' : '#6b7280'}">bolt</span>
-          </button>
-          <button class="icon-btn" title="Edit Article" onclick="openEditPost('${p.id}')">
-            <span class="material-symbols-outlined" style="font-size:16px">edit</span>
-          </button>
-          <button class="icon-btn danger" title="Delete Article" onclick="deletePost('${p.id}')">
-            <span class="material-symbols-outlined" style="font-size:16px">delete</span>
-          </button>
+
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Top 10 Spotlight Feed</span>
+            <span class="material-symbols-sharp text-sm text-amber-500">workspace_premium</span>
+          </div>
+          <div class="text-2xl font-display font-black text-amber-400 mt-1" id="statSponsoredPosts">0</div>
         </div>
-      </td>
-    </tr>
-  `).join('');
-}
 
-function togglePostProp(id, prop) {
-  const posts = getStoredPosts();
-  const idx = posts.findIndex(p => String(p.id) === String(id));
-  if (idx !== -1) {
-    posts[idx][prop] = !posts[idx][prop];
-    savePosts(posts);
-    renderPostsTable();
-  }
-}
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Registered Accounts</span>
+            <span class="material-symbols-sharp text-sm text-cyan-400">group</span>
+          </div>
+          <div class="text-2xl font-display font-black text-cyan-400 mt-1" id="statTotalAccounts">0</div>
+        </div>
+      </div>
 
-function deletePost(id) {
-  if (!confirm('Permanently delete this dispatch from the wire?')) return;
-  let posts = getStoredPosts();
-  posts = posts.filter(p => String(p.id) !== String(id));
-  savePosts(posts);
-  renderPostsTable();
-}
-
-function openEditPost(id) {
-  const posts = getStoredPosts();
-  const post = posts.find(p => String(p.id) === String(id));
-  if (!post) return;
-
-  document.getElementById('editPostId').value = post.id;
-  document.getElementById('editPostTitle').value = post.title || '';
-  document.getElementById('editPostCategory').value = (post.category || 'GAMING').toUpperCase();
-  document.getElementById('editPostAuthor').value = post.author || '';
-  document.getElementById('editPostImage').value = post.image || '';
-  document.getElementById('editPostExcerpt').value = post.excerpt || '';
-  document.getElementById('editPostBody').value = post.body || '';
-
-  document.getElementById('editPostModal').style.display = 'flex';
-}
-
-function saveEditedPost() {
-  const id = document.getElementById('editPostId').value;
-  const posts = getStoredPosts();
-  const idx = posts.findIndex(p => String(p.id) === String(id));
-  if (idx === -1) return;
-
-  posts[idx].title = document.getElementById('editPostTitle').value.trim();
-  posts[idx].category = document.getElementById('editPostCategory').value;
-  posts[idx].author = document.getElementById('editPostAuthor').value.trim();
-  posts[idx].image = document.getElementById('editPostImage').value.trim();
-  posts[idx].excerpt = document.getElementById('editPostExcerpt').value.trim();
-  posts[idx].body = document.getElementById('editPostBody').value.trim();
-
-  savePosts(posts);
-  closeModal('editPostModal');
-  renderPostsTable();
-}
-
-function renderAccountsTable() {
-  const tbody = document.getElementById('accountsTableBody');
-  const query = document.getElementById('userSearch').value.trim().toLowerCase();
-  const accounts = getStoredAccounts();
-
-  let filtered = accounts.slice();
-  if (query) {
-    filtered = filtered.filter(u => 
-      (u.username || '').toLowerCase().includes(query) ||
-      (u.title || '').toLowerCase().includes(query) ||
-      (u.role || '').toLowerCase().includes(query)
-    );
-  }
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-tab">No account profiles registered in storage.</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = filtered.map(u => {
-    const badgesHtml = (u.badges || []).map(b => {
-      let bClass = 'badge-gray';
-      if (b === 'Verified') bClass = 'badge-blue';
-      if (b === 'Staff') bClass = 'badge-red';
-      if (b === 'Top Reporter') bClass = 'badge-gold';
-      if (b === 'Critic') bClass = 'badge-purple';
-      if (b === 'Founder') bClass = 'badge-green';
-      return `<span class="badge-chip ${bClass}">${escapeHtml(b)}</span>`;
-    }).join(' ');
-
-    return `
-      <tr>
-        <td>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="user-avatar">${(u.username || 'U').charAt(0).toUpperCase()}</div>
-            <div>
-              <div style="font-weight:600;color:#fff">${escapeHtml(u.username)}</div>
-              <div style="font-size:11px;color:${u.status === 'SUSPENDED' ? '#ef4444' : '#10b981'}">${u.status || 'ACTIVE'}</div>
+      <div id="postsTabView" class="flex flex-col gap-4">
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <div class="relative flex-1 sm:w-64">
+              <input 
+                type="text" 
+                id="adminSearchInput" 
+                placeholder="Search by title, author, or tags..." 
+                class="w-full bg-qn-black border border-qn-border px-3 py-1.5 pl-8 text-xs text-white focus:outline-none focus:border-qn-red" 
+                oninput="handleAdminFilterChange()"
+              >
+              <span class="material-symbols-sharp absolute left-2 top-1/2 -translate-y-1/2 text-qn-muted text-sm pointer-events-none">search</span>
             </div>
+
+            <select 
+              id="adminCategoryFilter" 
+              class="bg-qn-black border border-qn-border p-1.5 text-xs text-white uppercase font-semibold focus:outline-none focus:border-qn-red" 
+              onchange="handleAdminFilterChange()"
+            >
+              <option value="ALL">All Categories</option>
+              <option value="GAMING">Gaming</option>
+              <option value="ANIME">Anime</option>
+              <option value="MOVIES">Movies</option>
+              <option value="TV SHOWS">TV Shows</option>
+              <option value="REVIEWS">Reviews</option>
+              <option value="TECH">Tech</option>
+              <option value="LEAKS">Leaks</option>
+              <option value="HARDWARE">Hardware</option>
+            </select>
+
+            <select 
+              id="adminStatusFilter" 
+              class="bg-qn-black border border-qn-border p-1.5 text-xs text-white uppercase font-semibold focus:outline-none focus:border-qn-red" 
+              onchange="handleAdminFilterChange()"
+            >
+              <option value="ALL">All Status</option>
+              <option value="BREAKING">Breaking Wire Only</option>
+              <option value="SPONSORED">Top 10 Spotlight Only</option>
+            </select>
           </div>
-        </td>
-        <td style="color:#d1d5db;font-weight:500">${escapeHtml(u.title || 'Staff Contributor')}</td>
-        <td><span class="badge-chip badge-gray">${escapeHtml(u.role || 'READER')}</span></td>
-        <td><div class="badges-container">${badgesHtml || '<span style="color:#6b7280;font-size:12px">None</span>'}</div></td>
-        <td style="color:#9ca3af;font-size:12px">${formatDate(u.joinedDate || new Date().toISOString())}</td>
-        <td style="text-align:right">
-          <div class="action-cell" style="justify-content:flex-end">
-            <button class="icon-btn" title="Edit Title & Badges" onclick="openEditUser('${u.id}')">
-              <span class="material-symbols-outlined" style="font-size:16px">edit</span>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <input type="file" id="jsonFileInput" accept=".json" class="hidden" onchange="importJsonFile(event)">
+            <button 
+              type="button" 
+              onclick="document.getElementById('jsonFileInput').click()" 
+              class="px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white font-bold uppercase transition flex items-center gap-1"
+            >
+              <span class="material-symbols-sharp text-sm">upload</span> Import
             </button>
-            <button class="icon-btn danger" title="Remove User" onclick="deleteUser('${u.id}')">
-              <span class="material-symbols-outlined" style="font-size:16px">person_remove</span>
+
+            <button 
+              type="button" 
+              onclick="exportArticlesAsFile()" 
+              class="px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white font-bold uppercase transition flex items-center gap-1"
+            >
+              <span class="material-symbols-sharp text-sm">download</span> Export
+            </button>
+
+            <button 
+              type="button" 
+              onclick="promptClearAll()" 
+              class="px-2.5 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-[11px] text-red-200 font-bold uppercase transition flex items-center gap-1"
+            >
+              <span class="material-symbols-sharp text-sm">delete_forever</span> Purge Wire
             </button>
           </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
+        </div>
 
-function openCreateUserModal() {
-  document.getElementById('userModalTitle').textContent = 'Add Editorial Staff Account';
-  document.getElementById('userIdField').value = '';
-  document.getElementById('userNameField').value = '';
-  document.getElementById('userTitleField').value = '';
-  document.getElementById('userRoleField').value = 'REPORTER';
-  document.getElementById('userStatusField').value = 'ACTIVE';
+        <div class="bg-qn-dark border border-qn-border flex flex-col flex-1 overflow-hidden">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-qn-red"></span>
+              <span class="font-display font-bold uppercase tracking-wider text-xs text-white">Live Wire Dispatches</span>
+            </div>
+            <span class="font-mono text-[11px] text-qn-muted" id="tableFilterCount">0 RECORDS FOUND</span>
+          </div>
 
-  document.getElementById('badgeVerified').checked = false;
-  document.getElementById('badgeStaff').checked = true;
-  document.getElementById('badgeTopReporter').checked = false;
-  document.getElementById('badgeCritic').checked = false;
-  document.getElementById('badgeFounder').checked = false;
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-qn-border/80 bg-qn-card/60 text-qn-muted font-mono uppercase text-[10px]">
+                  <th class="p-3 w-16">Cover</th>
+                  <th class="p-3">Headline / Identifier</th>
+                  <th class="p-3 w-28">Category</th>
+                  <th class="p-3 w-32">Reporter</th>
+                  <th class="p-3 w-28">Published</th>
+                  <th class="p-3 w-32 text-center">Flags</th>
+                  <th class="p-3 w-20 text-center">Views</th>
+                  <th class="p-3 w-48 text-right">Moderation Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody" class="divide-y divide-qn-border/50"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-  document.getElementById('userModal').style.display = 'flex';
-}
+      <div id="usersTabView" class="hidden flex-col gap-4">
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="relative w-full sm:w-80">
+            <input 
+              type="text" 
+              id="userSearchInput" 
+              placeholder="Search by username, title, or role..." 
+              class="w-full bg-qn-black border border-qn-border px-3 py-1.5 pl-8 text-xs text-white focus:outline-none focus:border-qn-red" 
+              oninput="renderUsersTable()"
+            >
+            <span class="material-symbols-sharp absolute left-2 top-1/2 -translate-y-1/2 text-qn-muted text-sm pointer-events-none">search</span>
+          </div>
 
-function openEditUser(id) {
-  const accounts = getStoredAccounts();
-  const user = accounts.find(u => String(u.id) === String(id));
-  if (!user) return;
+          <button 
+            type="button" 
+            onclick="openCreateUserModal()" 
+            class="px-3 py-1.5 bg-qn-red hover:bg-qn-redHover text-white text-xs font-display font-bold uppercase tracking-wider transition flex items-center gap-1.5 shadow"
+          >
+            <span class="material-symbols-sharp text-sm">person_add</span> Add Staff / Account
+          </button>
+        </div>
 
-  document.getElementById('userModalTitle').textContent = 'Edit Account Badges & Title';
-  document.getElementById('userIdField').value = user.id;
-  document.getElementById('userNameField').value = user.username || '';
-  document.getElementById('userTitleField').value = user.title || '';
-  document.getElementById('userRoleField').value = user.role || 'READER';
-  document.getElementById('userStatusField').value = user.status || 'ACTIVE';
+        <div class="bg-qn-dark border border-qn-border flex flex-col flex-1 overflow-hidden">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-cyan-400"></span>
+              <span class="font-display font-bold uppercase tracking-wider text-xs text-white">Registered Accounts & Staff Roster</span>
+            </div>
+            <span class="font-mono text-[11px] text-qn-muted" id="userFilterCount">0 ACCOUNTS FOUND</span>
+          </div>
 
-  const badges = user.badges || [];
-  document.getElementById('badgeVerified').checked = badges.includes('Verified');
-  document.getElementById('badgeStaff').checked = badges.includes('Staff');
-  document.getElementById('badgeTopReporter').checked = badges.includes('Top Reporter');
-  document.getElementById('badgeCritic').checked = badges.includes('Critic');
-  document.getElementById('badgeFounder').checked = badges.includes('Founder');
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-qn-border/80 bg-qn-card/60 text-qn-muted font-mono uppercase text-[10px]">
+                  <th class="p-3 w-12">User</th>
+                  <th class="p-3">Username / ID</th>
+                  <th class="p-3">Editorial Title</th>
+                  <th class="p-3 w-28">Role</th>
+                  <th class="p-3">Badges</th>
+                  <th class="p-3 w-28">Status</th>
+                  <th class="p-3 w-32 text-right">Manage</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody" class="divide-y divide-qn-border/50"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-  document.getElementById('userModal').style.display = 'flex';
-}
+    </main>
 
-function saveUserRecord() {
-  const id = document.getElementById('userIdField').value;
-  const username = document.getElementById('userNameField').value.trim();
-  const title = document.getElementById('userTitleField').value.trim();
-  const role = document.getElementById('userRoleField').value;
-  const status = document.getElementById('userStatusField').value;
+    <footer class="bg-qn-black border-t border-qn-border mt-8 text-qn-muted text-xs">
+      <div class="max-w-[1440px] mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+        <div class="flex items-center gap-2">
+          <span class="font-display font-black text-base text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
+          <span class="text-qn-muted font-mono">/ INTERNAL CONSOLE</span>
+        </div>
+        <div class="text-[10px] font-mono text-qn-muted">
+          SECURITY LEVEL: RESTRICTED DIALLO CONSOLE
+        </div>
+      </div>
+    </footer>
 
-  if (!username) {
-    alert('Username is required.');
-    return;
-  }
+  </div>
 
-  const badges = [];
-  if (document.getElementById('badgeVerified').checked) badges.push('Verified');
-  if (document.getElementById('badgeStaff').checked) badges.push('Staff');
-  if (document.getElementById('badgeTopReporter').checked) badges.push('Top Reporter');
-  if (document.getElementById('badgeCritic').checked) badges.push('Critic');
-  if (document.getElementById('badgeFounder').checked) badges.push('Founder');
+  <div id="editModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="relative w-full max-w-2xl max-h-[92vh] bg-qn-dark border border-qn-border flex flex-col shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="editModalContent">
+      <div class="bg-qn-black px-4 py-2.5 border-b border-qn-border flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 bg-qn-red"></span>
+          <h3 class="font-display font-bold uppercase tracking-wider text-xs text-white" id="editModalHeaderTitle">Edit Wire Dispatch</h3>
+        </div>
+        <button onclick="closeEditModal()" class="text-qn-muted hover:text-white flex items-center p-1 bg-qn-card border border-qn-border">
+          <span class="material-symbols-sharp text-base">close</span>
+        </button>
+      </div>
 
-  let accounts = getStoredAccounts();
+      <form onsubmit="handleSaveEdit(event)" class="overflow-y-auto p-4 sm:p-5 flex-1 flex flex-col gap-3 text-xs">
+        <input type="hidden" id="editArticleId">
 
-  if (id) {
-    const idx = accounts.findIndex(u => String(u.id) === String(id));
-    if (idx !== -1) {
-      accounts[idx].username = username;
-      accounts[idx].title = title || 'Staff Contributor';
-      accounts[idx].role = role;
-      accounts[idx].status = status;
-      accounts[idx].badges = badges;
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Headline *</label>
+          <input 
+            type="text" 
+            id="eTitle" 
+            required 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white font-serif text-sm focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Category *</label>
+            <select id="eCategory" class="w-full bg-qn-black border border-qn-border p-2 text-white uppercase font-semibold focus:outline-none focus:border-qn-red">
+              <option value="GAMING">Gaming</option>
+              <option value="ANIME">Anime</option>
+              <option value="MOVIES">Movies</option>
+              <option value="TV SHOWS">TV Shows</option>
+              <option value="REVIEWS">Reviews</option>
+              <option value="TECH">Tech</option>
+              <option value="LEAKS">Leaks</option>
+              <option value="HARDWARE">Hardware</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Reporter / Byline *</label>
+            <input 
+              type="text" 
+              id="eAuthor" 
+              required 
+              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Cover Image URL</label>
+          <input 
+            type="text" 
+            id="eImage" 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Summary Excerpt *</label>
+          <textarea 
+            id="eExcerpt" 
+            required 
+            rows="2" 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red resize-none"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Full Article Body *</label>
+          <textarea 
+            id="eBody" 
+            required 
+            rows="8" 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red font-mono text-xs"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center border-t border-qn-border pt-3">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="eBreaking" class="w-4 h-4 accent-qn-red cursor-pointer">
+            <span class="text-white font-semibold uppercase text-[11px]">Breaking Marquee Flag</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="eSponsored" class="w-4 h-4 accent-amber-500 cursor-pointer">
+            <span class="text-amber-400 font-semibold uppercase text-[11px]">Top 10 Spotlight Feed</span>
+          </label>
+        </div>
+
+        <div class="mt-2 pt-3 border-t border-qn-border flex items-center justify-end gap-2">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-muted hover:text-white uppercase font-bold text-[11px]">Cancel</button>
+          <button type="submit" class="px-5 py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold uppercase text-[11px] tracking-wider transition">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="userModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="relative w-full max-w-md bg-qn-dark border border-qn-border flex flex-col shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="userModalContent">
+      <div class="bg-qn-black px-4 py-2.5 border-b border-qn-border flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 bg-cyan-400"></span>
+          <h3 class="font-display font-bold uppercase tracking-wider text-xs text-white" id="userModalHeaderTitle">Edit Account Titles & Badges</h3>
+        </div>
+        <button onclick="closeUserModal()" class="text-qn-muted hover:text-white flex items-center p-1 bg-qn-card border border-qn-border">
+          <span class="material-symbols-sharp text-base">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveUser(event)" class="overflow-y-auto p-4 sm:p-5 flex-1 flex flex-col gap-3 text-xs">
+        <input type="hidden" id="uId">
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Username *</label>
+          <input 
+            type="text" 
+            id="uUsername" 
+            required 
+            placeholder="e.g. Qwideyed"
+            class="w-full bg-qn-black border border-qn-border p-2 text-white font-mono focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Editorial Title *</label>
+          <input 
+            type="text" 
+            id="uTitle" 
+            required 
+            placeholder="e.g. Editor-in-Chief, Senior Anime Critic"
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Account Role</label>
+            <select id="uRole" class="w-full bg-qn-black border border-qn-border p-2 text-white uppercase font-semibold focus:outline-none focus:border-qn-red">
+              <option value="READER">Reader</option>
+              <option value="SCOUT">Wire Scout</option>
+              <option value="REPORTER">Reporter</option>
+              <option value="EDITOR">Editor</option>
+              <option value="ADMIN">Administrator</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Status</label>
+            <select id="uStatus" class="w-full bg-qn-black border border-qn-border p-2 text-white uppercase font-semibold focus:outline-none focus:border-qn-red">
+              <option value="ACTIVE">Active</option>
+              <option value="SUSPENDED">Suspended</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1.5">Assigned Badges</label>
+          <div class="grid grid-cols-2 gap-2 bg-qn-black border border-qn-border p-2.5">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-slate-300">
+              <input type="checkbox" id="badgeVerified" class="w-3.5 h-3.5 accent-cyan-400">
+              <span class="text-[11px] font-mono">VERIFIED</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none text-slate-300">
+              <input type="checkbox" id="badgeStaff" class="w-3.5 h-3.5 accent-qn-red">
+              <span class="text-[11px] font-mono text-qn-red font-bold">STAFF</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none text-slate-300">
+              <input type="checkbox" id="badgeTopReporter" class="w-3.5 h-3.5 accent-amber-400">
+              <span class="text-[11px] font-mono text-amber-400">TOP REPORTER</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none text-slate-300">
+              <input type="checkbox" id="badgeCritic" class="w-3.5 h-3.5 accent-purple-400">
+              <span class="text-[11px] font-mono text-purple-400">CRITIC</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none text-slate-300 col-span-2">
+              <input type="checkbox" id="badgeFounder" class="w-3.5 h-3.5 accent-emerald-400">
+              <span class="text-[11px] font-mono text-emerald-400 font-bold">FOUNDER</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mt-2 pt-3 border-t border-qn-border flex items-center justify-end gap-2">
+          <button type="button" onclick="closeUserModal()" class="px-4 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-muted hover:text-white uppercase font-bold text-[11px]">Cancel</button>
+          <button type="submit" class="px-5 py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold uppercase text-[11px] tracking-wider transition">Save Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="w-full max-w-sm bg-qn-dark border border-qn-border p-5 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center gap-2 text-qn-red">
+        <span class="material-symbols-sharp text-2xl">warning</span>
+        <h4 class="font-display font-bold uppercase text-sm text-white" id="deleteModalHeading">Confirm Action</h4>
+      </div>
+      <p class="text-xs text-qn-muted leading-relaxed" id="deleteModalPrompt">
+        Are you sure you want to permanently erase this item from storage? This cannot be undone.
+      </p>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-qn-border">
+        <button type="button" onclick="closeDeleteModal()" class="px-3 py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text uppercase font-semibold text-xs">Cancel</button>
+        <button type="button" id="confirmDeleteBtn" class="px-4 py-1 bg-red-800 hover:bg-red-700 text-white uppercase font-bold text-xs">Delete Permanently</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-4 right-4 z-50 pointer-events-none transform translate-y-8 opacity-0 transition-all duration-200 bg-qn-black border border-qn-border text-white text-xs px-3 py-2 shadow-lg flex items-center gap-2">
+    <span class="w-2 h-2 bg-qn-red"></span>
+    <span id="toastMsg">Action completed.</span>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'qwidnews_posts';
+    const ACCOUNTS_KEY = 'qwidnews_accounts';
+    const AUTH_KEY = 'qwidnews_admin_auth';
+    const PASSKEY = 'Diallo1-(-)';
+    
+    let pendingDeleteType = null;
+    let pendingDeleteId = null;
+
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem(AUTH_KEY) === 'true';
+      const gate = document.getElementById('loginGate');
+      const panel = document.getElementById('adminPanel');
+
+      if (isAuth) {
+        gate.classList.add('hidden');
+        panel.classList.remove('hidden');
+        panel.classList.add('flex');
+        refreshAdminData();
+      } else {
+        gate.classList.remove('hidden');
+        panel.classList.add('hidden');
+        panel.classList.remove('flex');
+      }
     }
-  } else {
-    accounts.push({
-      id: 'acc_' + Date.now(),
-      username: username,
-      title: title || 'Staff Contributor',
-      role: role,
-      status: status,
-      badges: badges,
-      joinedDate: new Date().toISOString()
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const input = document.getElementById('adminKeyInput');
+      const errMsg = document.getElementById('loginErrorMsg');
+
+      if (input.value === PASSKEY) {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        errMsg.classList.add('hidden');
+        input.value = '';
+        checkAuth();
+        showToast('Access granted. Welcome Diallo.');
+      } else {
+        errMsg.classList.remove('hidden');
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem(AUTH_KEY);
+      checkAuth();
+      showToast('Session terminated.');
+    }
+
+    function switchAdminTab(tab) {
+      const tabPosts = document.getElementById('tabBtnPosts');
+      const tabUsers = document.getElementById('tabBtnUsers');
+      const viewPosts = document.getElementById('postsTabView');
+      const viewUsers = document.getElementById('usersTabView');
+
+      if (tab === 'posts') {
+        tabPosts.className = 'flex items-center gap-1.5 px-3 py-2 border-b-2 border-qn-red text-white font-display font-bold uppercase text-xs tracking-wider transition';
+        tabUsers.className = 'flex items-center gap-1.5 px-3 py-2 border-b-2 border-transparent text-qn-muted hover:text-white font-display font-bold uppercase text-xs tracking-wider transition';
+        viewPosts.classList.remove('hidden');
+        viewPosts.classList.add('flex');
+        viewUsers.classList.add('hidden');
+        viewUsers.classList.remove('flex');
+      } else {
+        tabUsers.className = 'flex items-center gap-1.5 px-3 py-2 border-b-2 border-cyan-400 text-white font-display font-bold uppercase text-xs tracking-wider transition';
+        tabPosts.className = 'flex items-center gap-1.5 px-3 py-2 border-b-2 border-transparent text-qn-muted hover:text-white font-display font-bold uppercase text-xs tracking-wider transition';
+        viewUsers.classList.remove('hidden');
+        viewUsers.classList.add('flex');
+        viewPosts.classList.add('hidden');
+        viewPosts.classList.remove('flex');
+        renderUsersTable();
+      }
+    }
+
+    function getArticles() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveArticles(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      refreshAdminData();
+    }
+
+    function getAccounts() {
+      try {
+        const raw = localStorage.getItem(ACCOUNTS_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveAccounts(list) {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(list));
+      refreshAdminData();
+    }
+
+    function refreshAdminData() {
+      const articles = getArticles();
+      const accounts = getAccounts();
+      updateMetrics(articles, accounts);
+      renderAdminTable(articles);
+      renderUsersTable();
+    }
+
+    function updateMetrics(articles, accounts) {
+      const totalCount = articles.length;
+      const breakingCount = articles.filter(a => a.isBreaking).length;
+      const sponsoredCount = articles.filter(a => a.isTop10Sponsored).length;
+      const totalAccounts = accounts.length;
+
+      document.getElementById('statTotalPosts').innerText = totalCount;
+      document.getElementById('statBreakingPosts').innerText = breakingCount;
+      document.getElementById('statSponsoredPosts').innerText = sponsoredCount;
+      document.getElementById('statTotalAccounts').innerText = totalAccounts;
+
+      const rawString = (localStorage.getItem(STORAGE_KEY) || '') + (localStorage.getItem(ACCOUNTS_KEY) || '');
+      const bytes = new Blob([rawString]).size;
+      const kb = (bytes / 1024).toFixed(1);
+      document.getElementById('storageByteCount').innerText = `STORAGE: ${kb} KB`;
+    }
+
+    function handleAdminFilterChange() {
+      const articles = getArticles();
+      renderAdminTable(articles);
+    }
+
+    function renderAdminTable(articles) {
+      const query = (document.getElementById('adminSearchInput').value || '').trim().toLowerCase();
+      const categoryFilter = document.getElementById('adminCategoryFilter').value;
+      const statusFilter = document.getElementById('adminStatusFilter').value;
+      const tbody = document.getElementById('adminTableBody');
+      const countLabel = document.getElementById('tableFilterCount');
+
+      const filtered = articles.filter(a => {
+        if (categoryFilter !== 'ALL' && a.category !== categoryFilter) return false;
+        if (statusFilter === 'BREAKING' && !a.isBreaking) return false;
+        if (statusFilter === 'SPONSORED' && !a.isTop10Sponsored) return false;
+
+        if (query) {
+          const matchTitle = (a.title || '').toLowerCase().includes(query);
+          const matchAuthor = (a.author || '').toLowerCase().includes(query);
+          const matchId = (a.id || '').toLowerCase().includes(query);
+          const matchTags = (a.tags || []).some(t => t.toLowerCase().includes(query));
+          if (!matchTitle && !matchAuthor && !matchId && !matchTags) return false;
+        }
+        return true;
+      });
+
+      countLabel.innerText = `${filtered.length} OF ${articles.length} RECORDS`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="p-6 text-center text-qn-muted font-mono">
+              No dispatches match the selected search or filter parameters.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(a => {
+        const coverSrc = a.image || 'https://placehold.co/100x70/11141a/e63946?text=Wire';
+        return `
+          <tr class="hover:bg-qn-card/40 transition-colors">
+            <td class="p-3">
+              <img src="${coverSrc}" class="w-12 h-9 object-cover bg-qn-black border border-qn-border/60" onerror="this.src='https://placehold.co/100x70/11141a/e63946?text=Wire'">
+            </td>
+            <td class="p-3 min-w-0 max-w-xs">
+              <a href="entry.html?id=${encodeURIComponent(a.id)}" target="_blank" class="font-serif font-bold text-white hover:text-qn-red transition leading-tight line-clamp-1 block">
+                ${escapeHtml(a.title)}
+              </a>
+              <div class="text-[10px] font-mono text-qn-muted mt-0.5 truncate">${escapeHtml(a.id)}</div>
+            </td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 bg-qn-black border border-qn-border text-[10px] font-mono font-bold text-qn-text uppercase">
+                ${escapeHtml(a.category)}
+              </span>
+            </td>
+            <td class="p-3 text-qn-text truncate">${escapeHtml(a.author)}</td>
+            <td class="p-3 font-mono text-[10px] text-qn-muted">${formatDate(a.timestamp)}</td>
+            <td class="p-3">
+              <div class="flex items-center justify-center gap-1">
+                ${a.isBreaking ? '<span class="bg-qn-red text-white text-[9px] font-bold px-1.5 py-0.2 uppercase">BREAKING</span>' : ''}
+                ${a.isTop10Sponsored ? '<span class="bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.2 uppercase">TOP 10</span>' : ''}
+                ${!a.isBreaking && !a.isTop10Sponsored ? '<span class="text-qn-muted font-mono text-[10px]">—</span>' : ''}
+              </div>
+            </td>
+            <td class="p-3 text-center font-mono text-[11px] text-white">${a.views || 0}</td>
+            <td class="p-3 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <button 
+                  onclick="toggleBreakingStatus('${a.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-mono ${a.isBreaking ? 'text-qn-red font-bold' : 'text-qn-muted'}" 
+                  title="Toggle Breaking Ticker"
+                >
+                  <span class="material-symbols-sharp text-sm block">bolt</span>
+                </button>
+
+                <button 
+                  onclick="toggleSpotlightStatus('${a.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-mono ${a.isTop10Sponsored ? 'text-amber-400 font-bold' : 'text-qn-muted'}" 
+                  title="Toggle Top 10 Spotlight"
+                >
+                  <span class="material-symbols-sharp text-sm block">workspace_premium</span>
+                </button>
+
+                <button 
+                  onclick="openEditModal('${a.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-[10px]" 
+                  title="Edit Dispatch"
+                >
+                  <span class="material-symbols-sharp text-sm block">edit</span>
+                </button>
+
+                <button 
+                  onclick="openDeleteModal('post', '${a.id}')" 
+                  class="p-1 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-200 text-[10px]" 
+                  title="Delete Dispatch"
+                >
+                  <span class="material-symbols-sharp text-sm block">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderUsersTable() {
+      const query = (document.getElementById('userSearchInput').value || '').trim().toLowerCase();
+      const accounts = getAccounts();
+      const tbody = document.getElementById('usersTableBody');
+      const countLabel = document.getElementById('userFilterCount');
+
+      const filtered = accounts.filter(u => {
+        if (!query) return true;
+        return (u.username || '').toLowerCase().includes(query) ||
+               (u.title || '').toLowerCase().includes(query) ||
+               (u.role || '').toLowerCase().includes(query) ||
+               (u.id || '').toLowerCase().includes(query);
+      });
+
+      countLabel.innerText = `${filtered.length} OF ${accounts.length} ACCOUNTS`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="p-6 text-center text-qn-muted font-mono">
+              No registered user profiles found in storage.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(u => {
+        const badges = u.badges || [];
+        const badgesHtml = badges.map(b => {
+          let color = 'bg-qn-black border-qn-border text-qn-muted';
+          if (b === 'VERIFIED') color = 'bg-cyan-950 border-cyan-800 text-cyan-300';
+          if (b === 'STAFF') color = 'bg-red-950 border-red-800 text-qn-red font-bold';
+          if (b === 'TOP REPORTER') color = 'bg-amber-950 border-amber-800 text-amber-300';
+          if (b === 'CRITIC') color = 'bg-purple-950 border-purple-800 text-purple-300';
+          if (b === 'FOUNDER') color = 'bg-emerald-950 border-emerald-800 text-emerald-300 font-bold';
+          return `<span class="px-1.5 py-0.5 border text-[9px] font-mono uppercase ${color}">${escapeHtml(b)}</span>`;
+        }).join(' ');
+
+        return `
+          <tr class="hover:bg-qn-card/40 transition-colors">
+            <td class="p-3">
+              <div class="w-8 h-8 bg-qn-black border border-qn-border flex items-center justify-center font-display font-bold text-white text-xs">
+                ${(u.username || 'U').charAt(0).toUpperCase()}
+              </div>
+            </td>
+            <td class="p-3">
+              <div class="font-bold text-white font-mono">${escapeHtml(u.username)}</div>
+              <div class="text-[10px] text-qn-muted font-mono">${escapeHtml(u.id)}</div>
+            </td>
+            <td class="p-3">
+              <span class="text-slate-200 font-semibold">${escapeHtml(u.title || 'Staff Contributor')}</span>
+            </td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 bg-qn-black border border-qn-border text-[10px] font-mono uppercase text-slate-300">
+                ${escapeHtml(u.role || 'READER')}
+              </span>
+            </td>
+            <td class="p-3">
+              <div class="flex flex-wrap gap-1">${badgesHtml || '<span class="text-qn-muted font-mono text-[10px]">—</span>'}</div>
+            </td>
+            <td class="p-3 font-mono text-[10px]">
+              <span class="${u.status === 'SUSPENDED' ? 'text-qn-red font-bold' : 'text-emerald-400'}">${escapeHtml(u.status || 'ACTIVE')}</span>
+            </td>
+            <td class="p-3 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <button 
+                  onclick="openEditUserModal('${u.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-[10px]" 
+                  title="Edit Badges & Title"
+                >
+                  <span class="material-symbols-sharp text-sm block">edit</span>
+                </button>
+                <button 
+                  onclick="openDeleteModal('user', '${u.id}')" 
+                  class="p-1 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-200 text-[10px]" 
+                  title="Remove Account"
+                >
+                  <span class="material-symbols-sharp text-sm block">person_remove</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleBreakingStatus(id) {
+      const articles = getArticles();
+      const item = articles.find(a => a.id === id);
+      if (!item) return;
+
+      item.isBreaking = !item.isBreaking;
+      saveArticles(articles);
+      showToast(`Breaking status ${item.isBreaking ? 'activated' : 'removed'}.`);
+    }
+
+    function toggleSpotlightStatus(id) {
+      const articles = getArticles();
+      const item = articles.find(a => a.id === id);
+      if (!item) return;
+
+      item.isTop10Sponsored = !item.isTop10Sponsored;
+      saveArticles(articles);
+      showToast(`Top 10 spotlight ${item.isTop10Sponsored ? 'enabled' : 'disabled'}.`);
+    }
+
+    function openEditModal(id) {
+      const articles = getArticles();
+      const item = articles.find(a => a.id === id);
+      if (!item) return;
+
+      document.getElementById('editArticleId').value = item.id;
+      document.getElementById('editModalHeaderTitle').innerText = `Edit: ${item.id}`;
+      document.getElementById('eTitle').value = item.title || '';
+      document.getElementById('eCategory').value = item.category || 'GAMING';
+      document.getElementById('eAuthor').value = item.author || '';
+      document.getElementById('eImage').value = item.image || '';
+      document.getElementById('eExcerpt').value = item.excerpt || '';
+      document.getElementById('eBody').value = item.body || '';
+      document.getElementById('eBreaking').checked = !!item.isBreaking;
+      document.getElementById('eSponsored').checked = !!item.isTop10Sponsored;
+
+      const modal = document.getElementById('editModal');
+      const content = document.getElementById('editModalContent');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById('editModal');
+      const content = document.getElementById('editModalContent');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-100');
+      content.classList.add('scale-95');
+    }
+
+    function handleSaveEdit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editArticleId').value;
+      const articles = getArticles();
+      const idx = articles.findIndex(a => a.id === id);
+
+      if (idx === -1) {
+        showToast('Failed locating article record.');
+        return;
+      }
+
+      articles[idx].title = document.getElementById('eTitle').value.trim();
+      articles[idx].category = document.getElementById('eCategory').value;
+      articles[idx].author = document.getElementById('eAuthor').value.trim();
+      articles[idx].image = document.getElementById('eImage').value.trim();
+      articles[idx].excerpt = document.getElementById('eExcerpt').value.trim();
+      articles[idx].body = document.getElementById('eBody').value.trim();
+      articles[idx].isBreaking = document.getElementById('eBreaking').checked;
+      articles[idx].isTop10Sponsored = document.getElementById('eSponsored').checked;
+      articles[idx].lastAdminEdit = new Date().toISOString();
+
+      saveArticles(articles);
+      closeEditModal();
+      showToast('Article changes saved to wire.');
+    }
+
+    function openCreateUserModal() {
+      document.getElementById('userModalHeaderTitle').innerText = 'Add Account & Staff Credentials';
+      document.getElementById('uId').value = '';
+      document.getElementById('uUsername').value = '';
+      document.getElementById('uTitle').value = 'Staff Contributor';
+      document.getElementById('uRole').value = 'REPORTER';
+      document.getElementById('uStatus').value = 'ACTIVE';
+
+      document.getElementById('badgeVerified').checked = false;
+      document.getElementById('badgeStaff').checked = true;
+      document.getElementById('badgeTopReporter').checked = false;
+      document.getElementById('badgeCritic').checked = false;
+      document.getElementById('badgeFounder').checked = false;
+
+      const modal = document.getElementById('userModal');
+      const content = document.getElementById('userModalContent');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }
+
+    function openEditUserModal(id) {
+      const accounts = getAccounts();
+      const user = accounts.find(u => u.id === id);
+      if (!user) return;
+
+      document.getElementById('userModalHeaderTitle').innerText = `Edit: ${user.username}`;
+      document.getElementById('uId').value = user.id;
+      document.getElementById('uUsername').value = user.username || '';
+      document.getElementById('uTitle').value = user.title || 'Staff Contributor';
+      document.getElementById('uRole').value = user.role || 'READER';
+      document.getElementById('uStatus').value = user.status || 'ACTIVE';
+
+      const badges = user.badges || [];
+      document.getElementById('badgeVerified').checked = badges.includes('VERIFIED');
+      document.getElementById('badgeStaff').checked = badges.includes('STAFF');
+      document.getElementById('badgeTopReporter').checked = badges.includes('TOP REPORTER');
+      document.getElementById('badgeCritic').checked = badges.includes('CRITIC');
+      document.getElementById('badgeFounder').checked = badges.includes('FOUNDER');
+
+      const modal = document.getElementById('userModal');
+      const content = document.getElementById('userModalContent');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }
+
+    function closeUserModal() {
+      const modal = document.getElementById('userModal');
+      const content = document.getElementById('userModalContent');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-100');
+      content.classList.add('scale-95');
+    }
+
+    function handleSaveUser(e) {
+      e.preventDefault();
+      const id = document.getElementById('uId').value;
+      const username = document.getElementById('uUsername').value.trim();
+      const title = document.getElementById('uTitle').value.trim();
+      const role = document.getElementById('uRole').value;
+      const status = document.getElementById('uStatus').value;
+
+      const badges = [];
+      if (document.getElementById('badgeVerified').checked) badges.push('VERIFIED');
+      if (document.getElementById('badgeStaff').checked) badges.push('STAFF');
+      if (document.getElementById('badgeTopReporter').checked) badges.push('TOP REPORTER');
+      if (document.getElementById('badgeCritic').checked) badges.push('CRITIC');
+      if (document.getElementById('badgeFounder').checked) badges.push('FOUNDER');
+
+      let accounts = getAccounts();
+
+      if (id) {
+        const idx = accounts.findIndex(u => u.id === id);
+        if (idx !== -1) {
+          accounts[idx].username = username;
+          accounts[idx].title = title;
+          accounts[idx].role = role;
+          accounts[idx].status = status;
+          accounts[idx].badges = badges;
+        }
+      } else {
+        accounts.push({
+          id: 'usr_' + Date.now().toString(36),
+          username: username,
+          title: title,
+          role: role,
+          status: status,
+          badges: badges,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      saveAccounts(accounts);
+      closeUserModal();
+      showToast('Account record updated.');
+    }
+
+    function openDeleteModal(type, id) {
+      pendingDeleteType = type;
+      pendingDeleteId = id;
+      const modal = document.getElementById('deleteModal');
+      const heading = document.getElementById('deleteModalHeading');
+      const prompt = document.getElementById('deleteModalPrompt');
+
+      if (type === 'post') {
+        heading.innerText = 'Confirm Article Deletion';
+        prompt.innerText = `Permanently delete article "${id}" from local storage?`;
+      } else {
+        heading.innerText = 'Confirm User Removal';
+        prompt.innerText = `Permanently delete account "${id}" and revoke titles/badges?`;
+      }
+
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeDeleteModal() {
+      pendingDeleteType = null;
+      pendingDeleteId = null;
+      const modal = document.getElementById('deleteModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (!pendingDeleteId) return;
+
+      if (pendingDeleteType === 'post') {
+        let articles = getArticles();
+        articles = articles.filter(a => a.id !== pendingDeleteId);
+        saveArticles(articles);
+        showToast('Article deleted.');
+      } else if (pendingDeleteType === 'user') {
+        let accounts = getAccounts();
+        accounts = accounts.filter(u => u.id !== pendingDeleteId);
+        saveAccounts(accounts);
+        showToast('User account deleted.');
+      }
+
+      closeDeleteModal();
     });
-  }
 
-  saveAccounts(accounts);
-  closeModal('userModal');
-  renderAccountsTable();
-}
+    function promptClearAll() {
+      if (!confirm('CRITICAL ACTION: Are you sure you want to purge EVERY article on the wire?')) return;
+      if (!confirm('Please confirm a second time: ALL articles and local wire records will be wiped.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      refreshAdminData();
+      showToast('All wire posts cleared.');
+    }
 
-function deleteUser(id) {
-  if (!confirm('Permanently remove this account profile?')) return;
-  let accounts = getStoredAccounts();
-  accounts = accounts.filter(u => String(u.id) !== String(id));
-  saveAccounts(accounts);
-  renderAccountsTable();
-}
+    function exportArticlesAsFile() {
+      const articles = getArticles();
+      const json = JSON.stringify(articles, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `qwidnews_backup_${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Wire backup downloaded.');
+    }
 
-function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
-}
+    function importJsonFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (!Array.isArray(parsed)) {
+            showToast('Invalid JSON schema. Array expected.');
+            return;
+          }
+          saveArticles(parsed);
+          showToast(`Successfully imported ${parsed.length} dispatches.`);
+        } catch (err) {
+          showToast('Failed parsing JSON file.');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>'"]/g, tag => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag));
-}
+    function formatDate(iso) {
+      if (!iso) return 'Just now';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
 
-function initAdmin() {
-  updateMetrics();
-  renderPostsTable();
-}
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-document.addEventListener('DOMContentLoaded', checkAuth);
-</script>
+    let toastTimer;
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMsg');
+      msg.innerText = text;
+      toast.classList.remove('opacity-0', 'translate-y-8');
+      toast.classList.add('opacity-100', 'translate-y-0');
 
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-8');
+      }, 2500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const stamp = document.getElementById('liveDateStamp');
+      if (stamp) {
+        const now = new Date();
+        stamp.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+      }
+      checkAuth();
+    });
+  </script>
 </body>
 </html>

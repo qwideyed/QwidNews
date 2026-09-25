@@ -1,1 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QwidNews Desk — Publish Article</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
 
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            display: ['"Chakra Petch"', 'sans-serif'],
+          },
+          colors: {
+            qn: {
+              black: '#0a0c0f',
+              dark: '#11141a',
+              card: '#181d26',
+              cardHover: '#1f2530',
+              border: '#242b38',
+              borderLight: '#374152',
+              red: '#e63946',
+              redHover: '#d62839',
+              orange: '#f35b04',
+              muted: '#8590a3',
+              text: '#e2e8f0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0a0c0f;
+      color: #cbd5e1;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0c0f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #242b38;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e63946;
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-[13px]">
+
+  <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
+    <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold">DISPATCH CONSOLE</span>
+        <span class="text-qn-text text-[11px] hidden sm:inline">QwidNews Internal Wire & Editorial Filing Terminal</span>
+      </div>
+      <div class="flex items-center gap-3 font-mono text-[10px] text-qn-muted">
+        <span id="storageStats">0 ARTICLES STORED</span>
+        <span id="currentDateDisplay">SEP 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-baseline gap-1 group">
+          <span class="font-display font-black text-2xl tracking-tight text-white uppercase group-hover:text-qn-red transition-colors">Qwid<span class="text-qn-red">News</span></span>
+        </a>
+        <div class="h-4 w-[1px] bg-qn-border hidden sm:block"></div>
+        <span class="font-mono text-[11px] uppercase tracking-wider text-qn-muted hidden sm:inline font-semibold">News Desk / Publishing</span>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <button 
+          type="button" 
+          onclick="togglePreviewMode()" 
+          id="previewToggleBtn"
+          class="lg:hidden flex items-center gap-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white px-3 py-1.5 font-bold uppercase text-[11px] tracking-wider transition"
+        >
+          <span class="material-symbols-sharp text-sm">visibility</span>
+          <span id="previewToggleLabel">Show Preview</span>
+        </button>
+
+        <div class="relative">
+          <button 
+            id="navMenuBtn"
+            onclick="toggleNavMenu(event)"
+            class="flex items-center gap-1.5 bg-qn-red hover:bg-qn-redHover text-white px-3 py-1.5 font-display font-bold uppercase text-[11px] tracking-wider transition-colors shadow"
+          >
+            <span class="material-symbols-sharp text-sm">menu</span>
+            <span>Menu</span>
+            <span class="material-symbols-sharp text-xs">arrow_drop_down</span>
+          </button>
+
+          <div 
+            id="navDropdownMenu" 
+            class="hidden absolute right-0 mt-1 w-48 bg-qn-dark border border-qn-border shadow-2xl py-1.5 z-50 text-xs"
+          >
+            <a href="index.html" class="flex items-center gap-2 px-3 py-2 text-white hover:bg-qn-card hover:text-qn-red font-semibold transition">
+              <span class="material-symbols-sharp text-sm text-qn-red">home</span>
+              <span>Home Feed</span>
+            </a>
+            <a href="post.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition bg-qn-black/40">
+              <span class="material-symbols-sharp text-sm text-qn-muted">edit_note</span>
+              <span>Post News</span>
+            </a>
+            <div class="border-t border-qn-border/60 my-1"></div>
+            <a href="wiki.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+              <span class="material-symbols-sharp text-sm text-qn-muted">menu_book</span>
+              <span>Wiki</span>
+            </a>
+            <a href="account.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+              <span class="material-symbols-sharp text-sm text-qn-muted">person</span>
+              <span>Account</span>
+            </a>
+            <a href="setting.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+              <span class="material-symbols-sharp text-sm text-qn-muted">settings</span>
+              <span>Settings</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-[1440px] mx-auto px-3 sm:px-4 py-4 w-full flex-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      
+      <div id="editorPane" class="lg:col-span-7 flex flex-col gap-3">
+        <form id="articleForm" onsubmit="handlePublish(event)" class="bg-qn-dark border border-qn-border p-3.5 sm:p-4 flex flex-col gap-3.5 shadow-sm">
+          
+          <div class="flex items-center justify-between border-b border-qn-border pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 bg-qn-red"></span>
+              <h1 class="font-display font-bold uppercase tracking-wider text-sm sm:text-base text-white" id="formHeaderTitle">Dispatch Authoring Desk</h1>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span id="draftStatus" class="font-mono text-[10px] text-qn-muted">NO DRAFT LOADED</span>
+              <button type="button" onclick="loadDraft()" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-bold uppercase text-qn-muted hover:text-white transition">Load Draft</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider">Headline / Article Title *</label>
+              <span class="font-mono text-[10px] text-qn-muted" id="titleCount">0 / 120</span>
+            </div>
+            <input 
+              type="text" 
+              id="fTitle" 
+              required 
+              maxlength="140"
+              placeholder="e.g. FromSoftware Announces Bloodborne Remaster for PlayStation 6 & PC" 
+              class="w-full bg-qn-black border border-qn-border px-3 py-2 text-white font-serif text-base focus:outline-none focus:border-qn-red transition-colors"
+              oninput="updatePreview(); updateCount(this, 'titleCount', 140);"
+            >
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Category *</label>
+              <select 
+                id="fCategory" 
+                class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red font-semibold uppercase text-xs"
+                onchange="updatePreview()"
+              >
+                <option value="GAMING">Gaming</option>
+                <option value="ANIME">Anime</option>
+                <option value="MOVIES">Movies</option>
+                <option value="TV SHOWS">TV Shows</option>
+                <option value="REVIEWS">Reviews</option>
+                <option value="LEAKS">Leaks</option>
+                <option value="HARDWARE">Hardware</option>
+                <option value="INDUSTRY">Industry</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Reporter / Byline *</label>
+              <input 
+                type="text" 
+                id="fAuthor" 
+                required 
+                placeholder="e.g. Staff Reporter, J. Doe" 
+                class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red text-xs"
+                oninput="updatePreview()"
+              >
+            </div>
+
+            <div>
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Tags (Comma-separated)</label>
+              <input 
+                type="text" 
+                id="fTags" 
+                placeholder="PS5, Soulsborne, Elden Ring" 
+                class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red text-xs"
+                oninput="updatePreview()"
+              >
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider">Excerpt / Frontpage Dek Summary *</label>
+              <span class="font-mono text-[10px] text-qn-muted" id="excerptCount">0 / 220</span>
+            </div>
+            <textarea 
+              id="fExcerpt" 
+              required 
+              rows="2" 
+              maxlength="260"
+              placeholder="Short 1-2 sentence lead summary appearing on the front news wire..."
+              class="w-full bg-qn-black border border-qn-border p-2.5 text-white focus:outline-none focus:border-qn-red text-xs resize-none"
+              oninput="updatePreview(); updateCount(this, 'excerptCount', 260);"
+            ></textarea>
+          </div>
+
+          <div class="border border-qn-border bg-qn-black/40 p-2.5 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <label class="text-white font-semibold uppercase text-[10px] tracking-wider">Cover Image Asset</label>
+              <div class="flex items-center gap-1 text-[10px]">
+                <button type="button" onclick="setImageSourceMode('url')" id="imgUrlModeBtn" class="px-2 py-0.5 bg-qn-border text-white font-bold uppercase">URL</button>
+                <button type="button" onclick="setImageSourceMode('upload')" id="imgUploadModeBtn" class="px-2 py-0.5 bg-qn-card text-qn-muted hover:text-white uppercase font-bold">File Upload</button>
+              </div>
+            </div>
+
+            <div id="imageUrlBox">
+              <input 
+                type="url" 
+                id="fImageUrl" 
+                placeholder="https://images.unsplash.com/photo-..." 
+                class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red text-xs"
+                oninput="handleUrlImageInput(this.value)"
+              >
+            </div>
+
+            <div id="imageUploadBox" class="hidden">
+              <input 
+                type="file" 
+                id="fImageFile" 
+                accept="image/*"
+                onchange="handleFileUpload(event)"
+                class="w-full text-xs text-qn-muted file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-qn-card file:text-white hover:file:bg-qn-cardHover cursor-pointer border border-qn-border bg-qn-black p-1"
+              >
+            </div>
+
+            <div id="imageThumbRow" class="flex items-center justify-between bg-qn-black border border-qn-border p-1.5">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img id="imageThumb" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Preview" class="w-14 h-10 object-cover border border-qn-border shrink-0 bg-qn-card">
+                <span class="text-[11px] text-qn-muted truncate font-mono" id="imageSourceLabel">Default header photo loaded</span>
+              </div>
+              <button type="button" onclick="clearImage()" class="px-2 py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] text-qn-muted hover:text-white uppercase font-bold shrink-0">Reset</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider">Article Content *</label>
+              <span class="font-mono text-[10px] text-qn-muted" id="wordCount">0 words</span>
+            </div>
+
+            <div class="bg-qn-black border border-qn-border border-b-0 p-1 flex items-center flex-wrap gap-1 text-[11px]">
+              <button type="button" onclick="insertFormat('bold')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white font-bold" title="Bold">B</button>
+              <button type="button" onclick="insertFormat('italic')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white italic" title="Italic">I</button>
+              <button type="button" onclick="insertFormat('h2')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white font-bold" title="Header">H2</button>
+              <button type="button" onclick="insertFormat('quote')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white" title="Blockquote">”Quote</button>
+              <button type="button" onclick="insertFormat('bullet')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white" title="Bullet List">• List</button>
+              <button type="button" onclick="insertFormat('link')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white" title="Link">[Link]</button>
+            </div>
+
+            <textarea 
+              id="fBody" 
+              required 
+              rows="12" 
+              placeholder="Draft the complete news story here. Paragraph breaks are maintained..."
+              class="w-full bg-qn-black border border-qn-border p-3 text-white focus:outline-none focus:border-qn-red text-xs font-mono leading-relaxed"
+              oninput="updatePreview(); updateWordCount(this.value);"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-between border-t border-qn-border pt-3">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="fBreaking" class="w-4 h-4 accent-qn-red cursor-pointer" onchange="updatePreview()">
+              <span class="text-white font-semibold text-xs uppercase tracking-wide">Feature in Top Marquee Wire (Breaking)</span>
+            </label>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-qn-border pt-3">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button 
+                type="button" 
+                onclick="saveDraft()"
+                class="flex-1 sm:flex-initial px-3 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text hover:text-white font-bold uppercase text-[11px] tracking-wider transition"
+              >
+                Save Draft
+              </button>
+              <button 
+                type="button" 
+                onclick="clearForm()"
+                class="px-3 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-muted hover:text-red-400 font-bold uppercase text-[11px] tracking-wider transition"
+              >
+                Reset
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <button 
+                type="submit" 
+                class="w-full sm:w-auto px-5 py-2 bg-qn-red hover:bg-qn-redHover text-white font-display font-bold uppercase text-xs tracking-wider transition flex items-center justify-center gap-1.5 shadow"
+              >
+                <span class="material-symbols-sharp text-sm">send</span>
+                <span id="submitBtnText">Publish Dispatch</span>
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="previewPane" class="lg:col-span-5 flex flex-col gap-3">
+        
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col gap-2.5">
+          <div class="bg-qn-black px-2.5 py-1.5 border-b border-qn-border flex items-center justify-between">
+            <span class="font-display font-bold uppercase tracking-wider text-[11px] text-white flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-qn-red"></span> Live Dispatch Preview
+            </span>
+            <span class="text-[10px] font-mono text-qn-muted">AS SEEN IN FEED</span>
+          </div>
+
+          <div class="bg-qn-card border border-qn-border p-3 flex flex-col gap-2.5">
+            <div class="relative w-full aspect-[16/9] bg-qn-black border border-qn-border overflow-hidden">
+              <img id="pCover" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Cover Preview" class="w-full h-full object-cover">
+              <span id="pBadge" class="absolute top-2 left-2 bg-black/80 backdrop-blur text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border border-white/20">GAMING</span>
+              <span id="pBreakingTag" class="hidden absolute top-2 right-2 bg-qn-red text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">BREAKING</span>
+            </div>
+
+            <div class="flex items-center gap-2 text-[10px] text-qn-muted uppercase font-mono">
+              <span id="pAuthor" class="text-white font-medium">By Reporter</span>
+              <span>&bull;</span>
+              <span>JUST NOW</span>
+            </div>
+
+            <h2 id="pTitle" class="font-serif font-bold text-lg text-white leading-snug">
+              Article headline will update dynamically as you draft...
+            </h2>
+
+            <p id="pExcerpt" class="text-xs text-qn-muted leading-relaxed line-clamp-3">
+              Frontpage excerpt will appear here. It summarizes the core reporting context for our audience.
+            </p>
+
+            <div id="pTags" class="flex flex-wrap gap-1 pt-1">
+              <span class="text-[9px] font-mono bg-qn-black border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">TAG</span>
+            </div>
+          </div>
+
+          <div class="bg-qn-card border border-qn-border p-3 flex flex-col gap-2">
+            <div class="font-display font-bold uppercase tracking-wider text-[11px] text-white border-b border-qn-border pb-1">
+              Article Body Preview
+            </div>
+            <div id="pBody" class="font-serif text-[13px] text-slate-300 leading-relaxed space-y-2 max-h-56 overflow-y-auto pr-1">
+              <p class="text-qn-muted italic font-sans text-xs">Body paragraphs will be rendered here...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border flex flex-col">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
+            <span class="font-display font-bold uppercase tracking-wider text-xs text-white flex items-center gap-1.5">
+              <span class="material-symbols-sharp text-sm text-qn-red">inventory_2</span> Published Storage Wire
+            </span>
+            <span class="text-[10px] font-mono text-qn-muted" id="managerCount">0 RECORDS</span>
+          </div>
+
+          <div id="managedArticlesList" class="p-2 flex flex-col gap-2 max-h-96 overflow-y-auto"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-qn-black border-t border-qn-border mt-8 text-qn-muted text-xs">
+    <div class="max-w-[1440px] mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+      <div class="flex items-center gap-2">
+        <span class="font-display font-black text-base text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
+        <span class="text-qn-muted font-mono">/ NEWSROOM CONSOLE</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="hover:text-white">Home Wire</a>
+        <a href="wiki.html" class="hover:text-white">Wiki</a>
+        <a href="account.html" class="hover:text-white">Account</a>
+        <a href="setting.html" class="hover:text-white">Settings</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="fixed bottom-4 right-4 z-50 pointer-events-none transform translate-y-8 opacity-0 transition-all duration-200 bg-qn-black border border-qn-border text-white text-xs px-3 py-2 shadow-lg flex items-center gap-2">
+    <span class="w-2 h-2 bg-qn-red"></span>
+    <span id="toastMsg">Action completed.</span>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'qwidnews_posts';
+    const DRAFT_KEY = 'qwidnews_drafts';
+    let currentImageBase64 = null;
+    let editingPostId = null;
+
+    function getArticles() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveArticles(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      renderManager();
+      updateStorageStat();
+    }
+
+    function toggleNavMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('navDropdownMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    function closeNavMenu() {
+      const menu = document.getElementById('navDropdownMenu');
+      if (menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+      }
+    }
+
+    function togglePreviewMode() {
+      const editor = document.getElementById('editorPane');
+      const preview = document.getElementById('previewPane');
+      const label = document.getElementById('previewToggleLabel');
+
+      if (preview.classList.contains('hidden')) {
+        preview.classList.remove('hidden');
+        editor.classList.add('hidden');
+        label.innerText = 'Show Editor';
+      } else {
+        preview.classList.add('hidden');
+        editor.classList.remove('hidden');
+        label.innerText = 'Show Preview';
+      }
+    }
+
+    function setImageSourceMode(mode) {
+      const urlBox = document.getElementById('imageUrlBox');
+      const uploadBox = document.getElementById('imageUploadBox');
+      const urlBtn = document.getElementById('imgUrlModeBtn');
+      const uploadBtn = document.getElementById('imgUploadModeBtn');
+
+      if (mode === 'url') {
+        urlBox.classList.remove('hidden');
+        uploadBox.classList.add('hidden');
+        urlBtn.className = "px-2 py-0.5 bg-qn-border text-white font-bold uppercase";
+        uploadBtn.className = "px-2 py-0.5 bg-qn-card text-qn-muted hover:text-white uppercase font-bold";
+      } else {
+        urlBox.classList.add('hidden');
+        uploadBox.classList.remove('hidden');
+        uploadBtn.className = "px-2 py-0.5 bg-qn-border text-white font-bold uppercase";
+        urlBtn.className = "px-2 py-0.5 bg-qn-card text-qn-muted hover:text-white uppercase font-bold";
+      }
+    }
+
+    function handleUrlImageInput(val) {
+      currentImageBase64 = null;
+      const thumb = document.getElementById('imageThumb');
+      const label = document.getElementById('imageSourceLabel');
+      const previewImg = document.getElementById('pCover');
+
+      if (val && val.trim().startsWith('http')) {
+        thumb.src = val.trim();
+        previewImg.src = val.trim();
+        label.innerText = 'External URL image set';
+      } else {
+        thumb.src = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+        previewImg.src = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+        label.innerText = 'Default header photo loaded';
+      }
+    }
+
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        currentImageBase64 = evt.target.result;
+        document.getElementById('imageThumb').src = currentImageBase64;
+        document.getElementById('pCover').src = currentImageBase64;
+        document.getElementById('imageSourceLabel').innerText = `Uploaded: ${file.name}`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearImage() {
+      currentImageBase64 = null;
+      document.getElementById('fImageUrl').value = '';
+      document.getElementById('fImageFile').value = '';
+      document.getElementById('imageThumb').src = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+      document.getElementById('pCover').src = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+      document.getElementById('imageSourceLabel').innerText = 'Default header photo loaded';
+    }
+
+    function insertFormat(type) {
+      const textarea = document.getElementById('fBody');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selected = textarea.value.substring(start, end);
+      let replacement = '';
+
+      switch (type) {
+        case 'bold':
+          replacement = `**${selected || 'bold text'}**`;
+          break;
+        case 'italic':
+          replacement = `*${selected || 'italic text'}*`;
+          break;
+        case 'h2':
+          replacement = `\n\n## ${selected || 'Section Heading'}\n`;
+          break;
+        case 'quote':
+          replacement = `\n\n> "${selected || 'Key quote or statement.'}"\n`;
+          break;
+        case 'bullet':
+          replacement = `\n• ${selected || 'Bullet item'}\n`;
+          break;
+        case 'link':
+          replacement = `[${selected || 'Link Title'}](https://example.com)`;
+          break;
+      }
+
+      textarea.setRangeText(replacement, start, end, 'end');
+      textarea.focus();
+      updatePreview();
+      updateWordCount(textarea.value);
+    }
+
+    function updateCount(el, targetId, max) {
+      const countEl = document.getElementById(targetId);
+      countEl.innerText = `${el.value.length} / ${max}`;
+    }
+
+    function updateWordCount(text) {
+      const trimmed = text.trim();
+      const count = trimmed ? trimmed.split(/\s+/).length : 0;
+      document.getElementById('wordCount').innerText = `${count} word${count === 1 ? '' : 's'}`;
+    }
+
+    function updatePreview() {
+      const title = document.getElementById('fTitle').value.trim();
+      const cat = document.getElementById('fCategory').value;
+      const author = document.getElementById('fAuthor').value.trim();
+      const excerpt = document.getElementById('fExcerpt').value.trim();
+      const body = document.getElementById('fBody').value.trim();
+      const tags = document.getElementById('fTags').value.trim();
+      const isBreaking = document.getElementById('fBreaking').checked;
+
+      document.getElementById('pTitle').innerText = title || 'Article headline will update dynamically as you draft...';
+      document.getElementById('pBadge').innerText = cat;
+      document.getElementById('pAuthor').innerText = author ? `By ${author}` : 'By Reporter';
+      document.getElementById('pExcerpt').innerText = excerpt || 'Frontpage excerpt will appear here. It summarizes the core reporting context for our audience.';
+
+      const breakingTag = document.getElementById('pBreakingTag');
+      if (isBreaking) {
+        breakingTag.classList.remove('hidden');
+      } else {
+        breakingTag.classList.add('hidden');
+      }
+
+      const tagsContainer = document.getElementById('pTags');
+      if (tags) {
+        const arr = tags.split(',').map(t => t.trim()).filter(Boolean);
+        tagsContainer.innerHTML = arr.map(t => `
+          <span class="text-[9px] font-mono bg-qn-black border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">${escapeHtml(t)}</span>
+        `).join('');
+      } else {
+        tagsContainer.innerHTML = `<span class="text-[9px] font-mono bg-qn-black border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">${cat}</span>`;
+      }
+
+      const bodyContainer = document.getElementById('pBody');
+      if (body) {
+        const paragraphs = body.split('\n\n').filter(Boolean);
+        bodyContainer.innerHTML = paragraphs.map(p => {
+          let cleaned = escapeHtml(p.trim());
+          if (cleaned.startsWith('## ')) {
+            return `<h3 class="font-display font-bold text-sm text-white pt-1 uppercase">${cleaned.replace('## ', '')}</h3>`;
+          }
+          if (cleaned.startsWith('&gt; ')) {
+            return `<blockquote class="border-l-2 border-qn-red pl-2.5 my-1 text-qn-text italic">${cleaned.replace('&gt; ', '')}</blockquote>`;
+          }
+          return `<p class="leading-relaxed">${cleaned.replace(/\n/g, '<br>')}</p>`;
+        }).join('');
+      } else {
+        bodyContainer.innerHTML = `<p class="text-qn-muted italic font-sans text-xs">Body paragraphs will be rendered here...</p>`;
+      }
+    }
+
+    function handlePublish(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('fTitle').value.trim();
+      const category = document.getElementById('fCategory').value;
+      const author = document.getElementById('fAuthor').value.trim();
+      const excerpt = document.getElementById('fExcerpt').value.trim();
+      const body = document.getElementById('fBody').value.trim();
+      const tagsRaw = document.getElementById('fTags').value.trim();
+      const isBreaking = document.getElementById('fBreaking').checked;
+      const urlInput = document.getElementById('fImageUrl').value.trim();
+
+      if (!title || !category || !author || !excerpt || !body) {
+        showToast('Please fill out all required fields.');
+        return;
+      }
+
+      const finalImage = currentImageBase64 || urlInput || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80';
+      const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [category];
+
+      let articles = getArticles();
+
+      if (editingPostId) {
+        articles = articles.map(art => {
+          if (art.id === editingPostId) {
+            return {
+              ...art,
+              title,
+              category,
+              author,
+              excerpt,
+              body,
+              tags,
+              image: finalImage,
+              isBreaking,
+              editedAt: new Date().toISOString()
+            };
+          }
+          return art;
+        });
+        saveArticles(articles);
+        showToast('Article update saved.');
+        const targetId = editingPostId;
+        editingPostId = null;
+        setTimeout(() => {
+          window.location.href = `entry.html?id=${encodeURIComponent(targetId)}`;
+        }, 800);
+      } else {
+        const newPost = {
+          id: 'qn_' + Date.now(),
+          title,
+          category,
+          author,
+          excerpt,
+          body,
+          tags,
+          image: finalImage,
+          isBreaking,
+          timestamp: new Date().toISOString()
+        };
+        articles.unshift(newPost);
+        saveArticles(articles);
+        localStorage.removeItem(DRAFT_KEY);
+        showToast('Dispatch published to wire.');
+        setTimeout(() => {
+          window.location.href = `entry.html?id=${encodeURIComponent(newPost.id)}`;
+        }, 800);
+      }
+    }
+
+    function saveDraft() {
+      const draft = {
+        title: document.getElementById('fTitle').value,
+        category: document.getElementById('fCategory').value,
+        author: document.getElementById('fAuthor').value,
+        excerpt: document.getElementById('fExcerpt').value,
+        body: document.getElementById('fBody').value,
+        tags: document.getElementById('fTags').value,
+        imageUrl: document.getElementById('fImageUrl').value,
+        imageBase64: currentImageBase64,
+        isBreaking: document.getElementById('fBreaking').checked,
+        savedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      document.getElementById('draftStatus').innerText = 'DRAFT SAVED ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      showToast('Draft preserved in browser.');
+    }
+
+    function loadDraft() {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) {
+          showToast('No saved draft located.');
+          return;
+        }
+        const d = JSON.parse(raw);
+        document.getElementById('fTitle').value = d.title || '';
+        document.getElementById('fCategory').value = d.category || 'GAMING';
+        document.getElementById('fAuthor').value = d.author || '';
+        document.getElementById('fExcerpt').value = d.excerpt || '';
+        document.getElementById('fBody').value = d.body || '';
+        document.getElementById('fTags').value = d.tags || '';
+        document.getElementById('fBreaking').checked = !!d.isBreaking;
+
+        if (d.imageBase64) {
+          currentImageBase64 = d.imageBase64;
+          document.getElementById('imageThumb').src = d.imageBase64;
+          document.getElementById('pCover').src = d.imageBase64;
+          document.getElementById('imageSourceLabel').innerText = 'Draft image restored';
+        } else if (d.imageUrl) {
+          document.getElementById('fImageUrl').value = d.imageUrl;
+          handleUrlImageInput(d.imageUrl);
+        }
+
+        updatePreview();
+        updateWordCount(d.body || '');
+        document.getElementById('draftStatus').innerText = 'DRAFT RESTORED';
+        showToast('Draft loaded into desk.');
+      } catch (e) {
+        showToast('Failed reading draft.');
+      }
+    }
+
+    function editPost(id) {
+      const articles = getArticles();
+      const art = articles.find(a => a.id === id);
+      if (!art) return;
+
+      editingPostId = art.id;
+      document.getElementById('formHeaderTitle').innerText = 'Edit Dispatch: ' + art.id;
+      document.getElementById('submitBtnText').innerText = 'Update Dispatch';
+
+      document.getElementById('fTitle').value = art.title || '';
+      document.getElementById('fCategory').value = art.category || 'GAMING';
+      document.getElementById('fAuthor').value = art.author || '';
+      document.getElementById('fExcerpt').value = art.excerpt || '';
+      document.getElementById('fBody').value = art.body || '';
+      document.getElementById('fTags').value = (art.tags || []).join(', ');
+      document.getElementById('fBreaking').checked = !!art.isBreaking;
+
+      if (art.image) {
+        if (art.image.startsWith('data:image')) {
+          currentImageBase64 = art.image;
+          document.getElementById('imageThumb').src = art.image;
+          document.getElementById('pCover').src = art.image;
+          document.getElementById('imageSourceLabel').innerText = 'Embedded base64 loaded';
+        } else {
+          document.getElementById('fImageUrl').value = art.image;
+          handleUrlImageInput(art.image);
+        }
+      }
+
+      updatePreview();
+      updateWordCount(art.body || '');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('Loaded story into editor.');
+    }
+
+    function deletePost(id) {
+      if (!window.confirm('Delete this article from local storage?')) return;
+      let articles = getArticles();
+      articles = articles.filter(a => a.id !== id);
+      saveArticles(articles);
+      if (editingPostId === id) {
+        clearForm();
+      }
+      showToast('Story removed from records.');
+    }
+
+    function clearForm() {
+      editingPostId = null;
+      document.getElementById('articleForm').reset();
+      document.getElementById('formHeaderTitle').innerText = 'Dispatch Authoring Desk';
+      document.getElementById('submitBtnText').innerText = 'Publish Dispatch';
+      clearImage();
+      updatePreview();
+      updateWordCount('');
+      document.getElementById('titleCount').innerText = '0 / 140';
+      document.getElementById('excerptCount').innerText = '0 / 260';
+    }
+
+    function renderManager() {
+      const articles = getArticles();
+      const container = document.getElementById('managedArticlesList');
+      const counter = document.getElementById('managerCount');
+
+      counter.innerText = `${articles.length} RECORDS`;
+
+      if (articles.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 bg-qn-black border border-qn-border text-center text-qn-muted text-xs">
+            No published stories found in storage.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = articles.map(a => `
+        <div class="p-2 bg-qn-black border border-qn-border flex items-center justify-between gap-2 text-xs">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5 text-[10px] font-mono text-qn-muted">
+              <span class="text-qn-red font-bold uppercase">[${a.category}]</span>
+              <span>&bull;</span>
+              <span>${formatTime(a.timestamp)}</span>
+            </div>
+            <div class="font-semibold text-white truncate text-[12px]">${escapeHtml(a.title)}</div>
+            <div class="text-[10px] text-qn-muted truncate">By ${escapeHtml(a.author)}</div>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <a href="entry.html?id=${encodeURIComponent(a.id)}" class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text hover:text-white" title="View Entry Page">
+              <span class="material-symbols-sharp text-sm block">visibility</span>
+            </a>
+            <button type="button" onclick="editPost('${a.id}')" class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text hover:text-white" title="Edit Dispatch">
+              <span class="material-symbols-sharp text-sm block">edit</span>
+            </button>
+            <button type="button" onclick="deletePost('${a.id}')" class="p-1 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-200" title="Delete Dispatch">
+              <span class="material-symbols-sharp text-sm block">delete</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateStorageStat() {
+      const articles = getArticles();
+      const el = document.getElementById('storageStats');
+      if (el) el.innerText = `${articles.length} ARTICLES STORED`;
+    }
+
+    function formatTime(isoString) {
+      if (!isoString) return 'Just now';
+      const date = new Date(isoString);
+      const diffMs = Date.now() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    let toastTimer;
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMsg');
+      msg.innerText = text;
+      toast.classList.remove('opacity-0', 'translate-y-8');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-8');
+      }, 2500);
+    }
+
+    window.addEventListener('click', () => {
+      closeNavMenu();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const dateEl = document.getElementById('currentDateDisplay');
+      if (dateEl) {
+        const now = new Date();
+        dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+      }
+      renderManager();
+      updateStorageStat();
+      updatePreview();
+    });
+  </script>
+</body>
+</html>

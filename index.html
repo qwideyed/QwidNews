@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QwidNews | Gaming & Anime Daily Dispatch</title>
+  <title>QwidNews</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,17 +22,17 @@
           },
           colors: {
             qn: {
-              black: '#0e1013',
-              dark: '#14171c',
-              card: '#1b1f26',
-              cardHover: '#222730',
-              border: '#2a303c',
-              borderLight: '#384152',
+              black: '#0a0c0f',
+              dark: '#11141a',
+              card: '#181d26',
+              cardHover: '#1f2530',
+              border: '#242b38',
+              borderLight: '#374152',
               red: '#e63946',
               redHover: '#d62839',
               orange: '#f35b04',
-              muted: '#8b949e',
-              text: '#e6edf3'
+              muted: '#8590a3',
+              text: '#e2e8f0'
             }
           }
         }
@@ -42,32 +42,30 @@
 
   <style>
     body {
-      background-color: #0d0f12;
-      color: #d1d7e0;
+      background-color: #0a0c0f;
+      color: #cbd5e1;
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     }
-
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: #111317;
+      background: #0a0c0f;
     }
     ::-webkit-scrollbar-thumb {
-      background: #2a303c;
+      background: #242b38;
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #e63946;
     }
-
     .ticker-wrap {
       overflow: hidden;
       white-space: nowrap;
     }
     .ticker-move {
       display: inline-block;
-      animation: ticker 32s linear infinite;
+      animation: ticker 14s linear infinite;
     }
     .ticker-wrap:hover .ticker-move {
       animation-play-state: paused;
@@ -76,7 +74,6 @@
       0% { transform: translate3d(0, 0, 0); }
       100% { transform: translate3d(-50%, 0, 0); }
     }
-
     .line-clamp-2 {
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -93,228 +90,143 @@
 </head>
 <body class="min-h-screen flex flex-col text-[14px]">
 
-  <div class="bg-[#090b0d] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1.5 px-3">
-    <div class="max-w-[1380px] mx-auto flex items-center justify-between gap-4">
+  <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
+    <div class="max-w-[1380px] mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-2 flex-1 overflow-hidden">
-        <span class="bg-qn-red text-white px-1.5 py-0.5 uppercase tracking-wider text-[9px] font-bold shrink-0">BREAKING</span>
+        <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold shrink-0">WIRE TICKER</span>
         <div class="ticker-wrap flex-1">
-          <div class="ticker-move text-qn-text">
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(1)">• Elden Ring DLC crosses 10M sales milestone as patch 1.14 drops</span>
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(2)">• Jujutsu Kaisen Season 3 'Culling Game' officially confirmed for Winter 2026 production</span>
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(3)">• Valve announces major SteamVR headset codenamed 'Deckard' in hardware filing</span>
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(5)">• Bleach: Thousand-Year Blood War Part 3 unveils new October key visual & theme</span>
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(1)">• Elden Ring DLC crosses 10M sales milestone as patch 1.14 drops</span>
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(2)">• Jujutsu Kaisen Season 3 'Culling Game' officially confirmed for Winter 2026 production</span>
-            <span class="cursor-pointer hover:text-qn-red mx-4" onclick="openStory(3)">• Valve announces major SteamVR headset codenamed 'Deckard' in hardware filing</span>
+          <div class="ticker-move text-qn-text" id="liveTickerContainer">
+            <span class="text-qn-muted mr-4">Waiting for dispatches to be published...</span>
           </div>
         </div>
       </div>
-      <div class="hidden md:flex items-center gap-4 text-qn-muted text-[11px] shrink-0">
-        <span>EDITION: GLOBAL / EN</span>
-        <span class="text-qn-border">|</span>
+      <div class="hidden sm:flex items-center gap-2 text-[11px] text-qn-muted shrink-0 font-mono">
         <span id="currentDateDisplay">SEP 2026</span>
       </div>
     </div>
   </div>
 
-  <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-30 shadow-md">
+  <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
     <div class="max-w-[1380px] mx-auto px-3 sm:px-4">
-      <div class="flex items-center justify-between py-2.5 sm:py-3 border-b border-qn-border/60 gap-3">
-        <div class="flex items-baseline gap-3">
-          <a href="#" onclick="filterNews('ALL'); return false;" class="group flex items-baseline gap-1">
+      <div class="flex items-center justify-between py-2.5 border-b border-qn-border/70 gap-3">
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="flex items-baseline gap-1 group">
             <span class="font-display font-black text-2xl sm:text-3xl tracking-tight text-white uppercase group-hover:text-qn-red transition-colors">Qwid<span class="text-qn-red">News</span></span>
           </a>
-          <span class="hidden sm:inline-block text-[11px] uppercase tracking-wider text-qn-muted font-medium border-l border-qn-border pl-3">
-            Gaming &amp; Anime Daily Dispatch
-          </span>
         </div>
 
-        <div class="flex items-center gap-2">
-          <div class="relative w-44 sm:w-64">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="relative w-36 sm:w-64">
             <input 
               type="text" 
               id="searchInput" 
-              placeholder="Search news, games, anime..."
-              class="w-full bg-qn-black border border-qn-border text-[12px] text-white px-2.5 py-1.5 pl-8 focus:outline-none focus:border-qn-red transition-colors"
+              placeholder="Search news..."
+              class="w-full bg-qn-black border border-qn-border text-[12px] text-white px-2 py-1.5 pl-7 focus:outline-none focus:border-qn-red transition-colors"
               oninput="handleSearch(this.value)"
             >
-            <span class="material-symbols-sharp absolute left-2 top-1/2 -translate-y-1/2 text-qn-muted text-[16px] pointer-events-none">search</span>
+            <span class="material-symbols-sharp absolute left-1.5 top-1/2 -translate-y-1/2 text-qn-muted text-[16px] pointer-events-none">search</span>
           </div>
-          <button onclick="clearSearch()" id="clearBtn" class="hidden text-[11px] bg-qn-card px-2 py-1.5 border border-qn-border text-qn-muted hover:text-white">Clear</button>
+
+          <div class="relative">
+            <button 
+              id="navMenuBtn"
+              onclick="toggleNavMenu(event)"
+              class="flex items-center gap-1.5 bg-qn-red hover:bg-qn-redHover text-white px-3 py-1.5 font-display font-bold uppercase text-[11px] tracking-wider transition-colors shadow"
+            >
+              <span class="material-symbols-sharp text-sm">menu</span>
+              <span>Menu</span>
+              <span class="material-symbols-sharp text-xs">arrow_drop_down</span>
+            </button>
+
+            <div 
+              id="navDropdownMenu" 
+              class="hidden absolute right-0 mt-1 w-48 bg-qn-dark border border-qn-border shadow-2xl py-1.5 z-50 text-xs"
+            >
+              <a href="post.html" class="flex items-center gap-2 px-3 py-2 text-white hover:bg-qn-card hover:text-qn-red font-semibold transition">
+                <span class="material-symbols-sharp text-sm text-qn-red">edit_note</span>
+                <span>Post News</span>
+              </a>
+              <button onclick="openComposeModal(); closeNavMenu();" class="w-full text-left flex items-center gap-2 px-3 py-2 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">add_circle</span>
+                <span>Quick Compose</span>
+              </button>
+              <div class="border-t border-qn-border/60 my-1"></div>
+              <a href="wiki.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">menu_book</span>
+                <span>Wiki</span>
+              </a>
+              <a href="account.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">person</span>
+                <span>Account</span>
+              </a>
+              <a href="setting.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">settings</span>
+                <span>Settings</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      <nav class="flex items-center justify-between overflow-x-auto text-[12px] font-bold tracking-wide uppercase py-1 gap-1 text-qn-muted no-scrollbar">
-        <div class="flex items-center gap-1 shrink-0" id="navTabs">
-          <button onclick="filterNews('ALL')" class="nav-tab active-tab px-3 py-1.5 text-white bg-qn-card border-b-2 border-qn-red" data-cat="ALL">All Feed</button>
-          <button onclick="filterNews('GAMING')" class="nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="GAMING">Gaming</button>
-          <button onclick="filterNews('ANIME')" class="nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="ANIME">Anime</button>
-          <button onclick="filterNews('REVIEWS')" class="nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="REVIEWS">Reviews</button>
-          <button onclick="filterNews('LEAKS')" class="nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="LEAKS">Rumors &amp; Leaks</button>
-          <button onclick="filterNews('TRAILERS')" class="nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="TRAILERS">Trailers</button>
-          <button onclick="filterNews('ESPORTS')" class="nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="ESPORTS">Industry</button>
+      <div class="flex items-center overflow-x-auto text-[11px] font-bold tracking-wide uppercase py-1 gap-1 text-qn-muted no-scrollbar">
+        <div class="flex items-center gap-1 shrink-0" id="navFilterTabs">
+          <button onclick="filterNews('ALL')" class="cat-tab active-cat px-3 py-1 text-white bg-qn-card border-b-2 border-qn-red" data-cat="ALL">All News</button>
+          <button onclick="filterNews('GAMING')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="GAMING">Gaming</button>
+          <button onclick="filterNews('ANIME')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="ANIME">Anime</button>
+          <button onclick="filterNews('MOVIES')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="MOVIES">Movies</button>
+          <button onclick="filterNews('TV SHOWS')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="TV SHOWS">TV Shows</button>
+          <button onclick="filterNews('REVIEWS')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="REVIEWS">Reviews</button>
+          <button onclick="filterNews('LEAKS')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="LEAKS">Leaks</button>
+          <button onclick="filterNews('HARDWARE')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="HARDWARE">Hardware</button>
         </div>
-        <div class="hidden lg:flex items-center gap-3 text-[11px] font-semibold text-qn-muted shrink-0 pl-4 border-l border-qn-border">
-          <span class="text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> FEED LIVE</span>
-          <span>1,248 Stories Indexed</span>
-        </div>
-      </nav>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-[1380px] mx-auto px-3 sm:px-4 py-4 w-full flex-1">
+  <main class="max-w-[1380px] mx-auto px-3 sm:px-4 py-3.5 w-full flex-1">
 
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-5 border-b border-qn-border pb-5">
-      <div class="lg:col-span-8 bg-qn-card border border-qn-border flex flex-col justify-between group cursor-pointer overflow-hidden" onclick="openStory(1)">
-        <div class="relative w-full aspect-[16/9] sm:aspect-[21/10] overflow-hidden bg-qn-black">
-          <img 
-            id="leadImage"
-            src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80" 
-            alt="Lead Story" 
-            class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-          >
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0e1013] via-[#0e1013]/40 to-transparent"></div>
-          <div class="absolute top-3 left-3 flex items-center gap-2">
-            <span class="bg-qn-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">HEADLINE EXCLUSIVE</span>
-            <span class="bg-black/70 backdrop-blur text-qn-muted text-[10px] font-semibold px-2 py-0.5 border border-white/10">GAMING &bull; RPG</span>
-          </div>
-          <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-            <h1 class="font-serif font-bold text-xl sm:text-2xl lg:text-3xl text-white group-hover:text-qn-red transition-colors leading-tight">
-              FromSoftware Confirms Next Massive Dark Fantasy IP Directed by Hidetaka Miyazaki
-            </h1>
-            <p class="text-xs sm:text-sm text-gray-300 mt-1.5 line-clamp-2 leading-relaxed">
-              Following unprecedented critical and commercial milestones for Elden Ring, the Tokyo studio officially initiates production on an all-new Unreal Engine 5 project featuring co-op mechanics.
-            </p>
-            <div class="flex items-center gap-3 text-[11px] text-qn-muted mt-2">
-              <span class="text-white font-medium">By Kenji Sato</span>
-              <span>&bull;</span>
-              <span>28 mins ago</span>
-              <span>&bull;</span>
-              <span class="flex items-center gap-1 text-qn-orange font-semibold"><span class="material-symbols-sharp text-[13px]">chat</span> 142 comments</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div id="leadScoopSection" class="mb-4"></div>
 
-      <div class="lg:col-span-4 flex flex-col gap-2.5">
-        <div class="bg-qn-dark border-b-2 border-qn-red px-3 py-1.5 flex items-center justify-between">
-          <span class="font-display font-bold uppercase tracking-wider text-[12px] text-white flex items-center gap-1.5">
-            <span class="w-2 h-2 bg-qn-red"></span> Hot Dispatch
-          </span>
-          <span class="text-[10px] font-mono text-qn-muted">UPDATED 5M AGO</span>
-        </div>
-
-        <div class="flex flex-col gap-2 flex-1 justify-between" id="hotStoriesContainer">
-          <article class="p-2 bg-qn-card border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-3 group" onclick="openStory(2)">
-            <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=240&q=80" class="w-20 h-16 object-cover shrink-0 bg-qn-black" alt="JJK">
-            <div class="min-w-0 flex-1">
-              <span class="text-[9px] font-bold text-qn-red uppercase">ANIME NEWS</span>
-              <h2 class="text-[13px] font-semibold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2">Jujutsu Kaisen Season 3: MAPPA Outlines Release Target for Culling Game Arc</h2>
-              <div class="text-[10px] text-qn-muted mt-1">1 hour ago &bull; 89 comments</div>
-            </div>
-          </article>
-
-          <article class="p-2 bg-qn-card border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-3 group" onclick="openStory(3)">
-            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=240&q=80" class="w-20 h-16 object-cover shrink-0 bg-qn-black" alt="Valve">
-            <div class="min-w-0 flex-1">
-              <span class="text-[9px] font-bold text-qn-orange uppercase">HARDWARE / LEAK</span>
-              <h2 class="text-[13px] font-semibold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2">Valve 'Deckard' Standalone Wireless VR Headset Specs Surfaced in Database</h2>
-              <div class="text-[10px] text-qn-muted mt-1">2 hours ago &bull; 64 comments</div>
-            </div>
-          </article>
-
-          <article class="p-2 bg-qn-card border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-3 group" onclick="openStory(4)">
-            <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=240&q=80" class="w-20 h-16 object-cover shrink-0 bg-qn-black" alt="HoYoverse">
-            <div class="min-w-0 flex-1">
-              <span class="text-[9px] font-bold text-emerald-400 uppercase">GAMING</span>
-              <h2 class="text-[13px] font-semibold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2">Genshin Impact Version 5.2 Patch Notes Outline Natlan Map Expansion</h2>
-              <div class="text-[10px] text-qn-muted mt-1">3 hours ago &bull; 31 comments</div>
-            </div>
-          </article>
-
-          <article class="p-2 bg-qn-card border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-3 group" onclick="openStory(5)">
-            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=240&q=80" class="w-20 h-16 object-cover shrink-0 bg-qn-black" alt="Bleach">
-            <div class="min-w-0 flex-1">
-              <span class="text-[9px] font-bold text-qn-red uppercase">ANIME</span>
-              <h2 class="text-[13px] font-semibold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2">Bleach TYBW Part 3 'The Conflict' New 90-Second Extended Trailer Debuts</h2>
-              <div class="text-[10px] text-qn-muted mt-1">4 hours ago &bull; 53 comments</div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
       <section class="lg:col-span-8 flex flex-col gap-3">
-        <div class="flex items-center justify-between border-b border-qn-border pb-2">
+        <div class="flex items-center justify-between border-b border-qn-border pb-1.5">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 bg-qn-red"></span>
-            <h2 class="font-display font-bold uppercase tracking-wider text-base text-white" id="feedTitle">Latest Reports &amp; Articles</h2>
-            <span class="text-[11px] font-mono text-qn-muted" id="resultsCount">(Showing all)</span>
+            <h2 class="font-display font-bold uppercase tracking-wider text-sm sm:text-base text-white" id="feedTitle">Latest Headlines</h2>
+            <span class="text-[11px] font-mono text-qn-muted" id="resultsCount">(0)</span>
           </div>
 
-          <div class="flex items-center gap-1 text-[11px]">
-            <span class="text-qn-muted hidden sm:inline mr-1">Sort:</span>
-            <button onclick="sortFeed('latest')" id="sortLatest" class="px-2 py-0.5 bg-qn-card border border-qn-border text-white font-semibold">Latest</button>
-            <button onclick="sortFeed('comments')" id="sortComments" class="px-2 py-0.5 bg-qn-dark border border-qn-border text-qn-muted hover:text-white">Most Discussed</button>
+          <div class="flex items-center gap-2 text-[11px]">
+            <a href="post.html" class="text-qn-red hover:underline flex items-center gap-1 font-semibold">
+              <span class="material-symbols-sharp text-sm">add</span> Submit Post
+            </a>
           </div>
         </div>
 
-        <div id="articlesList" class="flex flex-col gap-2.5">
-        </div>
-
-        <div class="pt-3 pb-6 flex justify-center">
-          <button onclick="loadMoreArticles()" id="loadMoreBtn" class="w-full sm:w-auto px-8 py-2 bg-qn-card hover:bg-qn-cardHover border border-qn-border font-display uppercase tracking-wider text-xs font-bold text-white transition-colors flex items-center justify-center gap-2">
-            <span class="material-symbols-sharp text-base">expand_more</span>
-            Load Additional Dispatches
-          </button>
-        </div>
+        <div id="articlesList" class="flex flex-col gap-2"></div>
       </section>
 
-      <aside class="lg:col-span-4 flex flex-col gap-5">
+      <aside class="lg:col-span-4 flex flex-col gap-3.5">
 
         <div class="bg-qn-dark border border-qn-border">
           <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
             <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
-              <span class="text-qn-red">★</span> Most Read This Week
+              <span class="text-qn-red material-symbols-sharp text-sm">feed</span> News Wire
             </h3>
-            <span class="text-[10px] text-qn-muted">TOP 5</span>
+            <span class="text-[10px] text-qn-muted font-mono" id="postStatsLabel">0 POSTS</span>
           </div>
-          <div class="divide-y divide-qn-border/60">
-            <div class="p-2.5 flex items-start gap-3 group cursor-pointer hover:bg-qn-card transition" onclick="openStory(1)">
-              <span class="font-display font-black text-xl text-qn-red leading-none w-5">01</span>
-              <div>
-                <h4 class="text-xs font-semibold text-qn-text group-hover:text-qn-red transition leading-snug">FromSoftware Unveils New Dark Fantasy Co-Op Title in Engine Shift</h4>
-                <div class="text-[10px] text-qn-muted mt-1">45.2k reads &bull; 142 comments</div>
-              </div>
-            </div>
-            <div class="p-2.5 flex items-start gap-3 group cursor-pointer hover:bg-qn-card transition" onclick="openStory(6)">
-              <span class="font-display font-black text-xl text-qn-muted leading-none w-5">02</span>
-              <div>
-                <h4 class="text-xs font-semibold text-qn-text group-hover:text-qn-red transition leading-snug">Chainsaw Man: Reze Arc Movie Sets Worldwide Fall Theatrical Window</h4>
-                <div class="text-[10px] text-qn-muted mt-1">38.9k reads &bull; 97 comments</div>
-              </div>
-            </div>
-            <div class="p-2.5 flex items-start gap-3 group cursor-pointer hover:bg-qn-card transition" onclick="openStory(7)">
-              <span class="font-display font-black text-xl text-qn-muted leading-none w-5">03</span>
-              <div>
-                <h4 class="text-xs font-semibold text-qn-text group-hover:text-qn-red transition leading-snug">Nintendo Switch 2 Custom Tegra SoC Die Shot Leak Analyzed by Tech Analysts</h4>
-                <div class="text-[10px] text-qn-muted mt-1">34.1k reads &bull; 210 comments</div>
-              </div>
-            </div>
-            <div class="p-2.5 flex items-start gap-3 group cursor-pointer hover:bg-qn-card transition" onclick="openStory(8)">
-              <span class="font-display font-black text-xl text-qn-muted leading-none w-5">04</span>
-              <div>
-                <h4 class="text-xs font-semibold text-qn-text group-hover:text-qn-red transition leading-snug">Solo Leveling Season 2 'Arise from the Shadow' Confirms January Debut</h4>
-                <div class="text-[10px] text-qn-muted mt-1">29.4k reads &bull; 73 comments</div>
-              </div>
-            </div>
-            <div class="p-2.5 flex items-start gap-3 group cursor-pointer hover:bg-qn-card transition" onclick="openStory(9)">
-              <span class="font-display font-black text-xl text-qn-muted leading-none w-5">05</span>
-              <div>
-                <h4 class="text-xs font-semibold text-qn-text group-hover:text-qn-red transition leading-snug">Silent Hill 2 Remake: Bloober Team Breaks Down Combat Polish &amp; Audio Tech</h4>
-                <div class="text-[10px] text-qn-muted mt-1">22.8k reads &bull; 44 comments</div>
+          <div class="p-3 text-xs flex flex-col gap-2.5">
+            <p class="text-qn-muted text-[11px] leading-relaxed">
+              Post real-time reports covering gaming, anime, movie premieres, and TV releases.
+            </p>
+            <div class="flex flex-col gap-1.5 pt-1 border-t border-qn-border/60">
+              <a href="post.html" class="w-full py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1 transition">
+                <span class="material-symbols-sharp text-sm">edit_note</span> Submit Article Page
+              </a>
+              <div class="grid grid-cols-2 gap-1.5">
+                <button onclick="openComposeModal()" class="py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-center text-[11px] text-qn-text hover:text-white uppercase font-semibold">Quick Post</button>
+                <button onclick="seedSampleNews()" class="py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-center text-[11px] text-qn-muted hover:text-white uppercase font-semibold">Load Samples</button>
               </div>
             </div>
           </div>
@@ -323,216 +235,170 @@
         <div class="bg-qn-dark border border-qn-border">
           <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
             <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
-              <span class="material-symbols-sharp text-qn-orange text-sm">calendar_month</span> Release Radar
+              <span class="material-symbols-sharp text-qn-orange text-sm">category</span> Categories
             </h3>
-            <span class="text-[10px] text-qn-muted">2026 SCHEDULE</span>
           </div>
-          <div class="p-2.5 flex flex-col gap-2 text-xs">
-            <div class="flex items-center justify-between border-b border-qn-border/60 pb-1.5">
-              <div>
-                <span class="font-semibold text-white block">Metaphor: ReFantazio</span>
-                <span class="text-[10px] text-qn-muted">PS5, XSX, PC &bull; Atlus</span>
-              </div>
-              <span class="text-[10px] font-mono font-bold bg-qn-card px-1.5 py-0.5 border border-qn-border text-qn-orange">OCT 11</span>
-            </div>
-            <div class="flex items-center justify-between border-b border-qn-border/60 pb-1.5">
-              <div>
-                <span class="font-semibold text-white block">Bleach: TYBW Part 3</span>
-                <span class="text-[10px] text-qn-muted">TV Series &bull; Studio Pierrot</span>
-              </div>
-              <span class="text-[10px] font-mono font-bold bg-qn-card px-1.5 py-0.5 border border-qn-border text-qn-red">OCT 05</span>
-            </div>
-            <div class="flex items-center justify-between border-b border-qn-border/60 pb-1.5">
-              <div>
-                <span class="font-semibold text-white block">Dragon Ball: Sparking! ZERO</span>
-                <span class="text-[10px] text-qn-muted">PS5, XSX, PC &bull; Bandai Namco</span>
-              </div>
-              <span class="text-[10px] font-mono font-bold bg-qn-card px-1.5 py-0.5 border border-qn-border text-qn-orange">OCT 10</span>
-            </div>
-            <div class="flex items-center justify-between border-b border-qn-border/60 pb-1.5">
-              <div>
-                <span class="font-semibold text-white block">Dandadan (Season 1)</span>
-                <span class="text-[10px] text-qn-muted">TV Series &bull; Science SARU</span>
-              </div>
-              <span class="text-[10px] font-mono font-bold bg-qn-card px-1.5 py-0.5 border border-qn-border text-qn-red">OCT 03</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="font-semibold text-white block">Monster Hunter Wilds</span>
-                <span class="text-[10px] text-qn-muted">PS5, XSX, PC &bull; Capcom</span>
-              </div>
-              <span class="text-[10px] font-mono font-bold bg-qn-card px-1.5 py-0.5 border border-qn-border text-qn-orange">FEB 2027</span>
-            </div>
-          </div>
+          <div class="divide-y divide-qn-border/60 text-xs" id="categoryCountsContainer"></div>
         </div>
 
-        <div class="bg-qn-dark border border-qn-border p-3">
-          <div class="flex items-center justify-between border-b border-qn-border pb-1.5 mb-2">
-            <span class="font-display font-bold uppercase tracking-wider text-[11px] text-white flex items-center gap-1">
-              <span class="w-2 h-2 bg-qn-orange"></span> Community Poll
-            </span>
-            <span class="text-[9px] bg-qn-card text-qn-muted px-1.5 py-0.5">OPEN</span>
+        <div class="bg-qn-card border border-qn-border p-3">
+          <div class="font-display font-bold uppercase tracking-wider text-xs text-white mb-1 flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-qn-red"></span> Storage Tools
           </div>
-          <p class="text-xs font-semibold text-qn-text leading-snug mb-3" id="pollQuestion">
-            Which upcoming Fall anime adaptation has the highest animation ceiling?
+          <p class="text-[11px] text-qn-muted leading-relaxed mb-3">
+            Manage your articles stored in your browser.
           </p>
-
-          <form id="pollForm" onsubmit="submitPoll(event)" class="space-y-2 text-xs">
-            <label class="flex items-center gap-2 p-1.5 bg-qn-card border border-qn-border/80 hover:border-qn-border cursor-pointer">
-              <input type="radio" name="poll" value="dandadan" class="accent-qn-red" checked>
-              <span class="flex-1 text-qn-text">Dandadan (Science SARU)</span>
-              <span class="text-[10px] font-mono text-qn-muted" id="pollPct0">48%</span>
-            </label>
-            <label class="flex items-center gap-2 p-1.5 bg-qn-card border border-qn-border/80 hover:border-qn-border cursor-pointer">
-              <input type="radio" name="poll" value="bleach" class="accent-qn-red">
-              <span class="flex-1 text-qn-text">Bleach TYBW Part 3 (Pierrot)</span>
-              <span class="text-[10px] font-mono text-qn-muted" id="pollPct1">34%</span>
-            </label>
-            <label class="flex items-center gap-2 p-1.5 bg-qn-card border border-qn-border/80 hover:border-qn-border cursor-pointer">
-              <input type="radio" name="poll" value="reゼロ" class="accent-qn-red">
-              <span class="flex-1 text-qn-text">Re:Zero Season 3 (White Fox)</span>
-              <span class="text-[10px] font-mono text-qn-muted" id="pollPct2">14%</span>
-            </label>
-            <label class="flex items-center gap-2 p-1.5 bg-qn-card border border-qn-border/80 hover:border-qn-border cursor-pointer">
-              <input type="radio" name="poll" value="bluebox" class="accent-qn-red">
-              <span class="flex-1 text-qn-text">Blue Box (Telecom)</span>
-              <span class="text-[10px] font-mono text-qn-muted" id="pollPct3">4%</span>
-            </label>
-            <div class="pt-1 flex items-center justify-between">
-              <button type="submit" class="px-3 py-1 bg-qn-red hover:bg-qn-redHover text-white font-bold text-[11px] uppercase tracking-wider transition">Vote</button>
-              <span class="text-[10px] text-qn-muted" id="pollVotesCount">3,428 votes recorded</span>
-            </div>
-          </form>
-          <div id="pollThanks" class="hidden text-center py-2 text-xs text-emerald-400 font-semibold">
-            Vote submitted! Thank you for participating.
+          <div class="flex items-center gap-2">
+            <button onclick="exportArticlesJson()" class="flex-1 py-1 bg-qn-dark hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white font-semibold uppercase">Export JSON</button>
+            <button onclick="clearAllArticles()" class="py-1 px-3 bg-red-950/60 hover:bg-red-900 border border-red-800 text-[11px] text-red-200 uppercase font-semibold">Clear All</button>
           </div>
-        </div>
-
-        <div class="bg-qn-card border border-qn-border p-3.5">
-          <div class="font-display font-bold uppercase tracking-wider text-xs text-white mb-1">
-            QwidNews Daily Digest
-          </div>
-          <p class="text-[11px] text-qn-muted leading-relaxed mb-2.5">
-            Get the morning roundup of verified Japanese gaming dispatches, anime broadcast announcements, and review scores sent straight to your inbox at 08:00 EST.
-          </p>
-          <form onsubmit="handleSubscribe(event)" class="flex gap-1.5">
-            <input 
-              type="email" 
-              required
-              placeholder="editor@domain.com" 
-              class="flex-1 bg-qn-black border border-qn-border px-2.5 py-1 text-xs text-white focus:outline-none focus:border-qn-red"
-            >
-            <button type="submit" class="bg-qn-borderLight hover:bg-white hover:text-black text-white font-bold text-[11px] uppercase px-3 transition">Join</button>
-          </form>
-          <div id="subSuccess" class="hidden text-[11px] text-emerald-400 mt-2 font-medium">Subscribed to morning wire.</div>
         </div>
 
       </aside>
     </div>
   </main>
 
-  <footer class="bg-qn-black border-t-2 border-qn-border mt-10 text-qn-muted text-xs">
-    <div class="max-w-[1380px] mx-auto px-4 py-8">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-8">
-        <div class="col-span-2">
-          <div class="font-display font-black text-2xl text-white tracking-tight uppercase mb-2">Qwid<span class="text-qn-red">News</span></div>
-          <p class="text-xs text-qn-muted max-w-sm leading-relaxed mb-3">
-            Independent journalistic coverage of the interactive entertainment and Japanese animation industries. Timely reporting, interviews, verified leaks, and rigorous criticism since 2018.
-          </p>
-          <div class="text-[11px] text-qn-muted">
-            Newsroom Hotline: <span class="text-qn-text">wire@qwidnews.com</span>
-          </div>
+  <footer class="bg-qn-black border-t border-qn-border mt-8 text-qn-muted text-xs">
+    <div class="max-w-[1380px] mx-auto px-4 py-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="font-display font-black text-xl text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
         </div>
-        <div>
-          <div class="font-bold text-white uppercase tracking-wider text-[11px] mb-2 border-b border-qn-border pb-1">Coverage</div>
-          <ul class="space-y-1 text-xs">
-            <li><a href="#" onclick="filterNews('GAMING'); return false;" class="hover:text-qn-red">PlayStation &amp; PC</a></li>
-            <li><a href="#" onclick="filterNews('GAMING'); return false;" class="hover:text-qn-red">Nintendo Switch</a></li>
-            <li><a href="#" onclick="filterNews('ANIME'); return false;" class="hover:text-qn-red">Seasonal Anime</a></li>
-            <li><a href="#" onclick="filterNews('REVIEWS'); return false;" class="hover:text-qn-red">Hardware Reviews</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="font-bold text-white uppercase tracking-wider text-[11px] mb-2 border-b border-qn-border pb-1">Features</div>
-          <ul class="space-y-1 text-xs">
-            <li><a href="#" onclick="filterNews('TRAILERS'); return false;" class="hover:text-qn-red">Trailers &amp; PVs</a></li>
-            <li><a href="#" onclick="filterNews('LEAKS'); return false;" class="hover:text-qn-red">Patent &amp; Dev Leaks</a></li>
-            <li><a href="#" onclick="filterNews('REVIEWS'); return false;" class="hover:text-qn-red">Scored Reviews</a></li>
-            <li><a href="#" onclick="return false;" class="hover:text-qn-red">Staff Columns</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="font-bold text-white uppercase tracking-wider text-[11px] mb-2 border-b border-qn-border pb-1">Publication</div>
-          <ul class="space-y-1 text-xs">
-            <li><a href="#" class="hover:text-qn-red">Ethics Statement</a></li>
-            <li><a href="#" class="hover:text-qn-red">Masthead &amp; Staff</a></li>
-            <li><a href="#" class="hover:text-qn-red">Press Contacts</a></li>
-            <li><a href="#" class="hover:text-qn-red">RSS Syndicate</a></li>
-          </ul>
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
+          <a href="index.html" class="hover:text-white">Home</a>
+          <a href="wiki.html" class="hover:text-white">Wiki</a>
+          <a href="post.html" class="hover:text-white">Post News</a>
+          <a href="account.html" class="hover:text-white">Account</a>
+          <a href="setting.html" class="hover:text-white">Settings</a>
         </div>
       </div>
-
-      <div class="border-t border-qn-border/80 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
-        <div>
-          &copy; 2026 QwidNews Media Group Inc. All rights reserved. Trademarks and promotional imagery belong to respective copyright holders.
-        </div>
-        <div class="flex items-center gap-4">
-          <a href="#" class="hover:text-white">Privacy Policy</a>
-          <span>&bull;</span>
-          <a href="#" class="hover:text-white">Terms of Dispatch</a>
-          <span>&bull;</span>
-          <a href="#" class="hover:text-white">Editorial Guidelines</a>
+      <div class="border-t border-qn-border/60 mt-4 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-qn-muted">
+        <div>&copy; 2026 QwidNews.</div>
+        <div class="flex gap-3">
+          <a href="wiki.html" class="hover:underline">Wiki</a>
+          <a href="setting.html" class="hover:underline">Settings</a>
         </div>
       </div>
     </div>
   </footer>
 
-  <div id="storyModal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="relative w-full max-w-3xl max-h-[92vh] bg-qn-dark border border-qn-border flex flex-col shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="storyModalContent">
+  <div id="composeModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="relative w-full max-w-2xl max-h-[92vh] bg-qn-dark border border-qn-border flex flex-col shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="composeModalContent">
       <div class="bg-qn-black px-4 py-2.5 border-b border-qn-border flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
-          <span id="modalCatBadge" class="bg-qn-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">NEWS</span>
-          <span class="text-qn-muted text-xs">&bull;</span>
-          <span id="modalTimestamp" class="text-qn-muted text-xs font-mono">Date</span>
+          <span class="w-2.5 h-2.5 bg-qn-red"></span>
+          <h3 class="font-display font-bold uppercase tracking-wider text-xs text-white">Publish Article</h3>
         </div>
-        <button onclick="closeStory()" class="text-qn-muted hover:text-white flex items-center p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border">
+        <button onclick="closeComposeModal()" class="text-qn-muted hover:text-white flex items-center p-1 bg-qn-card border border-qn-border">
           <span class="material-symbols-sharp text-base">close</span>
         </button>
       </div>
 
-      <div class="overflow-y-auto p-4 sm:p-6 flex-1 text-qn-text">
-        <h2 id="modalHeadline" class="font-serif font-bold text-2xl sm:text-3xl text-white leading-tight mb-2">Headline Here</h2>
-        
-        <div class="flex items-center justify-between py-2 border-y border-qn-border text-xs text-qn-muted mb-4">
-          <div class="flex items-center gap-2">
-            <span class="text-white font-medium" id="modalAuthor">By Staff Writer</span>
-            <span>&bull;</span>
-            <span id="modalReadTime">4 min read</span>
+      <form onsubmit="handleCreateArticle(event)" class="overflow-y-auto p-4 sm:p-5 flex-1 flex flex-col gap-3 text-xs">
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Headline *</label>
+          <input 
+            type="text" 
+            id="fTitle" 
+            required 
+            placeholder="Article title..." 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Category *</label>
+            <select id="fCategory" class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red">
+              <option value="GAMING">Gaming</option>
+              <option value="ANIME">Anime</option>
+              <option value="MOVIES">Movies</option>
+              <option value="TV SHOWS">TV Shows</option>
+              <option value="REVIEWS">Reviews</option>
+              <option value="LEAKS">Leaks</option>
+              <option value="HARDWARE">Hardware</option>
+            </select>
           </div>
-          <div class="flex items-center gap-1 text-qn-orange font-semibold">
-            <span class="material-symbols-sharp text-sm">chat</span>
-            <span id="modalCommentsCount">0 comments</span>
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Author / Source *</label>
+            <input 
+              type="text" 
+              id="fAuthor" 
+              required 
+              placeholder="Author name..." 
+              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+            >
           </div>
         </div>
 
-        <div class="w-full aspect-[16/9] bg-qn-black overflow-hidden border border-qn-border mb-4">
-          <img id="modalHeroImg" src="" alt="Story visual" class="w-full h-full object-cover">
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Cover Image</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input 
+              type="url" 
+              id="fImageUrl" 
+              placeholder="Image URL (https://...)" 
+              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+            >
+            <div class="relative">
+              <input 
+                type="file" 
+                id="fImageFile" 
+                accept="image/*"
+                onchange="handleFileUpload(event)"
+                class="w-full text-[11px] text-qn-muted file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-qn-card file:text-white hover:file:bg-qn-cardHover cursor-pointer border border-qn-border bg-qn-black p-1"
+              >
+            </div>
+          </div>
+          <div id="imagePreviewContainer" class="hidden mt-2 relative w-full h-32 bg-qn-black border border-qn-border overflow-hidden">
+            <img id="imagePreview" src="" class="w-full h-full object-cover">
+            <button type="button" onclick="clearUploadedImage()" class="absolute top-1 right-1 bg-black/80 text-white text-[10px] px-1.5 py-0.5 border border-white/20">Remove</button>
+          </div>
         </div>
 
-        <div id="modalBodyText" class="space-y-3.5 text-sm sm:text-[15px] leading-relaxed text-gray-200 font-sans">
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Summary *</label>
+          <textarea 
+            id="fExcerpt" 
+            required 
+            rows="2" 
+            placeholder="Short summary for the front page..."
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red resize-none"
+          ></textarea>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-qn-border flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-1.5" id="modalTagsContainer">
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Full Article Body *</label>
+          <textarea 
+            id="fBody" 
+            required 
+            rows="6" 
+            placeholder="Full article content..."
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Tags (Comma-separated)</label>
+            <input 
+              type="text" 
+              id="fTags" 
+              placeholder="e.g. HBO, PlayStation, MAPPA" 
+              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+            >
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="copyCurrentStoryLink()" class="px-3 py-1 bg-qn-card border border-qn-border text-qn-text hover:text-white hover:border-qn-borderLight transition flex items-center gap-1">
-              <span class="material-symbols-sharp text-sm">share</span> Share Dispatch
-            </button>
-            <button onclick="closeStory()" class="px-3 py-1 bg-qn-red hover:bg-qn-redHover text-white font-bold transition">Close Article</button>
+          <div class="pt-4 flex items-center gap-2">
+            <input type="checkbox" id="fBreaking" class="w-4 h-4 accent-qn-red cursor-pointer">
+            <label for="fBreaking" class="text-white font-semibold select-none cursor-pointer">Feature on Breaking Wire Ticker</label>
           </div>
         </div>
-      </div>
+
+        <div class="mt-2 pt-3 border-t border-qn-border flex items-center justify-end gap-2">
+          <button type="button" onclick="closeComposeModal()" class="px-4 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-muted hover:text-white uppercase font-bold text-[11px]">Cancel</button>
+          <button type="submit" class="px-5 py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold uppercase text-[11px] tracking-wider transition">Publish</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -542,315 +408,243 @@
   </div>
 
   <script>
-    const ARTICLES = [
-      {
-        id: 1,
-        category: 'GAMING',
-        tag: 'FromSoftware',
-        subType: 'RPG',
-        title: 'FromSoftware Confirms Next Massive Dark Fantasy IP Directed by Hidetaka Miyazaki',
-        author: 'Kenji Sato',
-        time: '28m ago',
-        reads: '45.2k',
-        comments: 142,
-        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Following unprecedented critical and commercial milestones for Elden Ring, the Tokyo studio officially initiates production on an all-new Unreal Engine 5 project featuring co-op mechanics.',
-        body: [
-          'FromSoftware president and game director Hidetaka Miyazaki has confirmed during an earnings briefing in Tokyo that the studio has entered full active development on an unannounced dark fantasy project.',
-          'Building upon the technical foundations learned through the development of Elden Ring and its Shadow of the Erdtree expansion, the upcoming title represents a major visual leap as the company migrates to modern custom internal pipelines paired with next-generation rendering engines.',
-          '"While we are deeply humbled by the enthusiasm surrounding the Lands Between, our design philosophy remains fixated on fresh landscapes, novel encounters, and world-building that rewards patient discovery," Miyazaki noted in a statement translated from the investor symposium.',
-          'Publisher Bandai Namco has slated preliminary promotional showcases for late next fiscal year, with multiplatform releases planned for current-generation home consoles and PC.'
-        ],
-        tags: ['FromSoftware', 'Miyazaki', 'Elden Ring', 'Action RPG', 'Unreal Engine']
-      },
-      {
-        id: 2,
-        category: 'ANIME',
-        tag: 'MAPPA',
-        subType: 'Shonen',
-        title: 'Jujutsu Kaisen Season 3: MAPPA Outlines Release Target for Culling Game Arc',
-        author: 'Aya Takahashi',
-        time: '1h ago',
-        reads: '38.9k',
-        comments: 89,
-        image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Production committee members in Shibuya reveal animation milestones for the highly anticipated Culling Game storyline following the fallout of the Shibuya Incident.',
-        body: [
-          'Animation studio MAPPA officially revealed during its production showcase that the third broadcast season of Gege Akutami\'s Jujutsu Kaisen has officially completed pre-production and entered keyframe animation.',
-          'The forthcoming season will adapt the high-stakes Culling Game arc, tracking Yuji Itadori and Megumi Fushiguro as they navigate Kenjaku\'s deadly battle royale across multiple barrier colonies in Japan.',
-          'Director Shota Goshozono returns alongside the core technical staff. Studio representatives reiterated that internal production schedules have been reworked to ensure sustainable workloads for layout and compositing teams.',
-          'A teaser trailer and confirmed broadcast window are slated to headline the Jump Festa main stage later this December.'
-        ],
-        tags: ['Jujutsu Kaisen', 'MAPPA', 'Anime', 'Culling Game', 'Weekly Shonen Jump']
-      },
-      {
-        id: 3,
-        category: 'LEAKS',
-        tag: 'Hardware',
-        subType: 'VR',
-        title: 'Valve "Deckard" Standalone Wireless VR Headset Specs Surfaced in Database',
-        author: 'Marcus Vance',
-        time: '2h ago',
-        reads: '34.1k',
-        comments: 64,
-        image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Newly uncovered regulatory filings in South Korea and SteamVR driver manifest entries point toward Valve preparing hardware prototypes for mass manufacturing.',
-        body: [
-          'Long-rumored hardware prototypes known internally at Valve as "Project Deckard" have surfaced in regional telecommunication filings, hinting that the Seattle hardware maker may soon reveal its successor to the Valve Index.',
-          'The hardware manifest describes an x86-based standalone compute module running SteamOS, paired with dual micro-OLED panels delivering 3840x3550 per eye and pancake optical lenses.',
-          'Crucially, references to low-latency Wi-Fi 7 direct streaming suggest the device functions both as an untethered VR console and as an ultra-high-definition wireless PC display headset.',
-          'Valve has declined to issue an official comment, but senior engineers have recently spoken publicly regarding SteamOS compatibility across varied mobile hardware form factors.'
-        ],
-        tags: ['Valve', 'SteamVR', 'Hardware', 'Deckard', 'PC Gaming']
-      },
-      {
-        id: 4,
-        category: 'GAMING',
-        tag: 'HoYoverse',
-        subType: 'Live Service',
-        title: 'Genshin Impact Version 5.2 Patch Notes Outline Natlan Map Expansion & Co-Op Overhaul',
-        author: 'Lin Zhang',
-        time: '3h ago',
-        reads: '18.4k',
-        comments: 31,
-        image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'HoYoverse unveils two new northern tribal regions, companion mount traversal physics, and an expansion of artifact inventory storage to 2,400 slots.',
-        body: [
-          'HoYoverse hosted its Version 5.2 preview broadcast, outlining the next major expansion to the Natlan continent.',
-          'The update introduces the Flower-Feather Clan and Masters of the Night-Wind territories, accompanied by new saurian traversal mechanics allowing players to glide across high-altitude thermal updrafts.',
-          'In response to long-standing community feedback, the development team also confirmed Quality of Life improvements: artifact loadouts can now be locked by character preset, and domain challenge runs can be automatically repeated without returning to the entrance hall.',
-          'Maintenance for Version 5.2 is scheduled to roll out next Wednesday across PC, PlayStation 5, and mobile platforms.'
-        ],
-        tags: ['Genshin Impact', 'HoYoverse', 'Natlan', 'RPG', 'Updates']
-      },
-      {
-        id: 5,
-        category: 'TRAILERS',
-        tag: 'Pierrot',
-        subType: 'Anime',
-        title: 'Bleach TYBW Part 3 "The Conflict" New 90-Second Extended Trailer Debuts',
-        author: 'Aya Takahashi',
-        time: '4h ago',
-        reads: '29.7k',
-        comments: 53,
-        image: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Pierrot Films showcases newly storyboarded battles between the Royal Guard Zero Division and Yhwach\'s Elite Schutzstaffel with supervisor Tite Kubo overseeing canon expansions.',
-        body: [
-          'Aniplex and Studio Pierrot have released the extended theatrical promotional video for Bleach: Thousand-Year Blood War Part 3 - The Conflict.',
-          'The newly animated sequences highlight never-before-seen combat between Squad Zero commander Ichibe Hyosube and the Quincies, fulfilling series creator Tite Kubo\'s pledge to expand scenes that were shortened in the original manga run.',
-          'The theme song for the cour, titled "Words That Never Reached", was revealed alongside confirmation that the third cour will span 13 television episodes.',
-          'Global streaming distribution continues under Disney+ and Hulu platforms worldwide.'
-        ],
-        tags: ['Bleach', 'Tite Kubo', 'Studio Pierrot', 'Trailers', 'Anime']
-      },
-      {
-        id: 6,
-        category: 'ANIME',
-        tag: 'MAPPA',
-        subType: 'Movie',
-        title: 'Chainsaw Man: Reze Arc Theatrical Film Sets Global Worldwide Premiere Schedule',
-        author: 'Kenji Sato',
-        time: '5h ago',
-        reads: '38.9k',
-        comments: 97,
-        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Denji\'s dramatic encounter with the Bomb Devil transitions to the big screen with an uncensored international cinematic distribution commitment.',
-        body: [
-          'TOHO animation and MAPPA confirmed that Chainsaw Man: The Movie - Reze Arc will premiere across 1,200 theaters across Japan before heading to North American and European circuits via Sony Pictures and Crunchyroll.',
-          'The feature film directly follows the Katana Man conflict from the television series and adapts chapters 40 through 52 of Tatsuki Fujimoto\'s manga.',
-          'Producer Keisuke Seshimo stated that the feature format allowed the animation unit to deliver unfiltered action sequences and elaborate cinematic lighting that would be impossible under broadcast television standards.',
-          'Ticket pre-orders open next Friday, accompanied by exclusive holographic shikishi art boards illustrated by Fujimoto himself.'
-        ],
-        tags: ['Chainsaw Man', 'MAPPA', 'Reze', 'Movies', 'Crunchyroll']
-      },
-      {
-        id: 7,
-        category: 'LEAKS',
-        tag: 'Nintendo',
-        subType: 'Hardware',
-        title: 'Nintendo Switch 2 Custom Tegra SoC Die Shot Leak Analyzed by Tech Analysts',
-        author: 'Marcus Vance',
-        time: '6h ago',
-        reads: '34.1k',
-        comments: 210,
-        image: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Semiconductor engineers breakdown leaked wafer prints of the T239 silicon, confirming custom Ampere tensor cores and hardware DLSS 3.1 support.',
-        body: [
-          'High-resolution microscope die photos originating from an assembly partner in Taiwan provide our clearest glimpse yet at the custom NVIDIA system-on-chip intended for Nintendo\'s upcoming successor hardware.',
-          'Digital foundry specialists examining the photos verified an 8-core ARM Cortex-A78C CPU cluster paired with 1,536 CUDA cores on an optimized 8nm process node.',
-          'Most noteworthy is the dedicated tensor acceleration array capable of executing DLSS upscaling, allowing the portable system to render internally at 720p or 1080p while outputting a reconstructed 4K image to television docks.',
-          'Nintendo President Shuntaro Furukawa previously stated that an announcement regarding the platform will occur before the end of the current fiscal year.'
-        ],
-        tags: ['Nintendo', 'Switch 2', 'NVIDIA', 'DLSS', 'Console Leaks']
-      },
-      {
-        id: 8,
-        category: 'ANIME',
-        tag: 'A-1 Pictures',
-        subType: 'Action',
-        title: 'Solo Leveling Season 2 "Arise from the Shadow" Confirms January Debut',
-        author: 'Aya Takahashi',
-        time: '7h ago',
-        reads: '29.4k',
-        comments: 73,
-        image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Sung Jinwoo\'s journey as the Shadow Monarch continues into the Red Gate arc and Demon Castle incursions in an uninterrupted 13-episode run.',
-        body: [
-          'A-1 Pictures and distributor Crunchyroll have affirmed that Solo Leveling Season 2: Arise from the Shadow will officially air starting January.',
-          'The premiere will be preceded by a theatrical compilation recap containing the first two unreleased episodes screened internationally.',
-          'Composer Hiroyuki Sawano returns to head the musical score, promising expanded orchestral tracks matching the rising scale of global dungeon breaks.',
-          'Staff confirmed that English, Korean, French, German, and Spanish dubs will be produced simultaneously with weekly Japanese broadcasts.'
-        ],
-        tags: ['Solo Leveling', 'A-1 Pictures', 'Manhwa', 'Sung Jinwoo', 'Winter Anime']
-      },
-      {
-        id: 9,
-        category: 'REVIEWS',
-        tag: 'Konami',
-        subType: 'Survival Horror',
-        title: 'Silent Hill 2 Remake: Critical Consensus Applauds Atmospheric Loyalty & Soundscape',
-        author: 'David Sterling',
-        time: '8h ago',
-        reads: '22.8k',
-        comments: 44,
-        image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Bloober Team and Akira Yamaoka deliver an undeniably reverent, tension-drenched psychological horror experience that honors the 2001 classic.',
-        body: [
-          'Review embargos for Konami\'s ground-up remake of Silent Hill 2 have lifted to overwhelmingly positive appraisal from specialist critics.',
-          'Reviewers praise the spatial audio implementation and redesigned puzzle configurations that preserve the surreal psychological tension of James Sunderland\'s descent into the foggy lake town.',
-          'While combat transitions to an over-the-shoulder perspective, the deliberate sluggishness of melee swings maintains vulnerability without devolving into a modern action game.',
-          'QwidNews awarded the title a 9.2/10 in our comprehensive scored breakdown, citing it as one of the definitive horror triumphs of the year.'
-        ],
-        tags: ['Silent Hill', 'Konami', 'Bloober Team', 'Horror', 'Review']
-      },
-      {
-        id: 10,
-        category: 'GAMING',
-        tag: 'Capcom',
-        subType: 'Action',
-        title: 'Monster Hunter Wilds Producer Ryozo Tsujimoto Discusses Dynamic Weather Ecosystems',
-        author: 'Kenji Sato',
-        time: '9h ago',
-        reads: '16.5k',
-        comments: 38,
-        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80',
-        excerpt: 'Sandstorms, monsoons, and herds numbering over 50 beasts simultaneously create completely fluid hunting environments without loading transitions.',
-        body: [
-          'In an in-depth technical interview at Capcom headquarters in Osaka, series producer Ryozo Tsujimoto explained how the RE Engine has been adapted to simulate living biomes in Monster Hunter Wilds.',
-          'Unlike previous installments where environmental states were static, the Windward Plains dynamically transition between three distinct phases: the Fallow, the Inclemency, and the Plenty.',
-          'Each meteorological shift alters monster aggression patterns, resource yields, and ambient predators.',
-          '"The hunt is no longer an isolated encounter in a defined arena; the terrain and thunder strikes are active participants that players must manipulate," Tsujimoto emphasized.'
-        ],
-        tags: ['Monster Hunter', 'Capcom', 'Wilds', 'RE Engine', 'Interviews']
-      }
-    ];
-
-    let currentCategory = 'ALL';
+    const STORAGE_KEY = 'qwidnews_posts';
+    let loadedImageBase64 = null;
+    let activeFilterCategory = 'ALL';
     let searchQuery = '';
-    let currentSort = 'latest';
-    let visibleCount = 6;
 
-    function renderFeed() {
-      const container = document.getElementById('articlesList');
-      const countLabel = document.getElementById('resultsCount');
+    function getArticles() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
+    }
 
-      let filtered = ARTICLES.filter(art => {
-        if (currentCategory !== 'ALL' && art.category !== currentCategory) {
+    function saveArticles(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      refreshAll();
+    }
+
+    function refreshAll() {
+      renderTicker();
+      renderLeadAndFeed();
+      renderCategoryCounts();
+    }
+
+    function navigateToEntry(id) {
+      window.location.href = `entry.html?id=${encodeURIComponent(id)}`;
+    }
+
+    function toggleNavMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('navDropdownMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    function closeNavMenu() {
+      const menu = document.getElementById('navDropdownMenu');
+      if (menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+      }
+    }
+
+    function renderTicker() {
+      const articles = getArticles();
+      const tickerBox = document.getElementById('liveTickerContainer');
+      const breakingArticles = articles.filter(a => a.isBreaking);
+      const displayList = breakingArticles.length > 0 ? breakingArticles : articles;
+
+      if (displayList.length === 0) {
+        tickerBox.innerHTML = '<span class="text-qn-muted mr-6">No news reports filed yet. Click Menu to post an article.</span>';
+        return;
+      }
+
+      const itemsHtml = displayList.map(a => `
+        <span class="cursor-pointer hover:text-qn-red mx-4 inline-flex items-center gap-1" onclick="navigateToEntry('${a.id}')">
+          <span class="text-qn-red font-bold font-mono">• [${a.category}]</span> 
+          ${escapeHtml(a.title)}
+        </span>
+      `).join('');
+
+      tickerBox.innerHTML = itemsHtml + itemsHtml;
+    }
+
+    function renderLeadAndFeed() {
+      const articles = getArticles();
+      const leadSection = document.getElementById('leadScoopSection');
+      const feedContainer = document.getElementById('articlesList');
+      const resultsCount = document.getElementById('resultsCount');
+
+      let filtered = articles.filter(art => {
+        if (activeFilterCategory !== 'ALL' && art.category !== activeFilterCategory) {
           return false;
         }
         if (searchQuery.trim() !== '') {
           const q = searchQuery.toLowerCase();
-          const matchTitle = art.title.toLowerCase().includes(q);
-          const matchExcerpt = art.excerpt.toLowerCase().includes(q);
-          const matchTag = art.tags.some(t => t.toLowerCase().includes(q));
-          const matchCat = art.category.toLowerCase().includes(q);
-          if (!matchTitle && !matchExcerpt && !matchTag && !matchCat) return false;
+          const matchTitle = (art.title || '').toLowerCase().includes(q);
+          const matchExcerpt = (art.excerpt || '').toLowerCase().includes(q);
+          const matchBody = (art.body || '').toLowerCase().includes(q);
+          const matchAuthor = (art.author || '').toLowerCase().includes(q);
+          const matchTags = (art.tags || []).some(t => t.toLowerCase().includes(q));
+          if (!matchTitle && !matchExcerpt && !matchBody && !matchAuthor && !matchTags) return false;
         }
         return true;
       });
 
-      if (currentSort === 'comments') {
-        filtered.sort((a, b) => b.comments - a.comments);
-      } else {
-        filtered.sort((a, b) => a.id - b.id);
-      }
+      resultsCount.innerText = `(${filtered.length})`;
 
-      countLabel.innerText = `(${filtered.length} stories found)`;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
+      if (articles.length === 0) {
+        leadSection.innerHTML = '';
+        feedContainer.innerHTML = `
           <div class="bg-qn-card border border-qn-border p-8 text-center text-qn-muted">
-            <span class="material-symbols-sharp text-4xl mb-2 text-qn-borderLight">feed</span>
-            <div class="font-bold text-white text-base">No news dispatches matched your query</div>
-            <p class="text-xs mt-1">Try clearing your search term or selecting 'All Feed' from the top bar.</p>
-            <button onclick="clearSearch(); filterNews('ALL');" class="mt-3 px-3 py-1.5 bg-qn-red text-white text-xs font-bold uppercase tracking-wider">Reset News Filters</button>
+            <span class="material-symbols-sharp text-4xl mb-2 text-qn-borderLight">newspaper</span>
+            <div class="font-display font-bold uppercase text-white text-base tracking-wider">No Articles Published</div>
+            <p class="text-xs text-qn-muted mt-1 max-w-md mx-auto leading-relaxed">
+              Your QwidNews feed is currently empty. Use the menu above to submit your first gaming, anime, movie, or TV news story.
+            </p>
+            <div class="mt-4 flex items-center justify-center gap-3">
+              <a href="post.html" class="px-4 py-2 bg-qn-red hover:bg-qn-redHover text-white font-bold text-xs uppercase tracking-wider transition">
+                Go to Post Page
+              </a>
+              <button onclick="seedSampleNews()" class="px-4 py-2 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text hover:text-white font-semibold text-xs uppercase tracking-wider transition">
+                Load Sample Articles
+              </button>
+            </div>
           </div>
         `;
-        document.getElementById('loadMoreBtn').classList.add('hidden');
         return;
       }
 
-      const displayed = filtered.slice(0, visibleCount);
-
-      if (displayed.length >= filtered.length) {
-        document.getElementById('loadMoreBtn').classList.add('hidden');
-      } else {
-        document.getElementById('loadMoreBtn').classList.remove('hidden');
+      if (filtered.length === 0) {
+        leadSection.innerHTML = '';
+        feedContainer.innerHTML = `
+          <div class="bg-qn-card border border-qn-border p-6 text-center text-qn-muted">
+            <div class="font-bold text-white text-sm">No articles found in category: "${escapeHtml(activeFilterCategory)}"</div>
+            <p class="text-xs mt-1">Try another category or clear your search input.</p>
+            <button onclick="filterNews('ALL'); clearSearch();" class="mt-3 px-3 py-1 bg-qn-borderLight hover:bg-white hover:text-black text-white text-xs font-bold uppercase">Reset Filter</button>
+          </div>
+        `;
+        return;
       }
 
-      container.innerHTML = displayed.map(art => {
-        let catColor = 'text-qn-red border-qn-red/40 bg-qn-red/10';
-        if (art.category === 'GAMING') catColor = 'text-cyan-400 border-cyan-400/40 bg-cyan-900/20';
-        if (art.category === 'ANIME') catColor = 'text-qn-red border-qn-red/40 bg-qn-red/20';
-        if (art.category === 'LEAKS') catColor = 'text-qn-orange border-qn-orange/40 bg-qn-orange/20';
-        if (art.category === 'REVIEWS') catColor = 'text-emerald-400 border-emerald-400/40 bg-emerald-900/20';
-        if (art.category === 'TRAILERS') catColor = 'text-purple-400 border-purple-400/40 bg-purple-900/20';
+      if (activeFilterCategory === 'ALL' && searchQuery.trim() === '' && filtered.length > 0) {
+        const lead = filtered[0];
+        const secondary = filtered.slice(1, 5);
 
+        leadSection.innerHTML = `
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 border-b border-qn-border pb-3.5">
+            <div class="lg:col-span-8 bg-qn-card border border-qn-border flex flex-col justify-between group cursor-pointer overflow-hidden" onclick="navigateToEntry('${lead.id}')">
+              <div class="relative w-full aspect-[16/9] sm:aspect-[21/10] overflow-hidden bg-qn-black">
+                <img 
+                  src="${lead.image || 'https://placehold.co/1200x600/11141a/e63946?text=QwidNews'}" 
+                  alt="${escapeHtml(lead.title)}" 
+                  class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0c0f] via-[#0a0c0f]/40 to-transparent"></div>
+                <div class="absolute top-3 left-3 flex items-center gap-2">
+                  <span class="bg-qn-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">TOP STORY</span>
+                  <span class="bg-black/75 backdrop-blur text-slate-300 text-[10px] font-semibold px-2 py-0.5 border border-white/10 uppercase">${lead.category}</span>
+                </div>
+                <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+                  <h1 class="font-serif font-bold text-xl sm:text-2xl lg:text-3xl text-white group-hover:text-qn-red transition-colors leading-tight">
+                    ${escapeHtml(lead.title)}
+                  </h1>
+                  <p class="text-xs sm:text-sm text-gray-300 mt-1.5 line-clamp-2 leading-relaxed">
+                    ${escapeHtml(lead.excerpt)}
+                  </p>
+                  <div class="flex items-center gap-3 text-[11px] text-qn-muted mt-2">
+                    <span class="text-white font-medium">By ${escapeHtml(lead.author)}</span>
+                    <span>&bull;</span>
+                    <span>${formatTime(lead.timestamp)}</span>
+                    ${lead.isBreaking ? '<span class="text-qn-red font-bold">• BREAKING</span>' : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col gap-2">
+              <div class="bg-qn-dark border-b-2 border-qn-red px-3 py-1.5 flex items-center justify-between">
+                <span class="font-display font-bold uppercase tracking-wider text-[11px] text-white flex items-center gap-1.5">
+                  <span class="w-2 h-2 bg-qn-red"></span> Headlines
+                </span>
+                <span class="text-[10px] font-mono text-qn-muted">${secondary.length} STORIES</span>
+              </div>
+              <div class="flex flex-col gap-2 flex-1 justify-start">
+                ${secondary.length > 0 ? secondary.map(item => `
+                  <article class="p-2 bg-qn-card border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-2.5 group" onclick="navigateToEntry('${item.id}')">
+                    <img src="${item.image || 'https://placehold.co/160x120/11141a/e63946?text=News'}" class="w-16 h-14 object-cover shrink-0 bg-qn-black border border-qn-border/60" alt="">
+                    <div class="min-w-0 flex-1">
+                      <span class="text-[9px] font-bold text-qn-red uppercase">${item.category}</span>
+                      <h4 class="text-[12px] font-semibold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2">${escapeHtml(item.title)}</h4>
+                      <div class="text-[10px] text-qn-muted mt-0.5">${formatTime(item.timestamp)} &bull; ${escapeHtml(item.author)}</div>
+                    </div>
+                  </article>
+                `).join('') : `
+                  <div class="p-4 bg-qn-card border border-qn-border text-center text-xs text-qn-muted">
+                    Additional articles will appear here.
+                  </div>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+
+        const restOfFeed = filtered.slice(5);
+        renderCardList(feedContainer, restOfFeed.length > 0 ? restOfFeed : filtered.slice(1));
+      } else {
+        leadSection.innerHTML = '';
+        renderCardList(feedContainer, filtered);
+      }
+    }
+
+    function renderCardList(container, items) {
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 bg-qn-card border border-qn-border text-center text-xs text-qn-muted">
+            All current articles are displayed above in the top story section.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(art => {
         return `
-          <article class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition-all p-3 flex flex-col sm:flex-row gap-3.5 group cursor-pointer" onclick="openStory(${art.id})">
-            <div class="w-full sm:w-44 md:w-52 h-32 sm:h-auto shrink-0 bg-qn-black overflow-hidden relative border border-qn-border/60">
+          <article class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition-all p-2.5 sm:p-3 flex flex-col sm:flex-row gap-3 group cursor-pointer" onclick="navigateToEntry('${art.id}')">
+            <div class="w-full sm:w-44 md:w-48 h-32 sm:h-28 shrink-0 bg-qn-black overflow-hidden relative border border-qn-border/60">
               <img 
-                src="${art.image}" 
-                alt="${art.title}" 
+                src="${art.image || 'https://placehold.co/400x250/11141a/e63946?text=QwidNews'}" 
+                alt="${escapeHtml(art.title)}" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
-                onerror="this.src='https://placehold.co/400x250/14171c/e63946?text=QwidNews'"
               >
-              <span class="absolute top-1.5 left-1.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 border ${catColor} backdrop-blur-sm">
+              <span class="absolute top-1 left-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 bg-black/80 text-white border border-white/20">
                 ${art.category}
               </span>
             </div>
 
             <div class="flex-1 flex flex-col justify-between min-w-0">
               <div>
-                <div class="flex items-center gap-2 text-[10px] text-qn-muted uppercase font-mono mb-1">
-                  <span class="text-white font-semibold">${art.tag}</span>
+                <div class="flex items-center gap-2 text-[10px] text-qn-muted uppercase font-mono mb-0.5">
+                  <span class="text-white font-semibold">${art.category}</span>
                   <span>&bull;</span>
-                  <span>${art.subType}</span>
+                  <span>${formatTime(art.timestamp)}</span>
+                  ${art.isBreaking ? '<span class="text-qn-red font-bold">BREAKING</span>' : ''}
                 </div>
 
-                <h3 class="font-serif font-bold text-base sm:text-lg text-qn-text leading-snug group-hover:text-qn-red transition-colors line-clamp-2">
-                  ${art.title}
+                <h3 class="font-serif font-bold text-base text-qn-text leading-snug group-hover:text-qn-red transition-colors line-clamp-2">
+                  ${escapeHtml(art.title)}
                 </h3>
 
-                <p class="text-xs text-qn-muted mt-1.5 line-clamp-2 leading-relaxed font-sans">
-                  ${art.excerpt}
+                <p class="text-xs text-qn-muted mt-1 line-clamp-2 leading-relaxed">
+                  ${escapeHtml(art.excerpt)}
                 </p>
               </div>
 
-              <div class="mt-2.5 pt-2 border-t border-qn-border/60 flex items-center justify-between text-[11px] text-qn-muted">
-                <div class="flex items-center gap-2">
-                  <span class="text-slate-300 font-medium">${art.author}</span>
-                  <span>&bull;</span>
-                  <span>${art.time}</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="text-qn-muted">${art.reads} views</span>
-                  <span class="flex items-center gap-1 text-qn-orange font-semibold">
-                    <span class="material-symbols-sharp text-[13px]">chat</span>
-                    ${art.comments}
-                  </span>
-                </div>
+              <div class="mt-2 pt-1.5 border-t border-qn-border/50 flex items-center justify-between text-[11px] text-qn-muted">
+                <span class="text-slate-300 font-medium">By ${escapeHtml(art.author)}</span>
+                <span class="text-qn-red group-hover:underline text-[11px] font-semibold uppercase">Read Article &rarr;</span>
               </div>
             </div>
           </article>
@@ -858,141 +652,233 @@
       }).join('');
     }
 
-    function filterNews(cat) {
-      currentCategory = cat;
-      visibleCount = 6;
+    function renderCategoryCounts() {
+      const articles = getArticles();
+      const statsBox = document.getElementById('categoryCountsContainer');
+      const statsLabel = document.getElementById('postStatsLabel');
+      statsLabel.innerText = `${articles.length} POSTS`;
 
-      const tabs = document.querySelectorAll('.nav-tab');
+      const cats = ['GAMING', 'ANIME', 'MOVIES', 'TV SHOWS', 'REVIEWS', 'LEAKS', 'HARDWARE'];
+      statsBox.innerHTML = cats.map(cat => {
+        const count = articles.filter(a => a.category === cat).length;
+        return `
+          <div onclick="filterNews('${cat}')" class="p-2 flex items-center justify-between hover:bg-qn-card cursor-pointer transition">
+            <span class="font-medium text-qn-text hover:text-white uppercase text-[11px]">${cat}</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.2 bg-qn-black border border-qn-border text-qn-muted">${count}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterNews(cat) {
+      activeFilterCategory = cat;
+      const tabs = document.querySelectorAll('.cat-tab');
       tabs.forEach(t => {
         if (t.getAttribute('data-cat') === cat) {
-          t.className = "nav-tab active-tab px-3 py-1.5 text-white bg-qn-card border-b-2 border-qn-red";
+          t.className = "cat-tab active-cat px-3 py-1 text-white bg-qn-card border-b-2 border-qn-red";
         } else {
-          t.className = "nav-tab px-3 py-1.5 hover:text-white hover:bg-qn-card/60 transition-colors";
+          t.className = "cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors";
         }
       });
 
       const title = document.getElementById('feedTitle');
-      if (cat === 'ALL') title.innerText = 'Latest Reports & Articles';
-      else if (cat === 'GAMING') title.innerText = 'Gaming News & Hardware';
-      else if (cat === 'ANIME') title.innerText = 'Anime & Manga Industry News';
-      else if (cat === 'REVIEWS') title.innerText = 'Critical Reviews & Verdicts';
-      else if (cat === 'LEAKS') title.innerText = 'Rumors, Patents & Unverified Leaks';
-      else if (cat === 'TRAILERS') title.innerText = 'Trailers & PV Dispatches';
-      else title.innerText = `${cat} Wire`;
-
-      renderFeed();
+      title.innerText = cat === 'ALL' ? 'Latest Headlines' : `${cat} Headlines`;
+      renderLeadAndFeed();
     }
 
     function handleSearch(val) {
       searchQuery = val;
-      const clearBtn = document.getElementById('clearBtn');
-      if (val.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
-      renderFeed();
+      renderLeadAndFeed();
     }
 
     function clearSearch() {
       const input = document.getElementById('searchInput');
       input.value = '';
       searchQuery = '';
-      document.getElementById('clearBtn').classList.add('hidden');
-      renderFeed();
+      renderLeadAndFeed();
     }
 
-    function sortFeed(type) {
-      currentSort = type;
-      const bLat = document.getElementById('sortLatest');
-      const bCom = document.getElementById('sortComments');
-      if (type === 'latest') {
-        bLat.className = "px-2 py-0.5 bg-qn-card border border-qn-border text-white font-semibold";
-        bCom.className = "px-2 py-0.5 bg-qn-dark border border-qn-border text-qn-muted hover:text-white";
-      } else {
-        bCom.className = "px-2 py-0.5 bg-qn-card border border-qn-border text-white font-semibold";
-        bLat.className = "px-2 py-0.5 bg-qn-dark border border-qn-border text-qn-muted hover:text-white";
-      }
-      renderFeed();
-    }
-
-    function loadMoreArticles() {
-      visibleCount += 4;
-      renderFeed();
-      showToast('Loaded more dispatches.');
-    }
-
-    let activeStoryId = null;
-
-    function openStory(id) {
-      const art = ARTICLES.find(a => a.id === id);
-      if (!art) return;
-      activeStoryId = id;
-
-      document.getElementById('modalHeadline').innerText = art.title;
-      document.getElementById('modalAuthor').innerText = `By ${art.author}`;
-      document.getElementById('modalTimestamp').innerText = `${art.time} / QwidNews Wire`;
-      document.getElementById('modalCatBadge').innerText = art.category;
-      document.getElementById('modalCommentsCount').innerText = `${art.comments} comments`;
-      document.getElementById('modalHeroImg').src = art.image;
-
-      const bodyBox = document.getElementById('modalBodyText');
-      bodyBox.innerHTML = art.body.map((p, idx) => {
-        if (idx === 1) {
-          return `
-            <p>${p}</p>
-            <blockquote class="my-3 pl-3 border-l-2 border-qn-red italic text-white text-[15px] font-serif bg-qn-card/60 py-2 pr-3">
-              "${art.excerpt}"
-            </blockquote>
-          `;
-        }
-        return `<p>${p}</p>`;
-      }).join('');
-
-      const tagsBox = document.getElementById('modalTagsContainer');
-      tagsBox.innerHTML = art.tags.map(t => `
-        <span class="px-2 py-0.5 bg-qn-card border border-qn-border text-[10px] text-qn-muted font-mono uppercase">${t}</span>
-      `).join('');
-
-      const modal = document.getElementById('storyModal');
-      const content = document.getElementById('storyModalContent');
+    function openComposeModal() {
+      const modal = document.getElementById('composeModal');
+      const content = document.getElementById('composeModalContent');
       modal.classList.remove('opacity-0', 'pointer-events-none');
       content.classList.remove('scale-95');
       content.classList.add('scale-100');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeStory() {
-      const modal = document.getElementById('storyModal');
-      const content = document.getElementById('storyModalContent');
+    function closeComposeModal() {
+      const modal = document.getElementById('composeModal');
+      const content = document.getElementById('composeModalContent');
       modal.classList.add('opacity-0', 'pointer-events-none');
       content.classList.remove('scale-100');
       content.classList.add('scale-95');
       document.body.style.overflow = '';
-      activeStoryId = null;
+      clearUploadedImage();
     }
 
-    function copyCurrentStoryLink() {
-      const dummy = document.createElement('input');
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        loadedImageBase64 = evt.target.result;
+        document.getElementById('imagePreview').src = loadedImageBase64;
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearUploadedImage() {
+      loadedImageBase64 = null;
+      document.getElementById('fImageFile').value = '';
+      document.getElementById('imagePreview').src = '';
+      document.getElementById('imagePreviewContainer').classList.add('hidden');
+    }
+
+    function handleCreateArticle(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('fTitle').value.trim();
+      const category = document.getElementById('fCategory').value;
+      const author = document.getElementById('fAuthor').value.trim();
+      const imageUrlInput = document.getElementById('fImageUrl').value.trim();
+      const excerpt = document.getElementById('fExcerpt').value.trim();
+      const body = document.getElementById('fBody').value.trim();
+      const tagsRaw = document.getElementById('fTags').value.trim();
+      const isBreaking = document.getElementById('fBreaking').checked;
+
+      const finalImage = loadedImageBase64 || imageUrlInput || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80';
+      const tagsArray = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [category];
+
+      const newArticle = {
+        id: 'qn_' + Date.now(),
+        title,
+        category,
+        author,
+        image: finalImage,
+        excerpt,
+        body,
+        tags: tagsArray,
+        isBreaking,
+        timestamp: new Date().toISOString()
+      };
+
+      const existing = getArticles();
+      existing.unshift(newArticle);
+      saveArticles(existing);
+
+      e.target.reset();
+      clearUploadedImage();
+      closeComposeModal();
+      showToast('Article published.');
+    }
+
+    function clearAllArticles() {
+      localStorage.removeItem(STORAGE_KEY);
+      refreshAll();
+      showToast('All stored articles cleared.');
+    }
+
+    function exportArticlesJson() {
+      const data = localStorage.getItem(STORAGE_KEY) || '[]';
+      const dummy = document.createElement('textarea');
       document.body.appendChild(dummy);
-      dummy.value = window.location.href.split('#')[0] + `?story=${activeStoryId || 1}`;
+      dummy.value = data;
       dummy.select();
       document.execCommand('copy');
       document.body.removeChild(dummy);
-      showToast('Article dispatch link copied to clipboard.');
+      showToast('Article JSON copied to clipboard.');
     }
 
-    function submitPoll(e) {
-      e.preventDefault();
-      document.getElementById('pollForm').classList.add('hidden');
-      document.getElementById('pollThanks').classList.remove('hidden');
-      showToast('Vote recorded on server.');
+    function seedSampleNews() {
+      const sample = [
+        {
+          id: 'qn_1',
+          title: 'FromSoftware Initiates Production on Brand New Dark Fantasy Action RPG',
+          category: 'GAMING',
+          author: 'Kenji Sato',
+          image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80',
+          excerpt: 'Following historical milestones with Elden Ring, the Tokyo studio officially enters technical development on a new project.',
+          body: 'FromSoftware leadership confirmed that full pre-production has wrapped on an unannounced fantasy action title.\n\nWhile details remain under strict embargo, developers indicated the project incorporates modern technical pipelines and expanded multiplayer structures.\n\nMore information will be shared in forthcoming industry showcases.',
+          tags: ['FromSoftware', 'Miyazaki', 'Elden Ring', 'Action RPG'],
+          isBreaking: true,
+          timestamp: new Date(Date.now() - 3600000).toISOString()
+        },
+        {
+          id: 'qn_2',
+          title: 'Jujutsu Kaisen Season 3: Production Committee Outlines Culling Game Schedule',
+          category: 'ANIME',
+          author: 'Aya Takahashi',
+          image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=80',
+          excerpt: 'MAPPA prepares key visual rollouts as the adaptation transitions into Gege Akutami\'s battle royale arc.',
+          body: 'The animation committee for Jujutsu Kaisen has officially confirmed that the third broadcast season covering the Culling Game arc is on schedule.\n\nDirector Shota Goshozono will oversee keyframe layouts alongside veteran animators to ensure sustained broadcast quality throughout the multi-cour run.',
+          tags: ['Jujutsu Kaisen', 'MAPPA', 'Anime', 'Culling Game'],
+          isBreaking: true,
+          timestamp: new Date(Date.now() - 7200000).toISOString()
+        },
+        {
+          id: 'qn_3',
+          title: 'Denis Villeneuve Sets Filming Schedule for Dune: Messiah Adaptation',
+          category: 'MOVIES',
+          author: 'Elena Gomez',
+          image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=900&q=80',
+          excerpt: 'Warner Bros. and Legendary lock in principal photography dates for the concluding chapter of Paul Atreides.',
+          body: 'Denis Villeneuve has completed the screenplay adaptation for Frank Herbert\'s Dune Messiah.\n\nProduction will commence across Budapest and Abu Dhabi with returning lead cast members Timothée Chalamet and Zendaya.',
+          tags: ['Dune', 'Movies', 'SciFi', 'Villeneuve'],
+          isBreaking: true,
+          timestamp: new Date(Date.now() - 9000000).toISOString()
+        },
+        {
+          id: 'qn_4',
+          title: 'The Last of Us Season 2 Finalizes Post-Production for Winter Release',
+          category: 'TV SHOWS',
+          author: 'Marcus Vance',
+          image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80',
+          excerpt: 'Craig Mazin and Neil Druckmann prepare the first full trailer showing Abby and the Seattle conflict.',
+          body: 'HBO has confirmed post-production milestones for the upcoming season adapting key elements of Part II.\n\nThe initial broadcast window is targeted for winter programming with seven extended episodes.',
+          tags: ['The Last of Us', 'HBO', 'TV Shows', 'PlayStation'],
+          isBreaking: false,
+          timestamp: new Date(Date.now() - 12000000).toISOString()
+        },
+        {
+          id: 'qn_5',
+          title: 'Valve Standalone VR Prototype Registered in Regional Hardware Filings',
+          category: 'HARDWARE',
+          author: 'Marcus Vance',
+          image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=80',
+          excerpt: 'Hardware manifests point toward custom x86 silicon and micro-OLED displays in prototype Deckard testing.',
+          body: 'Regulatory test certificates indicate Valve may be entering final manufacturing tests on its untethered virtual reality system.\n\nThe documents mention low-latency streaming modules and high resolution displays designed for SteamOS.',
+          tags: ['Valve', 'Hardware', 'Deckard', 'SteamVR'],
+          isBreaking: false,
+          timestamp: new Date(Date.now() - 15000000).toISOString()
+        }
+      ];
+
+      saveArticles(sample);
+      showToast('Loaded sample articles.');
     }
 
-    function handleSubscribe(e) {
-      e.preventDefault();
-      document.getElementById('subSuccess').classList.remove('hidden');
-      showToast('Subscribed to QwidNews daily edition.');
+    function formatTime(isoString) {
+      if (!isoString) return 'Just now';
+      const date = new Date(isoString);
+      const diffMs = Date.now() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     let toastTimer;
@@ -1011,12 +897,16 @@
     }
 
     window.addEventListener('click', (e) => {
-      const modal = document.getElementById('storyModal');
-      if (e.target === modal) closeStory();
+      closeNavMenu();
+      const cModal = document.getElementById('composeModal');
+      if (e.target === cModal) closeComposeModal();
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeStory();
+      if (e.key === 'Escape') {
+        closeNavMenu();
+        closeComposeModal();
+      }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -1025,7 +915,7 @@
         const now = new Date();
         dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
       }
-      renderFeed();
+      refreshAll();
     });
   </script>
 </body>

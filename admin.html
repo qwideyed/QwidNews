@@ -1,1 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QwidNews Terminal — Command Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
 
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            display: ['"Chakra Petch"', 'sans-serif'],
+          },
+          colors: {
+            qn: {
+              black: '#0a0c0f',
+              dark: '#11141a',
+              card: '#181d26',
+              cardHover: '#1f2530',
+              border: '#242b38',
+              borderLight: '#374152',
+              red: '#e63946',
+              redHover: '#d62839',
+              orange: '#f35b04',
+              muted: '#8590a3',
+              text: '#e2e8f0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0a0c0f;
+      color: #cbd5e1;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0c0f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #242b38;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e63946;
+    }
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-[13px]">
+
+  <div id="loginGate" class="fixed inset-0 z-50 bg-[#0a0c0f] flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-qn-dark border border-qn-border p-6 shadow-2xl relative">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-3 h-3 bg-qn-red"></span>
+        <h1 class="font-display font-black text-xl text-white tracking-wider uppercase">Qwid<span class="text-qn-red">News</span> Admin Gate</h1>
+      </div>
+      <p class="text-xs text-qn-muted leading-relaxed mb-5">
+        Restricted editorial command console. Enter the root editorial passkey to manage, moderate, or remove wire dispatches.
+      </p>
+
+      <form onsubmit="handleAdminLogin(event)" class="flex flex-col gap-3.5">
+        <div>
+          <label class="block text-[10px] font-mono uppercase text-qn-muted tracking-wider mb-1">Passkey Authentication</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="adminKeyInput" 
+              required 
+              placeholder="Enter administrator key..." 
+              class="w-full bg-qn-black border border-qn-border px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-qn-red pr-10"
+              autocomplete="current-password"
+            >
+            <span class="material-symbols-sharp absolute right-2.5 top-1/2 -translate-y-1/2 text-qn-muted text-base pointer-events-none">lock</span>
+          </div>
+        </div>
+
+        <div id="loginErrorMsg" class="hidden text-[11px] text-qn-red bg-red-950/40 border border-red-900/60 p-2 font-mono">
+          Authentication failed. Passkey rejected.
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-2 bg-qn-red hover:bg-qn-redHover text-white font-display font-bold uppercase text-xs tracking-wider transition flex items-center justify-center gap-1.5 shadow"
+        >
+          <span class="material-symbols-sharp text-sm">key</span>
+          <span>Authenticate Session</span>
+        </button>
+
+        <div class="pt-2 border-t border-qn-border/60 flex items-center justify-between text-[10px] font-mono text-qn-muted">
+          <a href="index.html" class="hover:text-white transition flex items-center gap-1">
+            <span class="material-symbols-sharp text-xs">arrow_back</span> Return to Frontpage
+          </a>
+          <span>SYS_ID: SEC-2026</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="adminPanel" class="hidden min-h-screen flex-col">
+
+    <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
+      <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold">SUPERUSER ACTIVE</span>
+          <span class="text-qn-text text-[11px] font-mono hidden sm:inline">ROOT PRIVILEGES GRANTED // LOCAL WIRE MANAGER</span>
+        </div>
+        <div class="flex items-center gap-3 font-mono text-[10px] text-qn-muted">
+          <span id="storageByteCount">STORAGE: 0 KB</span>
+          <span id="liveDateStamp">SEP 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
+      <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="flex items-baseline gap-1 group">
+            <span class="font-display font-black text-2xl tracking-tight text-white uppercase group-hover:text-qn-red transition-colors">Qwid<span class="text-qn-red">News</span></span>
+          </a>
+          <div class="h-4 w-[1px] bg-qn-border hidden sm:block"></div>
+          <span class="font-mono text-[11px] uppercase tracking-wider text-qn-muted hidden sm:inline font-bold text-qn-red">Admin Terminal</span>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <a href="index.html" class="hidden md:flex items-center gap-1 px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-xs font-semibold uppercase tracking-wider transition">
+            <span class="material-symbols-sharp text-sm text-qn-red">home</span>
+            <span>Frontpage</span>
+          </a>
+          <a href="post.html" class="hidden sm:flex items-center gap-1 px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-xs font-semibold uppercase tracking-wider transition">
+            <span class="material-symbols-sharp text-sm text-qn-muted">edit_note</span>
+            <span>New Post</span>
+          </a>
+          <button 
+            type="button" 
+            onclick="handleAdminLogout()" 
+            class="flex items-center gap-1 px-3 py-1.5 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-200 text-xs font-display font-bold uppercase tracking-wider transition"
+          >
+            <span class="material-symbols-sharp text-sm">logout</span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-[1440px] mx-auto px-3 sm:px-4 py-4 w-full flex-1 flex flex-col gap-4">
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Total Wire Stories</span>
+            <span class="material-symbols-sharp text-sm text-qn-red">newspaper</span>
+          </div>
+          <div class="text-2xl font-display font-black text-white mt-1" id="statTotalPosts">0</div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Breaking Ticker Items</span>
+            <span class="material-symbols-sharp text-sm text-qn-red">bolt</span>
+          </div>
+          <div class="text-2xl font-display font-black text-qn-red mt-1" id="statBreakingPosts">0</div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Top 10 Spotlight Feed</span>
+            <span class="material-symbols-sharp text-sm text-amber-500">workspace_premium</span>
+          </div>
+          <div class="text-2xl font-display font-black text-amber-400 mt-1" id="statSponsoredPosts">0</div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border p-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-qn-muted text-[10px] font-mono uppercase">
+            <span>Gross Article Views</span>
+            <span class="material-symbols-sharp text-sm text-emerald-400">visibility</span>
+          </div>
+          <div class="text-2xl font-display font-black text-white mt-1" id="statTotalViews">0</div>
+        </div>
+      </div>
+
+      <div class="bg-qn-dark border border-qn-border p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <div class="relative flex-1 sm:w-64">
+            <input 
+              type="text" 
+              id="adminSearchInput" 
+              placeholder="Search by title, author, or tags..." 
+              class="w-full bg-qn-black border border-qn-border px-3 py-1.5 pl-8 text-xs text-white focus:outline-none focus:border-qn-red"
+              oninput="handleAdminFilterChange()"
+            >
+            <span class="material-symbols-sharp absolute left-2 top-1/2 -translate-y-1/2 text-qn-muted text-sm pointer-events-none">search</span>
+          </div>
+
+          <select 
+            id="adminCategoryFilter" 
+            class="bg-qn-black border border-qn-border p-1.5 text-xs text-white uppercase font-semibold focus:outline-none focus:border-qn-red"
+            onchange="handleAdminFilterChange()"
+          >
+            <option value="ALL">All Categories</option>
+            <option value="GAMING">Gaming</option>
+            <option value="ANIME">Anime</option>
+            <option value="MOVIES">Movies</option>
+            <option value="TV SHOWS">TV Shows</option>
+            <option value="REVIEWS">Reviews</option>
+            <option value="TECH">Tech</option>
+            <option value="LEAKS">Leaks</option>
+            <option value="HARDWARE">Hardware</option>
+          </select>
+
+          <select 
+            id="adminStatusFilter" 
+            class="bg-qn-black border border-qn-border p-1.5 text-xs text-white uppercase font-semibold focus:outline-none focus:border-qn-red"
+            onchange="handleAdminFilterChange()"
+          >
+            <option value="ALL">All Status</option>
+            <option value="BREAKING">Breaking Wire Only</option>
+            <option value="SPONSORED">Top 10 Spotlight Only</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <input type="file" id="jsonFileInput" accept=".json" class="hidden" onchange="importJsonFile(event)">
+          <button 
+            type="button" 
+            onclick="document.getElementById('jsonFileInput').click()" 
+            class="px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white font-bold uppercase transition flex items-center gap-1"
+          >
+            <span class="material-symbols-sharp text-sm">upload</span> Import
+          </button>
+
+          <button 
+            type="button" 
+            onclick="exportArticlesAsFile()" 
+            class="px-2.5 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white font-bold uppercase transition flex items-center gap-1"
+          >
+            <span class="material-symbols-sharp text-sm">download</span> Export
+          </button>
+
+          <button 
+            type="button" 
+            onclick="promptClearAll()" 
+            class="px-2.5 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-[11px] text-red-200 font-bold uppercase transition flex items-center gap-1"
+          >
+            <span class="material-symbols-sharp text-sm">delete_forever</span> Purge Wire
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-qn-dark border border-qn-border flex flex-col flex-1 overflow-hidden">
+        <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-qn-red"></span>
+            <span class="font-display font-bold uppercase tracking-wider text-xs text-white">Live Wire Dispatches</span>
+          </div>
+          <span class="font-mono text-[11px] text-qn-muted" id="tableFilterCount">0 RECORDS FOUND</span>
+        </div>
+
+        <div class="overflow-x-auto flex-1">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-qn-border/80 bg-qn-card/60 text-qn-muted font-mono uppercase text-[10px]">
+                <th class="p-3 w-16">Cover</th>
+                <th class="p-3">Headline / Identifier</th>
+                <th class="p-3 w-28">Category</th>
+                <th class="p-3 w-32">Reporter</th>
+                <th class="p-3 w-28">Published</th>
+                <th class="p-3 w-32 text-center">Flags</th>
+                <th class="p-3 w-20 text-center">Views</th>
+                <th class="p-3 w-48 text-right">Moderation Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody" class="divide-y divide-qn-border/50"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="bg-qn-black border-t border-qn-border mt-8 text-qn-muted text-xs">
+      <div class="max-w-[1440px] mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+        <div class="flex items-center gap-2">
+          <span class="font-display font-black text-base text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
+          <span class="text-qn-muted font-mono">/ INTERNAL CONSOLE</span>
+        </div>
+        <div class="text-[10px] font-mono text-qn-muted">
+          SECURITY LEVEL: RESTRICTED DIALLO CONSOLE
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <div id="editModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="relative w-full max-w-2xl max-h-[92vh] bg-qn-dark border border-qn-border flex flex-col shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="editModalContent">
+      <div class="bg-qn-black px-4 py-2.5 border-b border-qn-border flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 bg-qn-red"></span>
+          <h3 class="font-display font-bold uppercase tracking-wider text-xs text-white" id="editModalHeaderTitle">Edit Wire Dispatch</h3>
+        </div>
+        <button onclick="closeEditModal()" class="text-qn-muted hover:text-white flex items-center p-1 bg-qn-card border border-qn-border">
+          <span class="material-symbols-sharp text-base">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveEdit(event)" class="overflow-y-auto p-4 sm:p-5 flex-1 flex flex-col gap-3 text-xs">
+        <input type="hidden" id="editArticleId">
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Headline *</label>
+          <input 
+            type="text" 
+            id="eTitle" 
+            required 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white font-serif text-sm focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Category *</label>
+            <select id="eCategory" class="w-full bg-qn-black border border-qn-border p-2 text-white uppercase font-semibold focus:outline-none focus:border-qn-red">
+              <option value="GAMING">Gaming</option>
+              <option value="ANIME">Anime</option>
+              <option value="MOVIES">Movies</option>
+              <option value="TV SHOWS">TV Shows</option>
+              <option value="REVIEWS">Reviews</option>
+              <option value="TECH">Tech</option>
+              <option value="LEAKS">Leaks</option>
+              <option value="HARDWARE">Hardware</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Reporter / Byline *</label>
+            <input 
+              type="text" 
+              id="eAuthor" 
+              required 
+              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Cover Image URL</label>
+          <input 
+            type="text" 
+            id="eImage" 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
+          >
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Summary Excerpt *</label>
+          <textarea 
+            id="eExcerpt" 
+            required 
+            rows="2" 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red resize-none"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Full Article Body *</label>
+          <textarea 
+            id="eBody" 
+            required 
+            rows="8" 
+            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red font-mono text-xs"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center border-t border-qn-border pt-3">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="eBreaking" class="w-4 h-4 accent-qn-red cursor-pointer">
+            <span class="text-white font-semibold uppercase text-[11px]">Breaking Marquee Flag</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="eSponsored" class="w-4 h-4 accent-amber-500 cursor-pointer">
+            <span class="text-amber-400 font-semibold uppercase text-[11px]">Top 10 Spotlight Feed</span>
+          </label>
+        </div>
+
+        <div class="mt-2 pt-3 border-t border-qn-border flex items-center justify-end gap-2">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-muted hover:text-white uppercase font-bold text-[11px]">Cancel</button>
+          <button type="submit" class="px-5 py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold uppercase text-[11px] tracking-wider transition">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="w-full max-w-sm bg-qn-dark border border-qn-border p-5 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center gap-2 text-qn-red">
+        <span class="material-symbols-sharp text-2xl">warning</span>
+        <h4 class="font-display font-bold uppercase text-sm text-white">Confirm Article Deletion</h4>
+      </div>
+      <p class="text-xs text-qn-muted leading-relaxed" id="deleteModalPrompt">
+        Are you sure you want to permanently delete this report from the wire? This cannot be undone.
+      </p>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-qn-border">
+        <button type="button" onclick="closeDeleteModal()" class="px-3 py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text uppercase font-semibold text-xs">Cancel</button>
+        <button type="button" id="confirmDeleteBtn" class="px-4 py-1 bg-red-800 hover:bg-red-700 text-white uppercase font-bold text-xs">Delete Permanently</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-4 right-4 z-50 pointer-events-none transform translate-y-8 opacity-0 transition-all duration-200 bg-qn-black border border-qn-border text-white text-xs px-3 py-2 shadow-lg flex items-center gap-2">
+    <span class="w-2 h-2 bg-qn-red"></span>
+    <span id="toastMsg">Action completed.</span>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'qwidnews_posts';
+    const AUTH_KEY = 'qwidnews_admin_auth';
+    const PASSKEY = 'Diallo1-(-)';
+    let pendingDeleteId = null;
+
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem(AUTH_KEY) === 'true';
+      const gate = document.getElementById('loginGate');
+      const panel = document.getElementById('adminPanel');
+
+      if (isAuth) {
+        gate.classList.add('hidden');
+        panel.classList.remove('hidden');
+        panel.classList.add('flex');
+        refreshAdminData();
+      } else {
+        gate.classList.remove('hidden');
+        panel.classList.add('hidden');
+        panel.classList.remove('flex');
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const input = document.getElementById('adminKeyInput');
+      const errMsg = document.getElementById('loginErrorMsg');
+
+      if (input.value === PASSKEY) {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        errMsg.classList.add('hidden');
+        input.value = '';
+        checkAuth();
+        showToast('Access granted. Welcome Diallo.');
+      } else {
+        errMsg.classList.remove('hidden');
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem(AUTH_KEY);
+      checkAuth();
+      showToast('Session terminated.');
+    }
+
+    function getArticles() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveArticles(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      refreshAdminData();
+    }
+
+    function refreshAdminData() {
+      const articles = getArticles();
+      updateMetrics(articles);
+      renderAdminTable(articles);
+    }
+
+    function updateMetrics(articles) {
+      const totalCount = articles.length;
+      const breakingCount = articles.filter(a => a.isBreaking).length;
+      const sponsoredCount = articles.filter(a => a.isTop10Sponsored).length;
+      const totalViews = articles.reduce((acc, curr) => acc + (curr.views || 0), 0);
+
+      document.getElementById('statTotalPosts').innerText = totalCount;
+      document.getElementById('statBreakingPosts').innerText = breakingCount;
+      document.getElementById('statSponsoredPosts').innerText = sponsoredCount;
+      document.getElementById('statTotalViews').innerText = totalViews;
+
+      const rawString = localStorage.getItem(STORAGE_KEY) || '';
+      const bytes = new Blob([rawString]).size;
+      const kb = (bytes / 1024).toFixed(1);
+      document.getElementById('storageByteCount').innerText = `STORAGE: ${kb} KB`;
+    }
+
+    function handleAdminFilterChange() {
+      const articles = getArticles();
+      renderAdminTable(articles);
+    }
+
+    function renderAdminTable(articles) {
+      const query = (document.getElementById('adminSearchInput').value || '').trim().toLowerCase();
+      const categoryFilter = document.getElementById('adminCategoryFilter').value;
+      const statusFilter = document.getElementById('adminStatusFilter').value;
+      const tbody = document.getElementById('adminTableBody');
+      const countLabel = document.getElementById('tableFilterCount');
+
+      const filtered = articles.filter(a => {
+        if (categoryFilter !== 'ALL' && a.category !== categoryFilter) return false;
+        if (statusFilter === 'BREAKING' && !a.isBreaking) return false;
+        if (statusFilter === 'SPONSORED' && !a.isTop10Sponsored) return false;
+
+        if (query) {
+          const matchTitle = (a.title || '').toLowerCase().includes(query);
+          const matchAuthor = (a.author || '').toLowerCase().includes(query);
+          const matchId = (a.id || '').toLowerCase().includes(query);
+          const matchTags = (a.tags || []).some(t => t.toLowerCase().includes(query));
+          if (!matchTitle && !matchAuthor && !matchId && !matchTags) return false;
+        }
+        return true;
+      });
+
+      countLabel.innerText = `${filtered.length} OF ${articles.length} RECORDS`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="p-6 text-center text-qn-muted font-mono">
+              No dispatches match the selected search or filter parameters.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(a => {
+        const coverSrc = a.image || 'https://placehold.co/100x70/11141a/e63946?text=Wire';
+        return `
+          <tr class="hover:bg-qn-card/40 transition-colors">
+            <td class="p-3">
+              <img src="${coverSrc}" class="w-12 h-9 object-cover bg-qn-black border border-qn-border/60" onerror="this.src='https://placehold.co/100x70/11141a/e63946?text=Wire'">
+            </td>
+            <td class="p-3 min-w-0 max-w-xs">
+              <a href="entry.html?id=${encodeURIComponent(a.id)}" target="_blank" class="font-serif font-bold text-white hover:text-qn-red transition leading-tight line-clamp-1 block">
+                ${escapeHtml(a.title)}
+              </a>
+              <div class="text-[10px] font-mono text-qn-muted mt-0.5 truncate">${escapeHtml(a.id)}</div>
+            </td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 bg-qn-black border border-qn-border text-[10px] font-mono font-bold text-qn-text uppercase">
+                ${escapeHtml(a.category)}
+              </span>
+            </td>
+            <td class="p-3 text-qn-text truncate">${escapeHtml(a.author)}</td>
+            <td class="p-3 font-mono text-[10px] text-qn-muted">${formatDate(a.timestamp)}</td>
+            <td class="p-3">
+              <div class="flex items-center justify-center gap-1">
+                ${a.isBreaking ? '<span class="bg-qn-red text-white text-[9px] font-bold px-1.5 py-0.2 uppercase">BREAKING</span>' : ''}
+                ${a.isTop10Sponsored ? '<span class="bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.2 uppercase">TOP 10</span>' : ''}
+                ${!a.isBreaking && !a.isTop10Sponsored ? '<span class="text-qn-muted font-mono text-[10px]">—</span>' : ''}
+              </div>
+            </td>
+            <td class="p-3 text-center font-mono text-[11px] text-white">${a.views || 0}</td>
+            <td class="p-3 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <button 
+                  onclick="toggleBreakingStatus('${a.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-mono ${a.isBreaking ? 'text-qn-red font-bold' : 'text-qn-muted'}" 
+                  title="Toggle Breaking Ticker"
+                >
+                  <span class="material-symbols-sharp text-sm block">bolt</span>
+                </button>
+
+                <button 
+                  onclick="toggleSpotlightStatus('${a.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-mono ${a.isTop10Sponsored ? 'text-amber-400 font-bold' : 'text-qn-muted'}" 
+                  title="Toggle Top 10 Spotlight"
+                >
+                  <span class="material-symbols-sharp text-sm block">workspace_premium</span>
+                </button>
+
+                <button 
+                  onclick="openEditModal('${a.id}')" 
+                  class="p-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-[10px]" 
+                  title="Edit Dispatch"
+                >
+                  <span class="material-symbols-sharp text-sm block">edit</span>
+                </button>
+
+                <button 
+                  onclick="openDeleteModal('${a.id}')" 
+                  class="p-1 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-200 text-[10px]" 
+                  title="Delete Dispatch"
+                >
+                  <span class="material-symbols-sharp text-sm block">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleBreakingStatus(id) {
+      const articles = getArticles();
+      const item = articles.find(a => a.id === id);
+      if (!item) return;
+
+      item.isBreaking = !item.isBreaking;
+      saveArticles(articles);
+      showToast(`Breaking status ${item.isBreaking ? 'activated' : 'removed'}.`);
+    }
+
+    function toggleSpotlightStatus(id) {
+      const articles = getArticles();
+      const item = articles.find(a => a.id === id);
+      if (!item) return;
+
+      item.isTop10Sponsored = !item.isTop10Sponsored;
+      saveArticles(articles);
+      showToast(`Top 10 spotlight ${item.isTop10Sponsored ? 'enabled' : 'disabled'}.`);
+    }
+
+    function openEditModal(id) {
+      const articles = getArticles();
+      const item = articles.find(a => a.id === id);
+      if (!item) return;
+
+      document.getElementById('editArticleId').value = item.id;
+      document.getElementById('editModalHeaderTitle').innerText = `Edit: ${item.id}`;
+      document.getElementById('eTitle').value = item.title || '';
+      document.getElementById('eCategory').value = item.category || 'GAMING';
+      document.getElementById('eAuthor').value = item.author || '';
+      document.getElementById('eImage').value = item.image || '';
+      document.getElementById('eExcerpt').value = item.excerpt || '';
+      document.getElementById('eBody').value = item.body || '';
+      document.getElementById('eBreaking').checked = !!item.isBreaking;
+      document.getElementById('eSponsored').checked = !!item.isTop10Sponsored;
+
+      const modal = document.getElementById('editModal');
+      const content = document.getElementById('editModalContent');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById('editModal');
+      const content = document.getElementById('editModalContent');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-100');
+      content.classList.add('scale-95');
+    }
+
+    function handleSaveEdit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editArticleId').value;
+      const articles = getArticles();
+      const idx = articles.findIndex(a => a.id === id);
+
+      if (idx === -1) {
+        showToast('Failed locating article record.');
+        return;
+      }
+
+      articles[idx].title = document.getElementById('eTitle').value.trim();
+      articles[idx].category = document.getElementById('eCategory').value;
+      articles[idx].author = document.getElementById('eAuthor').value.trim();
+      articles[idx].image = document.getElementById('eImage').value.trim();
+      articles[idx].excerpt = document.getElementById('eExcerpt').value.trim();
+      articles[idx].body = document.getElementById('eBody').value.trim();
+      articles[idx].isBreaking = document.getElementById('eBreaking').checked;
+      articles[idx].isTop10Sponsored = document.getElementById('eSponsored').checked;
+      articles[idx].lastAdminEdit = new Date().toISOString();
+
+      saveArticles(articles);
+      closeEditModal();
+      showToast('Article changes saved to wire.');
+    }
+
+    function openDeleteModal(id) {
+      pendingDeleteId = id;
+      const modal = document.getElementById('deleteModal');
+      const prompt = document.getElementById('deleteModalPrompt');
+      prompt.innerText = `Are you sure you want to permanently erase article "${id}" from local storage?`;
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeDeleteModal() {
+      pendingDeleteId = null;
+      const modal = document.getElementById('deleteModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (!pendingDeleteId) return;
+      let articles = getArticles();
+      articles = articles.filter(a => a.id !== pendingDeleteId);
+      saveArticles(articles);
+      closeDeleteModal();
+      showToast('Article deleted.');
+    });
+
+    function promptClearAll() {
+      if (!confirm('CRITICAL ACTION: Are you sure you want to purge EVERY article on the wire?')) return;
+      if (!confirm('Please confirm a second time: ALL articles and local wire records will be wiped.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      refreshAdminData();
+      showToast('All wire posts cleared.');
+    }
+
+    function exportArticlesAsFile() {
+      const articles = getArticles();
+      const json = JSON.stringify(articles, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `qwidnews_backup_${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Wire backup downloaded.');
+    }
+
+    function importJsonFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (!Array.isArray(parsed)) {
+            showToast('Invalid JSON schema. Array expected.');
+            return;
+          }
+          saveArticles(parsed);
+          showToast(`Successfully imported ${parsed.length} dispatches.`);
+        } catch (err) {
+          showToast('Failed parsing JSON file.');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function formatDate(iso) {
+      if (!iso) return 'Just now';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    let toastTimer;
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMsg');
+      msg.innerText = text;
+      toast.classList.remove('opacity-0', 'translate-y-8');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-8');
+      }, 2500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const stamp = document.getElementById('liveDateStamp');
+      if (stamp) {
+        const now = new Date();
+        stamp.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+      }
+      checkAuth();
+    });
+  </script>
+</body>
+</html>

@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QwidNews</title>
+  <title>QwidNews — Gaming, Anime & Media Wire</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
 
   <script>
@@ -24,13 +24,14 @@
             qn: {
               black: '#0a0c0f',
               dark: '#11141a',
-              card: '#181d26',
-              cardHover: '#1f2530',
-              border: '#242b38',
-              borderLight: '#374152',
+              card: '#161b22',
+              cardHover: '#1f2630',
+              border: '#21262d',
+              borderLight: '#30363d',
               red: '#e63946',
               redHover: '#d62839',
               orange: '#f35b04',
+              gold: '#f59e0b',
               muted: '#8590a3',
               text: '#e2e8f0'
             }
@@ -54,7 +55,7 @@
       background: #0a0c0f;
     }
     ::-webkit-scrollbar-thumb {
-      background: #242b38;
+      background: #21262d;
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #e63946;
@@ -74,6 +75,12 @@
       0% { transform: translate3d(0, 0, 0); }
       100% { transform: translate3d(-50%, 0, 0); }
     }
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
     .line-clamp-2 {
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -88,10 +95,10 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-[14px]">
+<body class="min-h-screen flex flex-col text-[13px]">
 
   <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
-    <div class="max-w-[1380px] mx-auto flex items-center justify-between gap-3">
+    <div class="max-w-[1400px] mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-2 flex-1 overflow-hidden">
         <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold shrink-0">WIRE TICKER</span>
         <div class="ticker-wrap flex-1">
@@ -100,14 +107,15 @@
           </div>
         </div>
       </div>
-      <div class="hidden sm:flex items-center gap-2 text-[11px] text-qn-muted shrink-0 font-mono">
+      <div class="hidden sm:flex items-center gap-3 text-[11px] text-qn-muted shrink-0 font-mono">
+        <span id="headerPostCount">0 STORIES FILED</span>
         <span id="currentDateDisplay">SEP 2026</span>
       </div>
     </div>
   </div>
 
   <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
-    <div class="max-w-[1380px] mx-auto px-3 sm:px-4">
+    <div class="max-w-[1400px] mx-auto px-3 sm:px-4">
       <div class="flex items-center justify-between py-2.5 border-b border-qn-border/70 gap-3">
         <div class="flex items-center gap-4">
           <a href="index.html" class="flex items-baseline gap-1 group">
@@ -116,11 +124,11 @@
         </div>
 
         <div class="flex items-center gap-2 sm:gap-3">
-          <div class="relative w-36 sm:w-64">
+          <div class="relative w-44 sm:w-72">
             <input 
               type="text" 
               id="searchInput" 
-              placeholder="Search news..."
+              placeholder="Search wire dispatches..."
               class="w-full bg-qn-black border border-qn-border text-[12px] text-white px-2 py-1.5 pl-7 focus:outline-none focus:border-qn-red transition-colors"
               oninput="handleSearch(this.value)"
             >
@@ -146,10 +154,6 @@
                 <span class="material-symbols-sharp text-sm text-qn-red">edit_note</span>
                 <span>Post News</span>
               </a>
-              <button onclick="openComposeModal(); closeNavMenu();" class="w-full text-left flex items-center gap-2 px-3 py-2 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
-                <span class="material-symbols-sharp text-sm text-qn-muted">add_circle</span>
-                <span>Quick Compose</span>
-              </button>
               <div class="border-t border-qn-border/60 my-1"></div>
               <a href="wiki.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
                 <span class="material-symbols-sharp text-sm text-qn-muted">menu_book</span>
@@ -170,22 +174,34 @@
 
       <div class="flex items-center overflow-x-auto text-[11px] font-bold tracking-wide uppercase py-1 gap-1 text-qn-muted no-scrollbar">
         <div class="flex items-center gap-1 shrink-0" id="navFilterTabs">
-          <button onclick="filterNews('ALL')" class="cat-tab active-cat px-3 py-1 text-white bg-qn-card border-b-2 border-qn-red" data-cat="ALL">All News</button>
+          <button onclick="filterNews('ALL')" class="cat-tab px-3 py-1 text-white bg-qn-card border-b-2 border-qn-red" data-cat="ALL">All Wire</button>
           <button onclick="filterNews('GAMING')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="GAMING">Gaming</button>
           <button onclick="filterNews('ANIME')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="ANIME">Anime</button>
           <button onclick="filterNews('MOVIES')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="MOVIES">Movies</button>
           <button onclick="filterNews('TV SHOWS')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="TV SHOWS">TV Shows</button>
           <button onclick="filterNews('REVIEWS')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="REVIEWS">Reviews</button>
           <button onclick="filterNews('LEAKS')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="LEAKS">Leaks</button>
-          <button onclick="filterNews('HARDWARE')" class="cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors" data-cat="HARDWARE">Hardware</button>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-[1380px] mx-auto px-3 sm:px-4 py-3.5 w-full flex-1">
+  <main class="max-w-[1400px] mx-auto px-3 sm:px-4 py-3.5 w-full flex-1">
 
-    <div id="leadScoopSection" class="mb-4"></div>
+    <section id="top5SpotlightSection" class="mb-4">
+      <div class="bg-qn-dark border border-qn-border mb-3">
+        <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 bg-qn-gold"></span>
+            <h2 class="font-display font-bold uppercase tracking-wider text-xs sm:text-sm text-white flex items-center gap-1.5">
+              <span>Top 5 Spotlight Dispatch</span>
+            </h2>
+          </div>
+          <span class="text-[10px] font-mono text-qn-muted uppercase">CURATED INDEX</span>
+        </div>
+        <div id="spotlightCardsGrid" class="p-2.5 sm:p-3"></div>
+      </div>
+    </section>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
@@ -193,13 +209,13 @@
         <div class="flex items-center justify-between border-b border-qn-border pb-1.5">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 bg-qn-red"></span>
-            <h2 class="font-display font-bold uppercase tracking-wider text-sm sm:text-base text-white" id="feedTitle">Latest Headlines</h2>
+            <h2 class="font-display font-bold uppercase tracking-wider text-sm sm:text-base text-white" id="feedTitle">Latest Wire Headlines</h2>
             <span class="text-[11px] font-mono text-qn-muted" id="resultsCount">(0)</span>
           </div>
 
           <div class="flex items-center gap-2 text-[11px]">
             <a href="post.html" class="text-qn-red hover:underline flex items-center gap-1 font-semibold">
-              <span class="material-symbols-sharp text-sm">add</span> Submit Post
+              <span class="material-symbols-sharp text-sm">add</span> File Dispatch
             </a>
           </div>
         </div>
@@ -212,22 +228,48 @@
         <div class="bg-qn-dark border border-qn-border">
           <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
             <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
-              <span class="text-qn-red material-symbols-sharp text-sm">feed</span> News Wire
+              <span class="text-qn-red material-symbols-sharp text-sm">local_fire_department</span> Most Viewed Wire
             </h3>
-            <span class="text-[10px] text-qn-muted font-mono" id="postStatsLabel">0 POSTS</span>
+            <span class="text-[10px] text-qn-muted font-mono">TOP 5</span>
           </div>
-          <div class="p-3 text-xs flex flex-col gap-2.5">
-            <p class="text-qn-muted text-[11px] leading-relaxed">
-              Post real-time reports covering gaming, anime, movie premieres, and TV releases.
-            </p>
-            <div class="flex flex-col gap-1.5 pt-1 border-t border-qn-border/60">
-              <a href="post.html" class="w-full py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1 transition">
-                <span class="material-symbols-sharp text-sm">edit_note</span> Submit Article Page
-              </a>
-              <div class="grid grid-cols-2 gap-1.5">
-                <button onclick="openComposeModal()" class="py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-center text-[11px] text-qn-text hover:text-white uppercase font-semibold">Quick Post</button>
-                <button onclick="seedSampleNews()" class="py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-center text-[11px] text-qn-muted hover:text-white uppercase font-semibold">Load Samples</button>
+          <div id="mostViewedContainer" class="p-2 flex flex-col gap-2 divide-y divide-qn-border/40"></div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
+            <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
+              <span class="text-qn-gold material-symbols-sharp text-sm">event_upcoming</span> Release Radar
+            </h3>
+            <span class="text-[10px] text-qn-muted font-mono">FALL 2026</span>
+          </div>
+          <div class="p-2.5 flex flex-col gap-2 text-xs">
+            <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
+              <div class="min-w-0 pr-2">
+                <div class="font-semibold text-white truncate text-[11px]">Metaphor: ReFantazio — Epilogue DLX</div>
+                <div class="text-[10px] text-qn-muted font-mono uppercase">Gaming &bull; PC / PS5 / Xbox</div>
               </div>
+              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">OCT 11</span>
+            </div>
+            <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
+              <div class="min-w-0 pr-2">
+                <div class="font-semibold text-white truncate text-[11px]">Chainsaw Man — Reze Arc Film</div>
+                <div class="text-[10px] text-qn-muted font-mono uppercase">Anime &bull; Theatrical Premiere</div>
+              </div>
+              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">NOV 04</span>
+            </div>
+            <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
+              <div class="min-w-0 pr-2">
+                <div class="font-semibold text-white truncate text-[11px]">Grand Theft Auto VI — Second Trailer</div>
+                <div class="text-[10px] text-qn-muted font-mono uppercase">Gaming &bull; Rockstar Broadcast</div>
+              </div>
+              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">NOV 19</span>
+            </div>
+            <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
+              <div class="min-w-0 pr-2">
+                <div class="font-semibold text-white truncate text-[11px]">Blade Runner 2099 — Season Premiere</div>
+                <div class="text-[10px] text-qn-muted font-mono uppercase">TV Shows &bull; Prime Video</div>
+              </div>
+              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">DEC 02</span>
             </div>
           </div>
         </div>
@@ -235,23 +277,46 @@
         <div class="bg-qn-dark border border-qn-border">
           <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
             <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
-              <span class="material-symbols-sharp text-qn-orange text-sm">category</span> Categories
+              <span class="text-cyan-400 material-symbols-sharp text-sm">how_to_vote</span> Community Poll
             </h3>
+            <span class="text-[10px] text-qn-muted font-mono" id="pollTotalVotes">1,482 VOTES</span>
           </div>
-          <div class="divide-y divide-qn-border/60 text-xs" id="categoryCountsContainer"></div>
+          <div class="p-3 text-xs flex flex-col gap-2">
+            <p class="font-semibold text-white text-[12px] leading-snug">
+              What is your most anticipated Fall anime adaptation or game launch?
+            </p>
+            <div class="flex flex-col gap-1.5 pt-1 text-[11px]" id="pollOptionsContainer">
+              <button onclick="votePoll(0)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
+                <span class="text-qn-text group-hover:text-white font-medium">Jujutsu Kaisen: Culling Game</span>
+                <span class="text-qn-muted font-mono text-[10px]" id="votePct0">42%</span>
+              </button>
+              <button onclick="votePoll(1)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
+                <span class="text-qn-text group-hover:text-white font-medium">New FromSoftware Action Title</span>
+                <span class="text-qn-muted font-mono text-[10px]" id="votePct1">34%</span>
+              </button>
+              <button onclick="votePoll(2)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
+                <span class="text-qn-text group-hover:text-white font-medium">Dune Messiah Feature Film</span>
+                <span class="text-qn-muted font-mono text-[10px]" id="votePct2">16%</span>
+              </button>
+              <button onclick="votePoll(3)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
+                <span class="text-qn-text group-hover:text-white font-medium">The Last of Us Part II Broadcast</span>
+                <span class="text-qn-muted font-mono text-[10px]" id="votePct3">8%</span>
+              </button>
+            </div>
+            <div id="voteStatus" class="text-[10px] font-mono text-qn-muted text-right pt-0.5">Click any option to cast ballot</div>
+          </div>
         </div>
 
-        <div class="bg-qn-card border border-qn-border p-3">
-          <div class="font-display font-bold uppercase tracking-wider text-xs text-white mb-1 flex items-center gap-1.5">
-            <span class="w-2 h-2 bg-qn-red"></span> Storage Tools
+        <div class="bg-qn-card border border-qn-border p-3 flex flex-col gap-2">
+          <div class="font-display font-bold uppercase tracking-wider text-xs text-white flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-qn-red"></span> Submit News Wire
           </div>
-          <p class="text-[11px] text-qn-muted leading-relaxed mb-3">
-            Manage your articles stored in your browser.
+          <p class="text-[11px] text-qn-muted leading-relaxed">
+            Have a scoop regarding games, anime, upcoming films, or hardware filings? Publish directly to our client-stored index.
           </p>
-          <div class="flex items-center gap-2">
-            <button onclick="exportArticlesJson()" class="flex-1 py-1 bg-qn-dark hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white font-semibold uppercase">Export JSON</button>
-            <button onclick="clearAllArticles()" class="py-1 px-3 bg-red-950/60 hover:bg-red-900 border border-red-800 text-[11px] text-red-200 uppercase font-semibold">Clear All</button>
-          </div>
+          <a href="post.html" class="w-full py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold text-center uppercase tracking-wider text-[11px] transition">
+            File New Article
+          </a>
         </div>
 
       </aside>
@@ -259,21 +324,22 @@
   </main>
 
   <footer class="bg-qn-black border-t border-qn-border mt-8 text-qn-muted text-xs">
-    <div class="max-w-[1380px] mx-auto px-4 py-6">
+    <div class="max-w-[1400px] mx-auto px-4 py-6">
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <span class="font-display font-black text-xl text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
+          <span class="text-qn-muted font-mono text-[11px]">/ WIRE ARCHIVE</span>
         </div>
         <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
           <a href="index.html" class="hover:text-white">Home</a>
-          <a href="wiki.html" class="hover:text-white">Wiki</a>
           <a href="post.html" class="hover:text-white">Post News</a>
+          <a href="wiki.html" class="hover:text-white">Wiki</a>
           <a href="account.html" class="hover:text-white">Account</a>
           <a href="setting.html" class="hover:text-white">Settings</a>
         </div>
       </div>
       <div class="border-t border-qn-border/60 mt-4 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-qn-muted">
-        <div>&copy; 2026 QwidNews.</div>
+        <div>&copy; 2026 QwidNews Editorial Wire. Client storage persistent index.</div>
         <div class="flex gap-3">
           <a href="wiki.html" class="hover:underline">Wiki</a>
           <a href="setting.html" class="hover:underline">Settings</a>
@@ -282,134 +348,8 @@
     </div>
   </footer>
 
-  <div id="composeModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="relative w-full max-w-2xl max-h-[92vh] bg-qn-dark border border-qn-border flex flex-col shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="composeModalContent">
-      <div class="bg-qn-black px-4 py-2.5 border-b border-qn-border flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 bg-qn-red"></span>
-          <h3 class="font-display font-bold uppercase tracking-wider text-xs text-white">Publish Article</h3>
-        </div>
-        <button onclick="closeComposeModal()" class="text-qn-muted hover:text-white flex items-center p-1 bg-qn-card border border-qn-border">
-          <span class="material-symbols-sharp text-base">close</span>
-        </button>
-      </div>
-
-      <form onsubmit="handleCreateArticle(event)" class="overflow-y-auto p-4 sm:p-5 flex-1 flex flex-col gap-3 text-xs">
-        <div>
-          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Headline *</label>
-          <input 
-            type="text" 
-            id="fTitle" 
-            required 
-            placeholder="Article title..." 
-            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
-          >
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Category *</label>
-            <select id="fCategory" class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red">
-              <option value="GAMING">Gaming</option>
-              <option value="ANIME">Anime</option>
-              <option value="MOVIES">Movies</option>
-              <option value="TV SHOWS">TV Shows</option>
-              <option value="REVIEWS">Reviews</option>
-              <option value="LEAKS">Leaks</option>
-              <option value="HARDWARE">Hardware</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Author / Source *</label>
-            <input 
-              type="text" 
-              id="fAuthor" 
-              required 
-              placeholder="Author name..." 
-              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
-            >
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Cover Image</label>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input 
-              type="url" 
-              id="fImageUrl" 
-              placeholder="Image URL (https://...)" 
-              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
-            >
-            <div class="relative">
-              <input 
-                type="file" 
-                id="fImageFile" 
-                accept="image/*"
-                onchange="handleFileUpload(event)"
-                class="w-full text-[11px] text-qn-muted file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-qn-card file:text-white hover:file:bg-qn-cardHover cursor-pointer border border-qn-border bg-qn-black p-1"
-              >
-            </div>
-          </div>
-          <div id="imagePreviewContainer" class="hidden mt-2 relative w-full h-32 bg-qn-black border border-qn-border overflow-hidden">
-            <img id="imagePreview" src="" class="w-full h-full object-cover">
-            <button type="button" onclick="clearUploadedImage()" class="absolute top-1 right-1 bg-black/80 text-white text-[10px] px-1.5 py-0.5 border border-white/20">Remove</button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Summary *</label>
-          <textarea 
-            id="fExcerpt" 
-            required 
-            rows="2" 
-            placeholder="Short summary for the front page..."
-            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red resize-none"
-          ></textarea>
-        </div>
-
-        <div>
-          <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Full Article Body *</label>
-          <textarea 
-            id="fBody" 
-            required 
-            rows="6" 
-            placeholder="Full article content..."
-            class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
-          ></textarea>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-          <div>
-            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Tags (Comma-separated)</label>
-            <input 
-              type="text" 
-              id="fTags" 
-              placeholder="e.g. HBO, PlayStation, MAPPA" 
-              class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red"
-            >
-          </div>
-          <div class="pt-4 flex items-center gap-2">
-            <input type="checkbox" id="fBreaking" class="w-4 h-4 accent-qn-red cursor-pointer">
-            <label for="fBreaking" class="text-white font-semibold select-none cursor-pointer">Feature on Breaking Wire Ticker</label>
-          </div>
-        </div>
-
-        <div class="mt-2 pt-3 border-t border-qn-border flex items-center justify-end gap-2">
-          <button type="button" onclick="closeComposeModal()" class="px-4 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-muted hover:text-white uppercase font-bold text-[11px]">Cancel</button>
-          <button type="submit" class="px-5 py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold uppercase text-[11px] tracking-wider transition">Publish</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="toast" class="fixed bottom-4 right-4 z-50 pointer-events-none transform translate-y-8 opacity-0 transition-all duration-200 bg-qn-black border border-qn-border text-white text-xs px-3 py-2 shadow-lg flex items-center gap-2">
-    <span class="w-2 h-2 bg-qn-red"></span>
-    <span id="toastMsg">Action completed.</span>
-  </div>
-
   <script>
     const STORAGE_KEY = 'qwidnews_posts';
-    let loadedImageBase64 = null;
     let activeFilterCategory = 'ALL';
     let searchQuery = '';
 
@@ -428,9 +368,17 @@
     }
 
     function refreshAll() {
-      renderTicker();
-      renderLeadAndFeed();
-      renderCategoryCounts();
+      const articles = getArticles();
+      updateHeaderPostCount(articles);
+      renderTicker(articles);
+      renderTop5Spotlight(articles);
+      renderMainFeed(articles);
+      renderMostViewed(articles);
+    }
+
+    function updateHeaderPostCount(articles) {
+      const countEl = document.getElementById('headerPostCount');
+      if (countEl) countEl.innerText = `${articles.length} STORIES FILED`;
     }
 
     function navigateToEntry(id) {
@@ -450,8 +398,7 @@
       }
     }
 
-    function renderTicker() {
-      const articles = getArticles();
+    function renderTicker(articles) {
       const tickerBox = document.getElementById('liveTickerContainer');
       const breakingArticles = articles.filter(a => a.isBreaking);
       const displayList = breakingArticles.length > 0 ? breakingArticles : articles;
@@ -463,7 +410,7 @@
 
       const itemsHtml = displayList.map(a => `
         <span class="cursor-pointer hover:text-qn-red mx-4 inline-flex items-center gap-1" onclick="navigateToEntry('${a.id}')">
-          <span class="text-qn-red font-bold font-mono">• [${a.category}]</span> 
+          <span class="text-qn-red font-bold font-mono">• [${escapeHtml(a.category)}]</span> 
           ${escapeHtml(a.title)}
         </span>
       `).join('');
@@ -471,9 +418,108 @@
       tickerBox.innerHTML = itemsHtml + itemsHtml;
     }
 
-    function renderLeadAndFeed() {
-      const articles = getArticles();
-      const leadSection = document.getElementById('leadScoopSection');
+    function getTop5SpotlightStories(articles) {
+      if (articles.length === 0) return [];
+      const pool = [...articles];
+      pool.sort((a, b) => {
+        const aScore = (a.isTop10Sponsored ? 1000 : 0) + (a.isBreaking ? 300 : 0) + (a.views || 0);
+        const bScore = (b.isTop10Sponsored ? 1000 : 0) + (b.isBreaking ? 300 : 0) + (b.views || 0);
+        if (bScore !== aScore) return bScore - aScore;
+        return new Date(b.timestamp || 0) - new Date(a.timestamp || 0);
+      });
+      return pool.slice(0, 5);
+    }
+
+    function renderTop5Spotlight(articles) {
+      const container = document.getElementById('spotlightCardsGrid');
+      const spotlightStories = getTop5SpotlightStories(articles);
+
+      if (spotlightStories.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-qn-muted font-mono text-xs">
+            No spotlight articles available. Submit dispatches to populate the top wire showcase.
+          </div>
+        `;
+        return;
+      }
+
+      const lead = spotlightStories[0];
+      const sideFour = spotlightStories.slice(1, 5);
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+          <div class="lg:col-span-7 bg-qn-black border border-qn-border group cursor-pointer overflow-hidden flex flex-col justify-between" onclick="navigateToEntry('${lead.id}')">
+            <div class="relative w-full aspect-[16/9] sm:aspect-[21/11] overflow-hidden bg-qn-black">
+              <img 
+                src="${lead.image || 'https://placehold.co/1200x630/11141a/e63946?text=Spotlight'}" 
+                alt="${escapeHtml(lead.title)}" 
+                class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                onerror="this.src='https://placehold.co/1200x630/11141a/e63946?text=Spotlight'"
+              >
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0a0c0f] via-[#0a0c0f]/50 to-transparent"></div>
+              <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                <span class="bg-qn-gold text-black text-[10px] font-black uppercase px-2 py-0.5 font-display flex items-center gap-1 shadow">
+                  <span class="material-symbols-sharp text-xs">workspace_premium</span> #1 SPOTLIGHT
+                </span>
+                <span class="bg-black/80 backdrop-blur text-white text-[10px] font-mono px-2 py-0.5 border border-white/20 uppercase">${escapeHtml(lead.category)}</span>
+                ${lead.isBreaking ? '<span class="bg-qn-red text-white text-[10px] font-bold px-1.5 py-0.5 uppercase">BREAKING</span>' : ''}
+              </div>
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4">
+                <h3 class="font-serif font-bold text-lg sm:text-2xl text-white group-hover:text-qn-red transition-colors leading-tight">
+                  ${escapeHtml(lead.title)}
+                </h3>
+                <p class="text-xs text-gray-300 mt-1.5 line-clamp-2 leading-relaxed">
+                  ${escapeHtml(lead.excerpt)}
+                </p>
+                <div class="flex items-center gap-3 text-[10px] font-mono text-qn-muted mt-2">
+                  <span class="text-white font-medium">BY ${escapeHtml(lead.author).toUpperCase()}</span>
+                  <span>&bull;</span>
+                  <span>${formatTime(lead.timestamp)}</span>
+                  <span>&bull;</span>
+                  <span class="text-qn-gold">${lead.views || 0} VIEWS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+            ${sideFour.map((item, idx) => `
+              <div class="p-2 bg-qn-black border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-2.5 group" onclick="navigateToEntry('${item.id}')">
+                <div class="relative w-20 h-16 shrink-0 bg-qn-card overflow-hidden border border-qn-border/60">
+                  <img 
+                    src="${item.image || 'https://placehold.co/160x120/11141a/e63946?text=Wire'}" 
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+                    alt="${escapeHtml(item.title)}"
+                    onerror="this.src='https://placehold.co/160x120/11141a/e63946?text=Wire'"
+                  >
+                  <span class="absolute top-0 left-0 bg-qn-gold text-black text-[9px] font-black px-1 font-display">#${idx + 2}</span>
+                </div>
+                <div class="min-w-0 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center gap-1.5 text-[9px] font-mono text-qn-muted uppercase">
+                      <span class="text-qn-red font-bold">${escapeHtml(item.category)}</span>
+                      <span>&bull;</span>
+                      <span>${formatTime(item.timestamp)}</span>
+                    </div>
+                    <h4 class="text-[12px] font-serif font-bold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2 mt-0.5">
+                      ${escapeHtml(item.title)}
+                    </h4>
+                  </div>
+                  <div class="text-[10px] text-qn-muted truncate">By ${escapeHtml(item.author)}</div>
+                </div>
+              </div>
+            `).join('')}
+            ${Array.from({ length: Math.max(0, 4 - sideFour.length) }).map((_, i) => `
+              <div class="p-3 bg-qn-black border border-dashed border-qn-border/60 flex items-center justify-center text-[11px] text-qn-muted font-mono">
+                #${sideFour.length + i + 2} SPOTLIGHT SLOT OPEN
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMainFeed(articles) {
       const feedContainer = document.getElementById('articlesList');
       const resultsCount = document.getElementById('resultsCount');
 
@@ -496,20 +542,19 @@
       resultsCount.innerText = `(${filtered.length})`;
 
       if (articles.length === 0) {
-        leadSection.innerHTML = '';
         feedContainer.innerHTML = `
           <div class="bg-qn-card border border-qn-border p-8 text-center text-qn-muted">
             <span class="material-symbols-sharp text-4xl mb-2 text-qn-borderLight">newspaper</span>
-            <div class="font-display font-bold uppercase text-white text-base tracking-wider">No Articles Published</div>
+            <div class="font-display font-bold uppercase text-white text-base tracking-wider">No Dispatches on Wire</div>
             <p class="text-xs text-qn-muted mt-1 max-w-md mx-auto leading-relaxed">
-              Your QwidNews feed is currently empty. Use the menu above to submit your first gaming, anime, movie, or TV news story.
+              Your QwidNews feed is currently empty. Use the publishing desk to draft and index your first news report.
             </p>
             <div class="mt-4 flex items-center justify-center gap-3">
               <a href="post.html" class="px-4 py-2 bg-qn-red hover:bg-qn-redHover text-white font-bold text-xs uppercase tracking-wider transition">
-                Go to Post Page
+                Submit First Article
               </a>
-              <button onclick="seedSampleNews()" class="px-4 py-2 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text hover:text-white font-semibold text-xs uppercase tracking-wider transition">
-                Load Sample Articles
+              <button onclick="seedSampleNews()" class="px-4 py-2 bg-qn-black hover:bg-qn-dark border border-qn-border text-qn-text hover:text-white font-semibold text-xs uppercase tracking-wider transition">
+                Load Sample Dispatches
               </button>
             </div>
           </div>
@@ -518,122 +563,43 @@
       }
 
       if (filtered.length === 0) {
-        leadSection.innerHTML = '';
         feedContainer.innerHTML = `
           <div class="bg-qn-card border border-qn-border p-6 text-center text-qn-muted">
-            <div class="font-bold text-white text-sm">No articles found in category: "${escapeHtml(activeFilterCategory)}"</div>
-            <p class="text-xs mt-1">Try another category or clear your search input.</p>
-            <button onclick="filterNews('ALL'); clearSearch();" class="mt-3 px-3 py-1 bg-qn-borderLight hover:bg-white hover:text-black text-white text-xs font-bold uppercase">Reset Filter</button>
+            <div class="font-bold text-white text-sm">No articles matched filter: "${escapeHtml(activeFilterCategory)}"</div>
+            <p class="text-xs mt-1">Try another category tab or refine your search keywords.</p>
+            <button onclick="filterNews('ALL'); clearSearch();" class="mt-3 px-3 py-1 bg-qn-borderLight hover:bg-white hover:text-black text-white text-xs font-bold uppercase">Reset Wire Filter</button>
           </div>
         `;
         return;
       }
 
-      if (activeFilterCategory === 'ALL' && searchQuery.trim() === '' && filtered.length > 0) {
-        const lead = filtered[0];
-        const secondary = filtered.slice(1, 5);
-
-        leadSection.innerHTML = `
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 border-b border-qn-border pb-3.5">
-            <div class="lg:col-span-8 bg-qn-card border border-qn-border flex flex-col justify-between group cursor-pointer overflow-hidden" onclick="navigateToEntry('${lead.id}')">
-              <div class="relative w-full aspect-[16/9] sm:aspect-[21/10] overflow-hidden bg-qn-black">
-                <img 
-                  src="${lead.image || 'https://placehold.co/1200x600/11141a/e63946?text=QwidNews'}" 
-                  alt="${escapeHtml(lead.title)}" 
-                  class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                >
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0c0f] via-[#0a0c0f]/40 to-transparent"></div>
-                <div class="absolute top-3 left-3 flex items-center gap-2">
-                  <span class="bg-qn-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">TOP STORY</span>
-                  <span class="bg-black/75 backdrop-blur text-slate-300 text-[10px] font-semibold px-2 py-0.5 border border-white/10 uppercase">${lead.category}</span>
-                </div>
-                <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                  <h1 class="font-serif font-bold text-xl sm:text-2xl lg:text-3xl text-white group-hover:text-qn-red transition-colors leading-tight">
-                    ${escapeHtml(lead.title)}
-                  </h1>
-                  <p class="text-xs sm:text-sm text-gray-300 mt-1.5 line-clamp-2 leading-relaxed">
-                    ${escapeHtml(lead.excerpt)}
-                  </p>
-                  <div class="flex items-center gap-3 text-[11px] text-qn-muted mt-2">
-                    <span class="text-white font-medium">By ${escapeHtml(lead.author)}</span>
-                    <span>&bull;</span>
-                    <span>${formatTime(lead.timestamp)}</span>
-                    ${lead.isBreaking ? '<span class="text-qn-red font-bold">• BREAKING</span>' : ''}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="lg:col-span-4 flex flex-col gap-2">
-              <div class="bg-qn-dark border-b-2 border-qn-red px-3 py-1.5 flex items-center justify-between">
-                <span class="font-display font-bold uppercase tracking-wider text-[11px] text-white flex items-center gap-1.5">
-                  <span class="w-2 h-2 bg-qn-red"></span> Headlines
-                </span>
-                <span class="text-[10px] font-mono text-qn-muted">${secondary.length} STORIES</span>
-              </div>
-              <div class="flex flex-col gap-2 flex-1 justify-start">
-                ${secondary.length > 0 ? secondary.map(item => `
-                  <article class="p-2 bg-qn-card border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-2.5 group" onclick="navigateToEntry('${item.id}')">
-                    <img src="${item.image || 'https://placehold.co/160x120/11141a/e63946?text=News'}" class="w-16 h-14 object-cover shrink-0 bg-qn-black border border-qn-border/60" alt="">
-                    <div class="min-w-0 flex-1">
-                      <span class="text-[9px] font-bold text-qn-red uppercase">${item.category}</span>
-                      <h4 class="text-[12px] font-semibold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2">${escapeHtml(item.title)}</h4>
-                      <div class="text-[10px] text-qn-muted mt-0.5">${formatTime(item.timestamp)} &bull; ${escapeHtml(item.author)}</div>
-                    </div>
-                  </article>
-                `).join('') : `
-                  <div class="p-4 bg-qn-card border border-qn-border text-center text-xs text-qn-muted">
-                    Additional articles will appear here.
-                  </div>
-                `}
-              </div>
-            </div>
-          </div>
-        `;
-
-        const restOfFeed = filtered.slice(5);
-        renderCardList(feedContainer, restOfFeed.length > 0 ? restOfFeed : filtered.slice(1));
-      } else {
-        leadSection.innerHTML = '';
-        renderCardList(feedContainer, filtered);
-      }
-    }
-
-    function renderCardList(container, items) {
-      if (items.length === 0) {
-        container.innerHTML = `
-          <div class="p-4 bg-qn-card border border-qn-border text-center text-xs text-qn-muted">
-            All current articles are displayed above in the top story section.
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = items.map(art => {
+      feedContainer.innerHTML = filtered.map(art => {
         return `
           <article class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition-all p-2.5 sm:p-3 flex flex-col sm:flex-row gap-3 group cursor-pointer" onclick="navigateToEntry('${art.id}')">
-            <div class="w-full sm:w-44 md:w-48 h-32 sm:h-28 shrink-0 bg-qn-black overflow-hidden relative border border-qn-border/60">
+            <div class="w-full sm:w-48 h-36 sm:h-28 shrink-0 bg-qn-black overflow-hidden relative border border-qn-border/60">
               <img 
                 src="${art.image || 'https://placehold.co/400x250/11141a/e63946?text=QwidNews'}" 
                 alt="${escapeHtml(art.title)}" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://placehold.co/400x250/11141a/e63946?text=QwidNews'"
                 loading="lazy"
               >
-              <span class="absolute top-1 left-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 bg-black/80 text-white border border-white/20">
-                ${art.category}
+              <span class="absolute top-1 left-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 bg-black/85 text-white border border-white/20">
+                ${escapeHtml(art.category)}
               </span>
+              ${art.isTop10Sponsored ? '<span class="absolute bottom-1 left-1 text-[9px] font-black uppercase px-1.5 py-0.2 bg-qn-gold text-black font-display">TOP 10</span>' : ''}
             </div>
 
             <div class="flex-1 flex flex-col justify-between min-w-0">
               <div>
                 <div class="flex items-center gap-2 text-[10px] text-qn-muted uppercase font-mono mb-0.5">
-                  <span class="text-white font-semibold">${art.category}</span>
+                  <span class="text-white font-semibold">${escapeHtml(art.category)}</span>
                   <span>&bull;</span>
                   <span>${formatTime(art.timestamp)}</span>
-                  ${art.isBreaking ? '<span class="text-qn-red font-bold">BREAKING</span>' : ''}
+                  ${art.isBreaking ? '<span class="text-qn-red font-bold">&bull; BREAKING</span>' : ''}
                 </div>
 
-                <h3 class="font-serif font-bold text-base text-qn-text leading-snug group-hover:text-qn-red transition-colors line-clamp-2">
+                <h3 class="font-serif font-bold text-base sm:text-lg text-qn-text leading-snug group-hover:text-qn-red transition-colors line-clamp-2">
                   ${escapeHtml(art.title)}
                 </h3>
 
@@ -642,9 +608,9 @@
                 </p>
               </div>
 
-              <div class="mt-2 pt-1.5 border-t border-qn-border/50 flex items-center justify-between text-[11px] text-qn-muted">
-                <span class="text-slate-300 font-medium">By ${escapeHtml(art.author)}</span>
-                <span class="text-qn-red group-hover:underline text-[11px] font-semibold uppercase">Read Article &rarr;</span>
+              <div class="mt-2 pt-1.5 border-t border-qn-border/50 flex items-center justify-between text-[11px] text-qn-muted font-mono">
+                <span class="text-slate-300 font-sans">By ${escapeHtml(art.author)}</span>
+                <span class="text-qn-red group-hover:underline text-[11px] font-sans font-semibold uppercase">Read Dispatch &rarr;</span>
               </div>
             </div>
           </article>
@@ -652,22 +618,30 @@
       }).join('');
     }
 
-    function renderCategoryCounts() {
-      const articles = getArticles();
-      const statsBox = document.getElementById('categoryCountsContainer');
-      const statsLabel = document.getElementById('postStatsLabel');
-      statsLabel.innerText = `${articles.length} POSTS`;
+    function renderMostViewed(articles) {
+      const container = document.getElementById('mostViewedContainer');
+      if (articles.length === 0) {
+        container.innerHTML = '<div class="p-3 text-center text-xs text-qn-muted font-mono">No read statistics yet.</div>';
+        return;
+      }
 
-      const cats = ['GAMING', 'ANIME', 'MOVIES', 'TV SHOWS', 'REVIEWS', 'LEAKS', 'HARDWARE'];
-      statsBox.innerHTML = cats.map(cat => {
-        const count = articles.filter(a => a.category === cat).length;
-        return `
-          <div onclick="filterNews('${cat}')" class="p-2 flex items-center justify-between hover:bg-qn-card cursor-pointer transition">
-            <span class="font-medium text-qn-text hover:text-white uppercase text-[11px]">${cat}</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.2 bg-qn-black border border-qn-border text-qn-muted">${count}</span>
+      const sorted = [...articles].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+
+      container.innerHTML = sorted.map((item, idx) => `
+        <div class="pt-2 first:pt-0 cursor-pointer group flex items-start gap-2.5" onclick="navigateToEntry('${item.id}')">
+          <span class="font-display font-black text-sm text-qn-red w-4 text-center shrink-0">#${idx + 1}</span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5 text-[9px] font-mono text-qn-muted uppercase mb-0.5">
+              <span class="text-qn-red font-bold">${escapeHtml(item.category)}</span>
+              <span>&bull;</span>
+              <span>${item.views || 0} READS</span>
+            </div>
+            <h4 class="font-serif font-bold text-xs text-white leading-snug group-hover:text-qn-red transition line-clamp-2">
+              ${escapeHtml(item.title)}
+            </h4>
           </div>
-        `;
-      }).join('');
+        </div>
+      `).join('');
     }
 
     function filterNews(cat) {
@@ -675,120 +649,42 @@
       const tabs = document.querySelectorAll('.cat-tab');
       tabs.forEach(t => {
         if (t.getAttribute('data-cat') === cat) {
-          t.className = "cat-tab active-cat px-3 py-1 text-white bg-qn-card border-b-2 border-qn-red";
+          t.className = "cat-tab px-3 py-1 text-white bg-qn-card border-b-2 border-qn-red";
         } else {
           t.className = "cat-tab px-3 py-1 hover:text-white hover:bg-qn-card/60 transition-colors";
         }
       });
 
       const title = document.getElementById('feedTitle');
-      title.innerText = cat === 'ALL' ? 'Latest Headlines' : `${cat} Headlines`;
-      renderLeadAndFeed();
+      title.innerText = cat === 'ALL' ? 'Latest Wire Headlines' : `${cat} Headlines`;
+      renderMainFeed(getArticles());
     }
 
     function handleSearch(val) {
       searchQuery = val;
-      renderLeadAndFeed();
+      renderMainFeed(getArticles());
     }
 
     function clearSearch() {
       const input = document.getElementById('searchInput');
       input.value = '';
       searchQuery = '';
-      renderLeadAndFeed();
+      renderMainFeed(getArticles());
     }
 
-    function openComposeModal() {
-      const modal = document.getElementById('composeModal');
-      const content = document.getElementById('composeModalContent');
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      content.classList.remove('scale-95');
-      content.classList.add('scale-100');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeComposeModal() {
-      const modal = document.getElementById('composeModal');
-      const content = document.getElementById('composeModalContent');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      content.classList.remove('scale-100');
-      content.classList.add('scale-95');
-      document.body.style.overflow = '';
-      clearUploadedImage();
-    }
-
-    function handleFileUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        loadedImageBase64 = evt.target.result;
-        document.getElementById('imagePreview').src = loadedImageBase64;
-        document.getElementById('imagePreviewContainer').classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function clearUploadedImage() {
-      loadedImageBase64 = null;
-      document.getElementById('fImageFile').value = '';
-      document.getElementById('imagePreview').src = '';
-      document.getElementById('imagePreviewContainer').classList.add('hidden');
-    }
-
-    function handleCreateArticle(e) {
-      e.preventDefault();
-
-      const title = document.getElementById('fTitle').value.trim();
-      const category = document.getElementById('fCategory').value;
-      const author = document.getElementById('fAuthor').value.trim();
-      const imageUrlInput = document.getElementById('fImageUrl').value.trim();
-      const excerpt = document.getElementById('fExcerpt').value.trim();
-      const body = document.getElementById('fBody').value.trim();
-      const tagsRaw = document.getElementById('fTags').value.trim();
-      const isBreaking = document.getElementById('fBreaking').checked;
-
-      const finalImage = loadedImageBase64 || imageUrlInput || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80';
-      const tagsArray = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [category];
-
-      const newArticle = {
-        id: 'qn_' + Date.now(),
-        title,
-        category,
-        author,
-        image: finalImage,
-        excerpt,
-        body,
-        tags: tagsArray,
-        isBreaking,
-        timestamp: new Date().toISOString()
-      };
-
-      const existing = getArticles();
-      existing.unshift(newArticle);
-      saveArticles(existing);
-
-      e.target.reset();
-      clearUploadedImage();
-      closeComposeModal();
-      showToast('Article published.');
-    }
-
-    function clearAllArticles() {
-      localStorage.removeItem(STORAGE_KEY);
-      refreshAll();
-      showToast('All stored articles cleared.');
-    }
-
-    function exportArticlesJson() {
-      const data = localStorage.getItem(STORAGE_KEY) || '[]';
-      const dummy = document.createElement('textarea');
-      document.body.appendChild(dummy);
-      dummy.value = data;
-      dummy.select();
-      document.execCommand('copy');
-      document.body.removeChild(dummy);
-      showToast('Article JSON copied to clipboard.');
+    function votePoll(index) {
+      const status = document.getElementById('voteStatus');
+      status.innerText = 'Ballot counted. Thank you for voting.';
+      status.classList.add('text-qn-red');
+      const counts = [43, 33, 16, 8];
+      counts[index] += 1;
+      const total = counts.reduce((a, b) => a + b, 0);
+      document.getElementById('pollTotalVotes').innerText = `${(1483).toLocaleString()} VOTES`;
+      for (let i = 0; i < 4; i++) {
+        const pct = Math.round((counts[i] / total) * 100);
+        const el = document.getElementById(`votePct${i}`);
+        if (el) el.innerText = `${pct}%`;
+      }
     }
 
     function seedSampleNews() {
@@ -803,6 +699,8 @@
           body: 'FromSoftware leadership confirmed that full pre-production has wrapped on an unannounced fantasy action title.\n\nWhile details remain under strict embargo, developers indicated the project incorporates modern technical pipelines and expanded multiplayer structures.\n\nMore information will be shared in forthcoming industry showcases.',
           tags: ['FromSoftware', 'Miyazaki', 'Elden Ring', 'Action RPG'],
           isBreaking: true,
+          isTop10Sponsored: true,
+          views: 342,
           timestamp: new Date(Date.now() - 3600000).toISOString()
         },
         {
@@ -815,6 +713,8 @@
           body: 'The animation committee for Jujutsu Kaisen has officially confirmed that the third broadcast season covering the Culling Game arc is on schedule.\n\nDirector Shota Goshozono will oversee keyframe layouts alongside veteran animators to ensure sustained broadcast quality throughout the multi-cour run.',
           tags: ['Jujutsu Kaisen', 'MAPPA', 'Anime', 'Culling Game'],
           isBreaking: true,
+          isTop10Sponsored: true,
+          views: 512,
           timestamp: new Date(Date.now() - 7200000).toISOString()
         },
         {
@@ -826,7 +726,9 @@
           excerpt: 'Warner Bros. and Legendary lock in principal photography dates for the concluding chapter of Paul Atreides.',
           body: 'Denis Villeneuve has completed the screenplay adaptation for Frank Herbert\'s Dune Messiah.\n\nProduction will commence across Budapest and Abu Dhabi with returning lead cast members Timothée Chalamet and Zendaya.',
           tags: ['Dune', 'Movies', 'SciFi', 'Villeneuve'],
-          isBreaking: true,
+          isBreaking: false,
+          isTop10Sponsored: true,
+          views: 289,
           timestamp: new Date(Date.now() - 9000000).toISOString()
         },
         {
@@ -838,25 +740,28 @@
           excerpt: 'Craig Mazin and Neil Druckmann prepare the first full trailer showing Abby and the Seattle conflict.',
           body: 'HBO has confirmed post-production milestones for the upcoming season adapting key elements of Part II.\n\nThe initial broadcast window is targeted for winter programming with seven extended episodes.',
           tags: ['The Last of Us', 'HBO', 'TV Shows', 'PlayStation'],
-          isBreaking: false,
+          isBreaking: true,
+          isTop10Sponsored: false,
+          views: 418,
           timestamp: new Date(Date.now() - 12000000).toISOString()
         },
         {
           id: 'qn_5',
-          title: 'Valve Standalone VR Prototype Registered in Regional Hardware Filings',
-          category: 'HARDWARE',
-          author: 'Marcus Vance',
-          image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=80',
-          excerpt: 'Hardware manifests point toward custom x86 silicon and micro-OLED displays in prototype Deckard testing.',
-          body: 'Regulatory test certificates indicate Valve may be entering final manufacturing tests on its untethered virtual reality system.\n\nThe documents mention low-latency streaming modules and high resolution displays designed for SteamOS.',
-          tags: ['Valve', 'Hardware', 'Deckard', 'SteamVR'],
-          isBreaking: false,
+          title: 'End of an Era: HiAnime Permanently Shuts Down Following Anti-Piracy Raid',
+          category: 'ANIME',
+          author: 'Staff Wire',
+          image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&q=80',
+          excerpt: 'The unauthorized streaming network pulling over 150 million monthly visitors goes dark after joint international enforcement operations.',
+          body: 'In one of the most consequential enforcement operations in online streaming, HiAnime has officially ceased operations for good.\n\nThe platform commanded over 150 million monthly visits before law enforcement authorities conducted coordinated operations.',
+          tags: ['HiAnime', 'Anime', 'Streaming', 'ACE'],
+          isBreaking: true,
+          isTop10Sponsored: true,
+          views: 890,
           timestamp: new Date(Date.now() - 15000000).toISOString()
         }
       ];
 
       saveArticles(sample);
-      showToast('Loaded sample articles.');
     }
 
     function formatTime(isoString) {
@@ -881,32 +786,12 @@
         .replace(/'/g, '&#039;');
     }
 
-    let toastTimer;
-    function showToast(text) {
-      const toast = document.getElementById('toast');
-      const msg = document.getElementById('toastMsg');
-      msg.innerText = text;
-      toast.classList.remove('opacity-0', 'translate-y-8');
-      toast.classList.add('opacity-100', 'translate-y-0');
-
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-8');
-      }, 2500);
-    }
-
-    window.addEventListener('click', (e) => {
+    window.addEventListener('click', () => {
       closeNavMenu();
-      const cModal = document.getElementById('composeModal');
-      if (e.target === cModal) closeComposeModal();
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeNavMenu();
-        closeComposeModal();
-      }
+      if (e.key === 'Escape') closeNavMenu();
     });
 
     window.addEventListener('DOMContentLoaded', () => {

@@ -1,1 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Article — QwidNews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
 
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            display: ['"Chakra Petch"', 'sans-serif'],
+          },
+          colors: {
+            qn: {
+              black: '#0a0c0f',
+              dark: '#11141a',
+              card: '#181d26',
+              cardHover: '#1f2530',
+              border: '#242b38',
+              borderLight: '#374152',
+              red: '#e63946',
+              redHover: '#d62839',
+              orange: '#f35b04',
+              muted: '#8590a3',
+              text: '#e2e8f0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0a0c0f;
+      color: #cbd5e1;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0c0f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #242b38;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e63946;
+    }
+    .ticker-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-move {
+      display: inline-block;
+      animation: ticker 14s linear infinite;
+    }
+    .ticker-wrap:hover .ticker-move {
+      animation-play-state: paused;
+    }
+    @keyframes ticker {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .article-body h2 {
+      font-family: "Chakra Petch", sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin-top: 1.75rem;
+      margin-bottom: 0.75rem;
+      border-left: 3px solid #e63946;
+      padding-left: 0.75rem;
+    }
+    .article-body p {
+      margin-bottom: 1.25rem;
+      line-height: 1.85;
+      font-size: 1.05rem;
+      color: #d1d5db;
+    }
+    .article-body blockquote {
+      border-left: 3px solid #e63946;
+      padding: 0.75rem 1.25rem;
+      margin: 1.5rem 0;
+      background-color: rgba(24, 29, 38, 0.6);
+      color: #f1f5f9;
+      font-style: italic;
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+    .article-body ul {
+      margin: 1rem 0 1.5rem 1.25rem;
+      list-style-type: square;
+      color: #cbd5e1;
+    }
+    .article-body li {
+      margin-bottom: 0.4rem;
+      line-height: 1.6;
+    }
+    .article-body strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .article-body a {
+      color: #e63946;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .article-body a:hover {
+      color: #f87171;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-[14px]">
+
+  <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
+    <div class="max-w-[1380px] mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 flex-1 overflow-hidden">
+        <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold shrink-0">WIRE TICKER</span>
+        <div class="ticker-wrap flex-1">
+          <div class="ticker-move text-qn-text" id="liveTickerContainer">
+            <span class="text-qn-muted mr-4">Waiting for dispatches to be published...</span>
+          </div>
+        </div>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 text-[11px] text-qn-muted shrink-0 font-mono">
+        <span id="currentDateDisplay">SEP 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
+    <div class="max-w-[1380px] mx-auto px-3 sm:px-4">
+      <div class="flex items-center justify-between py-2.5 gap-3">
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="flex items-baseline gap-1 group">
+            <span class="font-display font-black text-2xl sm:text-3xl tracking-tight text-white uppercase group-hover:text-qn-red transition-colors">Qwid<span class="text-qn-red">News</span></span>
+          </a>
+          <div class="h-4 w-[1px] bg-qn-border hidden sm:block"></div>
+          <span class="font-mono text-[11px] uppercase tracking-wider text-qn-muted hidden sm:inline font-semibold">Dispatch Reader</span>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="index.html" class="hidden sm:flex items-center gap-1 px-3 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white text-xs font-semibold uppercase tracking-wider transition">
+            <span class="material-symbols-sharp text-sm text-qn-red">arrow_back</span>
+            <span>Frontpage</span>
+          </a>
+
+          <div class="relative">
+            <button 
+              id="navMenuBtn"
+              onclick="toggleNavMenu(event)"
+              class="flex items-center gap-1.5 bg-qn-red hover:bg-qn-redHover text-white px-3 py-1.5 font-display font-bold uppercase text-[11px] tracking-wider transition-colors shadow"
+            >
+              <span class="material-symbols-sharp text-sm">menu</span>
+              <span>Menu</span>
+              <span class="material-symbols-sharp text-xs">arrow_drop_down</span>
+            </button>
+
+            <div 
+              id="navDropdownMenu" 
+              class="hidden absolute right-0 mt-1 w-48 bg-qn-dark border border-qn-border shadow-2xl py-1.5 z-50 text-xs"
+            >
+              <a href="index.html" class="flex items-center gap-2 px-3 py-2 text-white hover:bg-qn-card hover:text-qn-red font-semibold transition">
+                <span class="material-symbols-sharp text-sm text-qn-red">home</span>
+                <span>Home Feed</span>
+              </a>
+              <a href="post.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">edit_note</span>
+                <span>Post News</span>
+              </a>
+              <div class="border-t border-qn-border/60 my-1"></div>
+              <a href="wiki.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">menu_book</span>
+                <span>Wiki</span>
+              </a>
+              <a href="account.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">person</span>
+                <span>Account</span>
+              </a>
+              <a href="setting.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">settings</span>
+                <span>Settings</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-[1380px] mx-auto px-3 sm:px-4 py-4 sm:py-6 w-full flex-1">
+
+    <div id="notFoundBox" class="hidden max-w-xl mx-auto my-12 p-8 bg-qn-card border border-qn-border text-center">
+      <span class="material-symbols-sharp text-5xl text-qn-red mb-3">error_outline</span>
+      <h1 class="font-display font-bold text-xl uppercase tracking-wider text-white mb-2">Dispatch Not Located</h1>
+      <p class="text-xs text-qn-muted leading-relaxed mb-5">
+        The requested article identifier could not be verified in the local wire storage. The report may have been removed or the URL link is invalid.
+      </p>
+      <div class="flex items-center justify-center gap-3">
+        <a href="index.html" class="px-4 py-2 bg-qn-red hover:bg-qn-redHover text-white font-bold text-xs uppercase tracking-wider transition">Return to Home Feed</a>
+        <a href="post.html" class="px-4 py-2 bg-qn-black hover:bg-qn-dark border border-qn-border text-qn-text hover:text-white font-semibold text-xs uppercase tracking-wider transition">Submit New Article</a>
+      </div>
+    </div>
+
+    <div id="articleLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <article class="lg:col-span-8 flex flex-col gap-4">
+
+        <nav class="flex items-center gap-2 text-[11px] font-mono uppercase text-qn-muted">
+          <a href="index.html" class="hover:text-white transition">Home</a>
+          <span>/</span>
+          <span id="breadcrumbCategory" class="text-qn-red font-bold">Category</span>
+          <span>/</span>
+          <span class="truncate max-w-[200px] text-qn-muted" id="breadcrumbId">Dispatch</span>
+        </nav>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="entryBadge" class="bg-qn-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">CATEGORY</span>
+          <span id="entryBreaking" class="hidden bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">BREAKING</span>
+          <span id="entrySponsored" class="hidden bg-amber-500 text-black text-[10px] font-black uppercase tracking-wider px-2 py-0.5 shadow flex items-center gap-1">
+            <span class="material-symbols-sharp text-xs">workspace_premium</span> TOP 10 SPOTLIGHT
+          </span>
+        </div>
+
+        <h1 id="entryTitle" class="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-white leading-tight">
+          Loading article title...
+        </h1>
+
+        <p id="entryExcerpt" class="text-sm sm:text-base text-gray-300 font-sans border-l-2 border-qn-borderLight pl-3.5 italic leading-relaxed">
+          Loading summary excerpt...
+        </p>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 py-3 border-y border-qn-border/70 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-qn-card border border-qn-border flex items-center justify-center font-display font-bold text-white text-xs shrink-0" id="authorAvatar">
+              R
+            </div>
+            <div>
+              <div class="font-bold text-white uppercase text-[12px]" id="entryAuthor">By Reporter</div>
+              <div class="text-[11px] font-mono text-qn-muted flex items-center gap-2">
+                <span id="entryDate">JUST NOW</span>
+                <span>&bull;</span>
+                <span id="readingTime">2 min read</span>
+                <span>&bull;</span>
+                <span id="viewCountDisplay">0 views</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button onclick="bookmarkArticle()" id="bookmarkBtn" class="flex items-center gap-1 px-2.5 py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white uppercase font-semibold transition" title="Save to bookmarks">
+              <span class="material-symbols-sharp text-sm" id="bookmarkIcon">bookmark_border</span>
+              <span id="bookmarkText">Bookmark</span>
+            </button>
+            <button onclick="shareLink()" class="flex items-center gap-1 px-2.5 py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-text hover:text-white uppercase font-semibold transition" title="Copy article link">
+              <span class="material-symbols-sharp text-sm">share</span>
+              <span>Share</span>
+            </button>
+            <button onclick="editThisPost()" class="flex items-center gap-1 px-2.5 py-1 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[11px] text-qn-muted hover:text-white uppercase font-semibold transition" title="Edit in news desk">
+              <span class="material-symbols-sharp text-sm">edit</span>
+              <span class="hidden sm:inline">Edit</span>
+            </button>
+          </div>
+        </div>
+
+        <figure class="w-full bg-qn-black border border-qn-border overflow-hidden">
+          <img id="entryImage" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80" alt="Hero Lead" class="w-full max-h-[500px] object-cover">
+          <figcaption class="p-2 text-[11px] text-qn-muted font-mono flex items-center justify-between border-t border-qn-border/60 bg-[#07080b]">
+            <span id="imageCaption">Wire Coverage Asset</span>
+            <span class="uppercase">QwidNews Desk</span>
+          </figcaption>
+        </figure>
+
+        <div id="entryBody" class="article-body font-serif pt-2"></div>
+
+        <div class="border-t border-qn-border pt-4 mt-2">
+          <div class="text-[10px] font-mono uppercase text-qn-muted mb-2 tracking-wider">FILED UNDER TAGS</div>
+          <div id="entryTags" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <div class="bg-qn-card border border-qn-border p-4 mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div class="w-12 h-12 bg-qn-black border border-qn-border flex items-center justify-center font-display font-black text-qn-red text-base shrink-0 uppercase" id="authorCardBadge">
+            REP
+          </div>
+          <div class="flex-1 text-xs">
+            <div class="text-[10px] font-mono uppercase text-qn-muted">Verified Editorial Wire Dispatch</div>
+            <div class="font-bold text-white text-sm uppercase font-display" id="authorCardName">QwidNews Reporting Desk</div>
+            <p class="text-qn-muted text-[11px] leading-relaxed mt-1">
+              Authored directly through the QwidNews authoring terminal. Articles are indexed in browser storage for persistent client-side newsroom filing.
+            </p>
+          </div>
+        </div>
+
+        <section class="border-t border-qn-border pt-6 mt-4 flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-qn-border pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-qn-red"></span>
+              <h2 class="font-display font-bold uppercase tracking-wider text-sm text-white">Reader Discussions</h2>
+            </div>
+            <span class="text-xs font-mono text-qn-muted" id="commentCountLabel">0 COMMENTS</span>
+          </div>
+
+          <form onsubmit="handleCommentSubmit(event)" class="bg-qn-dark border border-qn-border p-3 flex flex-col gap-2.5 text-xs">
+            <div class="font-display font-semibold uppercase tracking-wider text-[11px] text-white">Leave a Remark</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input 
+                type="text" 
+                id="commentAuthor" 
+                required 
+                placeholder="Your name or handle *" 
+                class="bg-qn-black border border-qn-border p-2 text-white text-xs focus:outline-none focus:border-qn-red"
+              >
+            </div>
+            <textarea 
+              id="commentText" 
+              required 
+              rows="3" 
+              placeholder="Join the discussion regarding this dispatch..." 
+              class="w-full bg-qn-black border border-qn-border p-2 text-white text-xs focus:outline-none focus:border-qn-red resize-none"
+            ></textarea>
+            <div class="flex justify-end">
+              <button type="submit" class="px-4 py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold uppercase text-[11px] tracking-wider transition">
+                Submit Comment
+              </button>
+            </div>
+          </form>
+
+          <div id="commentsList" class="flex flex-col gap-2 mt-1"></div>
+        </section>
+
+      </article>
+
+      <aside class="lg:col-span-4 flex flex-col gap-4">
+
+        <div class="bg-qn-dark border border-qn-border">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
+            <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
+              <span class="material-symbols-sharp text-qn-red text-sm">hub</span> Related Wire Stories
+            </h3>
+            <span class="text-[10px] text-qn-muted font-mono" id="relatedCountLabel">0 POSTS</span>
+          </div>
+          <div id="relatedArticlesList" class="p-2 flex flex-col gap-2 divide-y divide-qn-border/40"></div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
+            <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
+              <span class="material-symbols-sharp text-amber-500 text-sm">trending_up</span> Top Spotlight Feed
+            </h3>
+          </div>
+          <div id="topSpotlightList" class="p-2 flex flex-col gap-2"></div>
+        </div>
+
+        <div class="bg-qn-card border border-qn-border p-3 flex flex-col gap-2 text-xs">
+          <div class="font-display font-bold uppercase tracking-wider text-xs text-white flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-qn-red"></span> Submit News Wire
+          </div>
+          <p class="text-qn-muted text-[11px] leading-relaxed">
+            Have a scoop regarding games, anime series, upcoming film adaptations, or hardware releases?
+          </p>
+          <a href="post.html" class="w-full py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold text-center uppercase tracking-wider text-[11px] transition">
+            File New Article
+          </a>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="bg-qn-black border-t border-qn-border mt-10 text-qn-muted text-xs">
+    <div class="max-w-[1380px] mx-auto px-4 py-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="font-display font-black text-xl text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
+          <span class="text-qn-muted font-mono text-[11px]">/ WIRE ARCHIVE</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
+          <a href="index.html" class="hover:text-white">Home</a>
+          <a href="post.html" class="hover:text-white">Post News</a>
+          <a href="wiki.html" class="hover:text-white">Wiki</a>
+          <a href="account.html" class="hover:text-white">Account</a>
+          <a href="setting.html" class="hover:text-white">Settings</a>
+        </div>
+      </div>
+      <div class="border-t border-qn-border/60 mt-4 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-qn-muted">
+        <div>&copy; 2026 QwidNews Editorial Terminal. All dispatches stored locally.</div>
+        <div class="flex gap-3">
+          <a href="index.html" class="hover:underline">Home Feed</a>
+          <a href="post.html" class="hover:underline">Publishing Desk</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="fixed bottom-4 right-4 z-50 pointer-events-none transform translate-y-8 opacity-0 transition-all duration-200 bg-qn-black border border-qn-border text-white text-xs px-3 py-2 shadow-lg flex items-center gap-2">
+    <span class="w-2 h-2 bg-qn-red"></span>
+    <span id="toastMsg">Action completed.</span>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'qwidnews_posts';
+    const BOOKMARKS_KEY = 'qwidnews_saved';
+    let currentArticle = null;
+
+    function getArticles() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveArticles(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function getComments(id) {
+      try {
+        const raw = localStorage.getItem('qwidnews_comments_' + id);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveComments(id, list) {
+      localStorage.setItem('qwidnews_comments_' + id, JSON.stringify(list));
+      renderComments();
+    }
+
+    function toggleNavMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('navDropdownMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    function closeNavMenu() {
+      const menu = document.getElementById('navDropdownMenu');
+      if (menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+      }
+    }
+
+    function renderTicker() {
+      const articles = getArticles();
+      const tickerBox = document.getElementById('liveTickerContainer');
+      const breakingArticles = articles.filter(a => a.isBreaking);
+      const displayList = breakingArticles.length > 0 ? breakingArticles : articles;
+
+      if (displayList.length === 0) {
+        tickerBox.innerHTML = '<span class="text-qn-muted mr-6">No news reports filed yet. Click Menu to post an article.</span>';
+        return;
+      }
+
+      const itemsHtml = displayList.map(a => `
+        <span class="cursor-pointer hover:text-qn-red mx-4 inline-flex items-center gap-1" onclick="window.location.href='entry.html?id=${encodeURIComponent(a.id)}'">
+          <span class="text-qn-red font-bold font-mono">• [${a.category}]</span> 
+          ${escapeHtml(a.title)}
+        </span>
+      `).join('');
+
+      tickerBox.innerHTML = itemsHtml + itemsHtml;
+    }
+
+    function loadArticle() {
+      const params = new URLSearchParams(window.location.search);
+      const targetId = params.get('id');
+
+      const layout = document.getElementById('articleLayout');
+      const notFound = document.getElementById('notFoundBox');
+
+      if (!targetId) {
+        layout.classList.add('hidden');
+        notFound.classList.remove('hidden');
+        return;
+      }
+
+      const articles = getArticles();
+      const article = articles.find(a => String(a.id) === String(targetId));
+
+      if (!article) {
+        layout.classList.add('hidden');
+        notFound.classList.remove('hidden');
+        return;
+      }
+
+      currentArticle = article;
+
+      if (!article.views) article.views = 0;
+      article.views += 1;
+      saveArticles(articles);
+
+      document.getElementById('pageTitle').innerText = `${article.title} — QwidNews`;
+      document.getElementById('breadcrumbCategory').innerText = article.category;
+      document.getElementById('breadcrumbId').innerText = article.id;
+      document.getElementById('entryBadge').innerText = article.category;
+
+      if (article.isBreaking) {
+        document.getElementById('entryBreaking').classList.remove('hidden');
+      }
+      if (article.isTop10Sponsored) {
+        document.getElementById('entrySponsored').classList.remove('hidden');
+      }
+
+      document.getElementById('entryTitle').innerText = article.title;
+      document.getElementById('entryExcerpt').innerText = article.excerpt || '';
+      document.getElementById('entryAuthor').innerText = `By ${article.author}`;
+      document.getElementById('authorCardName').innerText = article.author;
+      document.getElementById('entryDate').innerText = formatTime(article.timestamp);
+      document.getElementById('viewCountDisplay').innerText = `${article.views} view${article.views === 1 ? '' : 's'}`;
+
+      const words = ((article.body || '') + ' ' + (article.excerpt || '')).trim().split(/\s+/).length;
+      const readMinutes = Math.max(1, Math.ceil(words / 200));
+      document.getElementById('readingTime').innerText = `${readMinutes} min read`;
+
+      const initial = (article.author || 'R').trim().charAt(0).toUpperCase();
+      document.getElementById('authorAvatar').innerText = initial;
+      document.getElementById('authorCardBadge').innerText = initial;
+
+      const imgEl = document.getElementById('entryImage');
+      imgEl.src = article.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80';
+      imgEl.onerror = () => {
+        imgEl.src = 'https://placehold.co/1200x600/11141a/e63946?text=QwidNews';
+      };
+
+      document.getElementById('imageCaption').innerText = `${article.category} Wire Asset &bull; Filed ${formatTime(article.timestamp)}`;
+
+      renderRichBody(article.body || '');
+
+      const tagsContainer = document.getElementById('entryTags');
+      const tagsList = article.tags && article.tags.length > 0 ? article.tags : [article.category];
+      tagsContainer.innerHTML = tagsList.map(t => `
+        <span class="px-2 py-0.5 bg-qn-black border border-qn-border text-[11px] font-mono text-qn-muted uppercase">${escapeHtml(t)}</span>
+      `).join('');
+
+      updateBookmarkButton();
+      renderComments();
+      renderSidebarWidgets(article, articles);
+    }
+
+    function renderRichBody(raw) {
+      const container = document.getElementById('entryBody');
+      if (!raw) {
+        container.innerHTML = '<p class="italic text-qn-muted">No text content filed for this dispatch.</p>';
+        return;
+      }
+
+      const paragraphs = raw.split(/\n\s*\n/).filter(Boolean);
+
+      container.innerHTML = paragraphs.map(para => {
+        let trimmed = para.trim();
+
+        if (trimmed.startsWith('## ')) {
+          const headingText = escapeHtml(trimmed.substring(3).trim());
+          return `<h2>${headingText}</h2>`;
+        }
+
+        if (trimmed.startsWith('> ') || trimmed.startsWith('&gt; ')) {
+          const quoteText = formatInlineMarkdown(trimmed.replace(/^(&gt;|>)\s*/, ''));
+          return `<blockquote>${quoteText}</blockquote>`;
+        }
+
+        if (trimmed.startsWith('• ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const lines = trimmed.split('\n');
+          const listItems = lines.map(line => {
+            const clean = formatInlineMarkdown(line.replace(/^[•\-\*]\s*/, ''));
+            return `<li>${clean}</li>`;
+          }).join('');
+          return `<ul>${listItems}</ul>`;
+        }
+
+        return `<p>${formatInlineMarkdown(trimmed).replace(/\n/g, '<br>')}</p>`;
+      }).join('');
+    }
+
+    function formatInlineMarkdown(text) {
+      let out = escapeHtml(text);
+      out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      out = out.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      return out;
+    }
+
+    function renderSidebarWidgets(current, all) {
+      const relatedBox = document.getElementById('relatedArticlesList');
+      const relatedCount = document.getElementById('relatedCountLabel');
+      const topList = document.getElementById('topSpotlightList');
+
+      const related = all.filter(a => String(a.id) !== String(current.id) && a.category === current.category);
+      relatedCount.innerText = `${related.length} POSTS`;
+
+      if (related.length === 0) {
+        relatedBox.innerHTML = `
+          <div class="p-3 text-center text-xs text-qn-muted">
+            No further reports filed under ${current.category} yet.
+          </div>
+        `;
+      } else {
+        relatedBox.innerHTML = related.slice(0, 5).map(item => `
+          <div class="pt-2 first:pt-0 cursor-pointer group" onclick="window.location.href='entry.html?id=${encodeURIComponent(item.id)}'">
+            <div class="flex items-center gap-2 text-[10px] font-mono text-qn-muted mb-0.5">
+              <span class="text-qn-red font-bold uppercase">[${item.category}]</span>
+              <span>&bull;</span>
+              <span>${formatTime(item.timestamp)}</span>
+            </div>
+            <h4 class="font-serif font-bold text-xs text-white leading-snug group-hover:text-qn-red transition line-clamp-2">
+              ${escapeHtml(item.title)}
+            </h4>
+            <div class="text-[10px] text-qn-muted mt-1">By ${escapeHtml(item.author)}</div>
+          </div>
+        `).join('');
+      }
+
+      const spotlights = all.filter(a => a.isTop10Sponsored || a.isBreaking).slice(0, 5);
+      const displaySpotlights = spotlights.length > 0 ? spotlights : all.slice(0, 5);
+
+      topList.innerHTML = displaySpotlights.map((item, idx) => `
+        <div class="flex items-center gap-2.5 p-2 bg-qn-card border border-qn-border cursor-pointer hover:border-qn-borderLight transition group" onclick="window.location.href='entry.html?id=${encodeURIComponent(item.id)}'">
+          <div class="font-display font-black text-sm text-qn-red w-5 text-center shrink-0">#${idx + 1}</div>
+          <img src="${item.image || 'https://placehold.co/100x70/11141a/e63946?text=Wire'}" class="w-12 h-10 object-cover bg-qn-black shrink-0 border border-qn-border/60">
+          <div class="min-w-0 flex-1">
+            <h5 class="text-[11px] font-semibold text-qn-text group-hover:text-qn-red transition leading-tight line-clamp-2">${escapeHtml(item.title)}</h5>
+            <div class="text-[10px] font-mono text-qn-muted mt-0.5">${formatTime(item.timestamp)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderComments() {
+      if (!currentArticle) return;
+      const list = getComments(currentArticle.id);
+      const container = document.getElementById('commentsList');
+      const counter = document.getElementById('commentCountLabel');
+
+      counter.innerText = `${list.length} COMMENT${list.length === 1 ? '' : 'S'}`;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 bg-qn-card border border-qn-border text-center text-xs text-qn-muted">
+            Be the first to provide analysis or thoughts on this wire report.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(c => `
+        <div class="p-3 bg-qn-card border border-qn-border flex items-start gap-3 text-xs">
+          <div class="w-7 h-7 bg-qn-black border border-qn-border flex items-center justify-center font-display font-bold text-white text-[11px] shrink-0 uppercase">
+            ${escapeHtml(c.name.charAt(0))}
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-bold text-white uppercase text-[11px]">${escapeHtml(c.name)}</span>
+              <span class="text-[10px] font-mono text-qn-muted">${formatTime(c.timestamp)}</span>
+            </div>
+            <p class="text-slate-300 mt-1 leading-relaxed text-[12px] whitespace-pre-wrap">${escapeHtml(c.body)}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleCommentSubmit(e) {
+      e.preventDefault();
+      if (!currentArticle) return;
+
+      const nameInput = document.getElementById('commentAuthor');
+      const textInput = document.getElementById('commentText');
+
+      const name = nameInput.value.trim();
+      const body = textInput.value.trim();
+
+      if (!name || !body) return;
+
+      const comments = getComments(currentArticle.id);
+      comments.unshift({
+        id: 'comm_' + Date.now(),
+        name,
+        body,
+        timestamp: new Date().toISOString()
+      });
+
+      saveComments(currentArticle.id, comments);
+      textInput.value = '';
+      showToast('Comment submitted to dispatch.');
+    }
+
+    function shareLink() {
+      const dummy = document.createElement('input');
+      document.body.appendChild(dummy);
+      dummy.value = window.location.href;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      showToast('Article link copied to clipboard.');
+    }
+
+    function getSavedArticles() {
+      try {
+        const raw = localStorage.getItem(BOOKMARKS_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function bookmarkArticle() {
+      if (!currentArticle) return;
+      let saved = getSavedArticles();
+      const exists = saved.includes(currentArticle.id);
+
+      if (exists) {
+        saved = saved.filter(id => id !== currentArticle.id);
+        localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(saved));
+        showToast('Article removed from saved bookmarks.');
+      } else {
+        saved.push(currentArticle.id);
+        localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(saved));
+        showToast('Article added to saved bookmarks.');
+      }
+      updateBookmarkButton();
+    }
+
+    function updateBookmarkButton() {
+      if (!currentArticle) return;
+      const saved = getSavedArticles();
+      const exists = saved.includes(currentArticle.id);
+      const icon = document.getElementById('bookmarkIcon');
+      const text = document.getElementById('bookmarkText');
+
+      if (exists) {
+        icon.innerText = 'bookmark';
+        icon.classList.add('text-qn-red');
+        text.innerText = 'Saved';
+      } else {
+        icon.innerText = 'bookmark_border';
+        icon.classList.remove('text-qn-red');
+        text.innerText = 'Bookmark';
+      }
+    }
+
+    function editThisPost() {
+      if (!currentArticle) return;
+      window.location.href = `post.html?edit=${encodeURIComponent(currentArticle.id)}`;
+    }
+
+    function formatTime(isoString) {
+      if (!isoString) return 'Just now';
+      const date = new Date(isoString);
+      const diffMs = Date.now() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    let toastTimer;
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMsg');
+      msg.innerText = text;
+      toast.classList.remove('opacity-0', 'translate-y-8');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-8');
+      }, 2500);
+    }
+
+    window.addEventListener('click', () => {
+      closeNavMenu();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const dateEl = document.getElementById('currentDateDisplay');
+      if (dateEl) {
+        const now = new Date();
+        dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+      }
+      renderTicker();
+      loadArticle();
+    });
+  </script>
+</body>
+</html>

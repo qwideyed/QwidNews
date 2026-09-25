@@ -3,183 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QwidNews — Gaming & Anime Wire</title>
+<title>QwidNews</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background-color:#0a0c0f;color:#d1d5db;font-family:'Inter',sans-serif;line-height:1.5;min-height:100vh}
+body{background-color:#0d0f12;color:#d1d5db;font-family:'Inter',sans-serif;line-height:1.5;min-height:100vh}
 a{color:inherit;text-decoration:none}
 button{cursor:pointer;font-family:inherit;border:none;background:none}
-.container{max-width:1440px;margin:0 auto;padding:0 24px}
-.ticker-bar{background:#0d1015;border-bottom:1px solid #1f242c;display:flex;align-items:center;height:40px;overflow:hidden;font-size:13px}
-.ticker-tag{background:#e63946;color:#fff;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;z-index:2}
-.ticker-wrap{flex:1;overflow:hidden;position:relative;height:100%;display:flex;align-items:center}
+.container{max-width:1400px;margin:0 auto;padding:0 20px}
+.ticker-bar{background:#11141a;border-bottom:1px solid #1f2530;display:flex;align-items:center;height:38px;overflow:hidden;font-size:13px}
+.ticker-badge{background:#e63946;color:#fff;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;z-index:2}
+.ticker-content{flex:1;overflow:hidden;position:relative;height:100%;display:flex;align-items:center}
 .ticker-track{display:flex;white-space:nowrap;will-change:transform;animation:marquee 14s linear infinite}
 .ticker-track:hover{animation-play-state:paused}
-.ticker-item{padding:0 24px;color:#9ca3af;display:inline-flex;align-items:center;gap:8px}
+.ticker-item{padding:0 22px;color:#9ca3af;display:inline-flex;align-items:center;gap:8px}
 .ticker-item:hover{color:#fff}
-.ticker-item span{color:#e63946;font-size:10px;font-weight:700}
+.ticker-item span{color:#e63946;font-size:11px;font-weight:700}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.header{border-bottom:1px solid #1a1f26;background:#0d1015;position:sticky;top:0;z-index:40}
-.header-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-mark{width:36px;height:36px;background:#e63946;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;border-radius:4px}
-.brand-text{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;letter-spacing:1px;color:#fff}
-.brand-text span{color:#e63946}
-.search-box{flex:1;max-width:400px;margin:0 32px;position:relative}
-.search-box input{width:100%;background:#14171d;border:1px solid #222731;color:#fff;padding:8px 14px 8px 38px;border-radius:4px;font-size:13px;outline:none}
-.search-box input:focus{border-color:#e63946}
+.header{background:#14171c;border-bottom:1px solid #1f2530;position:sticky;top:0;z-index:50}
+.header-row{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-square{width:36px;height:36px;background:#e63946;color:#fff;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+.brand-name{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;letter-spacing:1px;color:#fff}
+.brand-name span{color:#e63946}
+.search-wrapper{flex:1;max-width:440px;margin:0 24px;position:relative}
+.search-wrapper input{width:100%;background:#1b1f26;border:1px solid #28303d;color:#fff;padding:8px 14px 8px 38px;border-radius:4px;font-size:13px;outline:none}
+.search-wrapper input:focus{border-color:#e63946}
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:#6b7280}
-.nav-actions{display:flex;align-items:center;gap:12px;position:relative}
-.post-btn{background:#e63946;color:#fff;padding:8px 16px;border-radius:4px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.5px;display:flex;align-items:center;gap:6px}
-.post-btn:hover{background:#d62839}
-.menu-btn{width:38px;height:38px;border:1px solid #222731;border-radius:4px;background:#14171d;color:#fff;display:flex;align-items:center;justify-content:center}
-.menu-dropdown{position:absolute;right:0;top:48px;background:#14171d;border:1px solid #242a36;border-radius:6px;width:180px;display:none;flex-direction:column;box-shadow:0 10px 25px rgba(0,0,0,0.5);overflow:hidden;z-index:50}
-.menu-dropdown.active{display:flex}
-.menu-link{padding:12px 16px;font-size:13px;color:#9ca3af;border-bottom:1px solid #1b1f27;display:flex;align-items:center;gap:10px}
-.menu-link:hover{background:#1a1f26;color:#fff}
-.menu-link:last-child{border-bottom:none}
-.sub-nav{background:#0a0c0f;border-bottom:1px solid #14171d}
-.cat-list{display:flex;gap:4px;overflow-x:auto;padding:8px 0}
-.cat-btn{padding:6px 14px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.5px;color:#6b7280;border-radius:3px}
-.cat-btn.active,.cat-btn:hover{background:#161a21;color:#fff}
-.cat-btn.active{color:#e63946}
-.spotlight-section{padding:28px 0 20px;border-bottom:1px solid #1a1f26}
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.sec-title{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.sec-title::before{content:'';display:block;width:3px;height:14px;background:#e63946}
+.header-actions{display:flex;align-items:center;gap:12px;position:relative}
+.post-action-btn{background:#e63946;color:#fff;padding:7px 16px;border-radius:4px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.5px;display:flex;align-items:center;gap:6px}
+.post-action-btn:hover{background:#d62839}
+.nav-menu-btn{width:38px;height:38px;border:1px solid #28303d;border-radius:4px;background:#1b1f26;color:#fff;display:flex;align-items:center;justify-content:center}
+.dropdown-menu{position:absolute;right:0;top:48px;background:#181c23;border:1px solid #2a3342;border-radius:6px;width:190px;display:none;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,0.6);z-index:60;overflow:hidden}
+.dropdown-menu.active{display:flex}
+.dropdown-item{padding:12px 16px;font-size:13px;color:#9ca3af;border-bottom:1px solid #202734;display:flex;align-items:center;gap:10px}
+.dropdown-item:hover{background:#202734;color:#fff}
+.dropdown-item:last-child{border-bottom:none}
+.category-nav{background:#0f1217;border-bottom:1px solid #1a1f27}
+.category-list{display:flex;gap:4px;overflow-x:auto;padding:8px 0}
+.category-pill{padding:6px 14px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.5px;color:#6b7280;border-radius:3px}
+.category-pill.active,.category-pill:hover{background:#1a1f27;color:#fff}
+.category-pill.active{color:#e63946}
+.spotlight-zone{padding:24px 0 20px;border-bottom:1px solid #1a1f27}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:#e63946}
 .spotlight-grid{display:grid;grid-template-columns:1.8fr 1.2fr;gap:20px}
-.lead-card{position:relative;background:#101318;border:1px solid #1e242d;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;min-height:420px}
-.lead-img-box{position:relative;flex:1;background:#060709;overflow:hidden}
-.lead-img{width:100%;height:100%;object-fit:cover;min-height:260px}
-.lead-content{padding:20px;display:flex;flex-direction:column;gap:8px}
-.lead-title{font-family:'Newsreader',serif;font-size:26px;color:#fff;font-weight:700;line-height:1.25}
-.lead-title:hover{color:#e63946}
-.lead-excerpt{font-size:13px;color:#9ca3af;line-height:1.5}
-.lead-meta{display:flex;align-items:center;gap:12px;font-size:11px;color:#6b7280;margin-top:4px}
-.badge{background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;font-family:'Chakra Petch',sans-serif;letter-spacing:0.5px;display:inline-block}
-.badge-alt{background:#222731;color:#9ca3af}
-.badge-gold{background:#d97706;color:#fff}
-.side-stack{display:flex;flex-direction:column;gap:12px}
-.mini-card{display:flex;gap:14px;background:#101318;border:1px solid #1e242d;border-radius:6px;padding:12px;align-items:center}
-.mini-card:hover{border-color:#2e3644}
-.mini-thumb{width:100px;height:72px;border-radius:4px;object-fit:cover;background:#060709;flex-shrink:0}
-.mini-info{display:flex;flex-direction:column;gap:4px;overflow:hidden}
-.mini-title{font-family:'Inter',sans-serif;font-weight:600;font-size:14px;color:#fff;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mini-title:hover{color:#e63946}
-.mini-meta{font-size:11px;color:#6b7280;display:flex;gap:8px;align-items:center}
-.wire-section{padding:32px 0 60px}
-.feed-grid{display:grid;grid-template-columns:1fr;gap:24px}
-.news-list{display:flex;flex-direction:column;gap:16px}
-.wire-card{display:grid;grid-template-columns:220px 1fr;gap:18px;background:#101318;border:1px solid #1b2028;border-radius:6px;overflow:hidden;padding:14px}
-.wire-card:hover{border-color:#2a3240}
-.wire-thumb{width:100%;height:140px;object-fit:cover;border-radius:4px;background:#07080a}
-.wire-body{display:flex;flex-direction:column;justify-content:space-between}
-.wire-headline{font-family:'Newsreader',serif;font-size:20px;font-weight:700;color:#fff;line-height:1.3}
-.wire-headline:hover{color:#e63946}
-.wire-excerpt{font-size:13px;color:#9ca3af;margin:6px 0;line-height:1.5}
-.wire-meta{display:flex;align-items:center;gap:12px;font-size:11px;color:#6b7280}
-.empty-box{background:#101318;border:1px dashed #242a35;border-radius:6px;padding:60px 20px;text-align:center}
-.empty-icon{font-size:44px;color:#4b5563;margin-bottom:12px}
-.empty-title{font-family:'Chakra Petch',sans-serif;font-size:18px;color:#fff;margin-bottom:6px}
-.empty-desc{font-size:13px;color:#6b7280;max-width:440px;margin:0 auto 16px}
+.lead-story{position:relative;background:#14171c;border:1px solid #202631;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;min-height:390px}
+.lead-media{position:relative;flex:1;background:#090b0e;overflow:hidden}
+.lead-img{width:100%;height:100%;object-fit:cover;min-height:240px}
+.lead-body{padding:18px;display:flex;flex-direction:column;gap:8px}
+.lead-headline{font-family:'Newsreader',serif;font-size:24px;color:#fff;font-weight:700;line-height:1.25}
+.lead-headline:hover{color:#e63946}
+.lead-desc{font-size:13px;color:#9ca3af;line-height:1.5}
+.lead-info{display:flex;align-items:center;gap:12px;font-size:11px;color:#6b7280;margin-top:4px}
+.tag-badge{background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;font-family:'Chakra Petch',sans-serif;letter-spacing:0.5px;display:inline-block}
+.tag-alt{background:#222834;color:#9ca3af}
+.tag-spotlight{background:#d97706;color:#fff}
+.side-stories{display:flex;flex-direction:column;gap:10px}
+.mini-story-card{display:flex;gap:12px;background:#14171c;border:1px solid #202631;border-radius:6px;padding:10px;align-items:center}
+.mini-story-card:hover{border-color:#2e3747}
+.mini-thumb-img{width:90px;height:68px;border-radius:4px;object-fit:cover;background:#090b0e;flex-shrink:0}
+.mini-details{display:flex;flex-direction:column;gap:3px;overflow:hidden}
+.mini-story-title{font-family:'Inter',sans-serif;font-weight:600;font-size:13px;color:#fff;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-story-title:hover{color:#e63946}
+.mini-story-meta{font-size:11px;color:#6b7280;display:flex;gap:8px;align-items:center}
+.feed-zone{padding:28px 0 60px}
+.feed-stack{display:flex;flex-direction:column;gap:14px}
+.feed-card{display:grid;grid-template-columns:200px 1fr;gap:16px;background:#14171c;border:1px solid #202631;border-radius:6px;overflow:hidden;padding:12px}
+.feed-card:hover{border-color:#2a3342}
+.feed-thumb{width:100%;height:130px;object-fit:cover;border-radius:4px;background:#090b0e}
+.feed-details{display:flex;flex-direction:column;justify-content:space-between}
+.feed-headline{font-family:'Newsreader',serif;font-size:19px;font-weight:700;color:#fff;line-height:1.3}
+.feed-headline:hover{color:#e63946}
+.feed-excerpt{font-size:13px;color:#9ca3af;margin:5px 0;line-height:1.5}
+.feed-meta{display:flex;align-items:center;gap:12px;font-size:11px;color:#6b7280}
+.empty-placeholder{background:#14171c;border:1px dashed #242c3a;border-radius:6px;padding:60px 20px;text-align:center}
+.empty-placeholder .material-symbols-outlined{font-size:42px;color:#4b5563;margin-bottom:12px}
+.empty-headline{font-family:'Chakra Petch',sans-serif;font-size:18px;color:#fff;margin-bottom:6px}
+.empty-sub{font-size:13px;color:#6b7280;max-width:440px;margin:0 auto 16px}
 @media(max-width:960px){
 .spotlight-grid{grid-template-columns:1fr}
-.search-box{display:none}
+.search-wrapper{display:none}
 }
 @media(max-width:640px){
-.wire-card{grid-template-columns:1fr}
-.wire-thumb{height:180px}
+.feed-card{grid-template-columns:1fr}
+.feed-thumb{height:180px}
 }
 </style>
 </head>
 <body>
 
 <div class="ticker-bar">
-  <div class="ticker-tag">BREAKING WIRE</div>
-  <div class="ticker-wrap">
+  <div class="ticker-badge">BREAKING WIRE</div>
+  <div class="ticker-content">
     <div class="ticker-track" id="tickerTrack">
-      <div class="ticker-item">No wire alerts posted yet.</div>
+      <div class="ticker-item">No active breaking dispatches on the wire.</div>
     </div>
   </div>
 </div>
 
 <header class="header">
-  <div class="container header-inner">
+  <div class="container header-row">
     <a href="index.html" class="brand">
-      <div class="brand-mark">Q</div>
-      <div class="brand-text">QWID<span>NEWS</span></div>
+      <div class="brand-square">Q</div>
+      <div class="brand-name">QWID<span>NEWS</span></div>
     </a>
 
-    <div class="search-box">
+    <div class="search-wrapper">
       <span class="material-symbols-outlined search-icon">search</span>
       <input type="text" id="searchInput" placeholder="Search news stories..." oninput="handleSearch()">
     </div>
 
-    <div class="nav-actions">
-      <a href="post.html" class="post-btn">
+    <div class="header-actions">
+      <a href="post.html" class="post-action-btn">
         <span class="material-symbols-outlined" style="font-size:18px">add_circle</span>
         Post News
       </a>
-      <button class="menu-btn" onclick="toggleMenu(event)">
+      <button class="nav-menu-btn" onclick="toggleDropdown(event)">
         <span class="material-symbols-outlined">menu</span>
       </button>
-      <div class="menu-dropdown" id="menuDropdown">
-        <a href="post.html" class="menu-link"><span class="material-symbols-outlined">edit_square</span>Post News</a>
-        <a href="wiki.html" class="menu-link"><span class="material-symbols-outlined">auto_stories</span>Wiki</a>
-        <a href="account.html" class="menu-link"><span class="material-symbols-outlined">person</span>Account</a>
-        <a href="setting.html" class="menu-link"><span class="material-symbols-outlined">settings</span>Settings</a>
+      <div class="dropdown-menu" id="navDropdown">
+        <a href="post.html" class="dropdown-item"><span class="material-symbols-outlined">edit_square</span>Post News</a>
+        <a href="wiki.html" class="dropdown-item"><span class="material-symbols-outlined">auto_stories</span>Wiki</a>
+        <a href="account.html" class="dropdown-item"><span class="material-symbols-outlined">person</span>Account</a>
+        <a href="setting.html" class="dropdown-item"><span class="material-symbols-outlined">settings</span>Settings</a>
       </div>
     </div>
   </div>
 </header>
 
-<nav class="sub-nav">
+<nav class="category-nav">
   <div class="container">
-    <div class="cat-list" id="categoryFilter">
-      <button class="cat-btn active" onclick="setCategory('ALL')">ALL WIRE</button>
-      <button class="cat-btn" onclick="setCategory('GAMING')">GAMING</button>
-      <button class="cat-btn" onclick="setCategory('ANIME')">ANIME</button>
-      <button class="cat-btn" onclick="setCategory('MOVIES')">MOVIES</button>
-      <button class="cat-btn" onclick="setCategory('TV SHOWS')">TV SHOWS</button>
-      <button class="cat-btn" onclick="setCategory('REVIEWS')">REVIEWS</button>
+    <div class="category-list" id="categoryTabs">
+      <button class="category-pill active" onclick="filterCategory('ALL')">ALL WIRE</button>
+      <button class="category-pill" onclick="filterCategory('GAMING')">GAMING</button>
+      <button class="category-pill" onclick="filterCategory('ANIME')">ANIME</button>
+      <button class="category-pill" onclick="filterCategory('MOVIES')">MOVIES</button>
+      <button class="category-pill" onclick="filterCategory('TV SHOWS')">TV SHOWS</button>
+      <button class="category-pill" onclick="filterCategory('REVIEWS')">REVIEWS</button>
     </div>
   </div>
 </nav>
 
-<section class="spotlight-section" id="spotlightSection" style="display:none">
+<section class="spotlight-zone" id="spotlightArea" style="display:none">
   <div class="container">
-    <div class="sec-head">
-      <div class="sec-title">Top 5 Spotlight</div>
+    <div class="section-header">
+      <div class="section-title">Top 5 Spotlight</div>
     </div>
     <div class="spotlight-grid">
-      <div id="leadSpotlight"></div>
-      <div class="side-stack" id="sideSpotlight"></div>
+      <div id="leadSpotlightContainer"></div>
+      <div class="side-stories" id="sideSpotlightContainer"></div>
     </div>
   </div>
 </section>
 
-<section class="wire-section">
+<section class="feed-zone">
   <div class="container">
-    <div class="sec-head">
-      <div class="sec-title" id="feedHeading">Latest Dispatches</div>
-      <span id="storyCount" style="font-size:12px;color:#6b7280;font-family:'Chakra Petch',sans-serif">0 STORIES</span>
+    <div class="section-header">
+      <div class="section-title">Latest Dispatches</div>
+      <span id="storyCountText" style="font-size:12px;color:#6b7280;font-family:'Chakra Petch',sans-serif">0 STORIES</span>
     </div>
 
-    <div class="feed-grid">
-      <div class="news-list" id="postsContainer"></div>
-    </div>
+    <div class="feed-stack" id="postsFeedContainer"></div>
   </div>
 </section>
 
 <script>
-let currentCategory = 'ALL';
-let searchQuery = '';
+let activeCategory = 'ALL';
+let currentSearch = '';
 
-function getPosts() {
+function fetchPosts() {
   try {
     return JSON.parse(localStorage.getItem('qwidnews_posts')) || [];
   } catch(e) {
@@ -187,55 +184,55 @@ function getPosts() {
   }
 }
 
-function toggleMenu(e) {
+function toggleDropdown(e) {
   e.stopPropagation();
-  const menu = document.getElementById('menuDropdown');
-  menu.classList.toggle('active');
+  const dropdown = document.getElementById('navDropdown');
+  dropdown.classList.toggle('active');
 }
 
 document.addEventListener('click', () => {
-  const menu = document.getElementById('menuDropdown');
-  if (menu) menu.classList.remove('active');
+  const dropdown = document.getElementById('navDropdown');
+  if (dropdown) dropdown.classList.remove('active');
 });
 
-function setCategory(cat) {
-  currentCategory = cat;
-  document.querySelectorAll('.cat-btn').forEach(btn => {
+function filterCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.category-pill').forEach(btn => {
     btn.classList.toggle('active', btn.textContent.trim() === cat || (cat === 'ALL' && btn.textContent.trim() === 'ALL WIRE'));
   });
-  renderAll();
+  renderSite();
 }
 
 function handleSearch() {
-  searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
-  renderAll();
+  currentSearch = document.getElementById('searchInput').value.trim().toLowerCase();
+  renderSite();
 }
 
-function renderTicker(posts) {
-  const tickerTrack = document.getElementById('tickerTrack');
+function buildTicker(posts) {
+  const track = document.getElementById('tickerTrack');
   const breaking = posts.filter(p => p.isBreaking);
 
   if (breaking.length === 0) {
-    tickerTrack.innerHTML = '<div class="ticker-item">No active wire alerts.</div>';
+    track.innerHTML = '<div class="ticker-item">No active breaking dispatches on the wire.</div>';
     return;
   }
 
-  const itemsHtml = breaking.map(p => `
+  const items = breaking.map(p => `
     <a href="entry.html?id=${p.id}" class="ticker-item">
       <span>● [${escapeHtml(p.category || 'WIRE')}]</span>
       ${escapeHtml(p.title)}
     </a>
   `).join('');
 
-  tickerTrack.innerHTML = itemsHtml + itemsHtml;
+  track.innerHTML = items + items;
 }
 
-function renderSpotlight(posts) {
-  const spotlightSection = document.getElementById('spotlightSection');
-  const leadContainer = document.getElementById('leadSpotlight');
-  const sideContainer = document.getElementById('sideSpotlight');
+function buildSpotlight(posts) {
+  const section = document.getElementById('spotlightArea');
+  const leadEl = document.getElementById('leadSpotlightContainer');
+  const sideEl = document.getElementById('sideSpotlightContainer');
 
-  const spotlightPosts = posts
+  const top5 = posts
     .slice()
     .sort((a, b) => {
       if (b.isTop10Sponsored !== a.isTop10Sponsored) return (b.isTop10Sponsored ? 1 : 0) - (a.isTop10Sponsored ? 1 : 0);
@@ -244,30 +241,30 @@ function renderSpotlight(posts) {
     })
     .slice(0, 5);
 
-  if (spotlightPosts.length === 0) {
-    spotlightSection.style.display = 'none';
+  if (top5.length === 0) {
+    section.style.display = 'none';
     return;
   }
 
-  spotlightSection.style.display = 'block';
+  section.style.display = 'block';
 
-  const lead = spotlightPosts[0];
-  leadContainer.innerHTML = `
-    <article class="lead-card">
-      <a href="entry.html?id=${lead.id}" class="lead-img-box">
+  const lead = top5[0];
+  leadEl.innerHTML = `
+    <article class="lead-story">
+      <a href="entry.html?id=${lead.id}" class="lead-media">
         <img class="lead-img" src="${escapeHtml(lead.image || '')}" alt="${escapeHtml(lead.title)}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80'">
       </a>
-      <div class="lead-content">
+      <div class="lead-body">
         <div>
-          ${lead.isTop10Sponsored ? '<span class="badge badge-gold">SPOTLIGHT</span> ' : ''}
-          <span class="badge">${escapeHtml(lead.category || 'NEWS')}</span>
+          ${lead.isTop10Sponsored ? '<span class="tag-badge tag-spotlight">SPOTLIGHT</span> ' : ''}
+          <span class="tag-badge">${escapeHtml(lead.category || 'NEWS')}</span>
         </div>
         <a href="entry.html?id=${lead.id}">
-          <h2 class="lead-title">${escapeHtml(lead.title)}</h2>
+          <h2 class="lead-headline">${escapeHtml(lead.title)}</h2>
         </a>
-        <p class="lead-excerpt">${escapeHtml(lead.excerpt || '')}</p>
-        <div class="lead-meta">
-          <span>By ${escapeHtml(lead.author || 'Wire Desk')}</span>
+        <p class="lead-desc">${escapeHtml(lead.excerpt || '')}</p>
+        <div class="lead-info">
+          <span>By ${escapeHtml(lead.author || 'Staff')}</span>
           <span>•</span>
           <span>${formatDate(lead.date)}</span>
         </div>
@@ -275,20 +272,20 @@ function renderSpotlight(posts) {
     </article>
   `;
 
-  const side = spotlightPosts.slice(1);
-  if (side.length === 0) {
-    sideContainer.innerHTML = '';
+  const remaining = top5.slice(1);
+  if (remaining.length === 0) {
+    sideEl.innerHTML = '';
   } else {
-    sideContainer.innerHTML = side.map(p => `
-      <a href="entry.html?id=${p.id}" class="mini-card">
-        <img class="mini-thumb" src="${escapeHtml(p.image || '')}" alt="${escapeHtml(p.title)}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80'">
-        <div class="mini-info">
+    sideEl.innerHTML = remaining.map(p => `
+      <a href="entry.html?id=${p.id}" class="mini-story-card">
+        <img class="mini-thumb-img" src="${escapeHtml(p.image || '')}" alt="${escapeHtml(p.title)}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80'">
+        <div class="mini-details">
           <div>
-            ${p.isTop10Sponsored ? '<span class="badge badge-gold" style="font-size:9px">SPOTLIGHT</span> ' : ''}
-            <span class="badge badge-alt" style="font-size:9px">${escapeHtml(p.category || 'NEWS')}</span>
+            ${p.isTop10Sponsored ? '<span class="tag-badge tag-spotlight" style="font-size:9px">SPOTLIGHT</span> ' : ''}
+            <span class="tag-badge tag-alt" style="font-size:9px">${escapeHtml(p.category || 'NEWS')}</span>
           </div>
-          <div class="mini-title">${escapeHtml(p.title)}</div>
-          <div class="mini-meta">
+          <div class="mini-story-title">${escapeHtml(p.title)}</div>
+          <div class="mini-story-meta">
             <span>By ${escapeHtml(p.author || 'Staff')}</span>
             <span>•</span>
             <span>${formatDate(p.date)}</span>
@@ -299,56 +296,56 @@ function renderSpotlight(posts) {
   }
 }
 
-function renderFeed(posts) {
-  const container = document.getElementById('postsContainer');
-  const countDisplay = document.getElementById('storyCount');
+function buildFeed(posts) {
+  const container = document.getElementById('postsFeedContainer');
+  const countLabel = document.getElementById('storyCountText');
 
   let filtered = posts.slice();
 
-  if (currentCategory !== 'ALL') {
-    filtered = filtered.filter(p => (p.category || '').toUpperCase() === currentCategory);
+  if (activeCategory !== 'ALL') {
+    filtered = filtered.filter(p => (p.category || '').toUpperCase() === activeCategory);
   }
 
-  if (searchQuery) {
+  if (currentSearch) {
     filtered = filtered.filter(p => 
-      (p.title || '').toLowerCase().includes(searchQuery) ||
-      (p.excerpt || '').toLowerCase().includes(searchQuery) ||
-      (p.author || '').toLowerCase().includes(searchQuery)
+      (p.title || '').toLowerCase().includes(currentSearch) ||
+      (p.excerpt || '').toLowerCase().includes(currentSearch) ||
+      (p.author || '').toLowerCase().includes(currentSearch)
     );
   }
 
-  countDisplay.textContent = `${filtered.length} STORIES`;
+  countLabel.textContent = `${filtered.length} STORIES`;
 
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div class="empty-box">
-        <div class="empty-icon material-symbols-outlined">newspaper</div>
-        <div class="empty-title">No News Dispatches Available</div>
-        <p class="empty-desc">There are no published stories in this category yet. Be the first to publish a report to the wire.</p>
-        <a href="post.html" class="post-btn" style="display:inline-flex">Submit a Story</a>
+      <div class="empty-placeholder">
+        <div class="material-symbols-outlined">newspaper</div>
+        <div class="empty-headline">No Stories Available</div>
+        <p class="empty-sub">There are currently no dispatches published in this category. Submit your report to see it appear on the wire.</p>
+        <a href="post.html" class="post-action-btn" style="display:inline-flex">Submit a Story</a>
       </div>
     `;
     return;
   }
 
   container.innerHTML = filtered.map(p => `
-    <article class="wire-card">
+    <article class="feed-card">
       <a href="entry.html?id=${p.id}">
-        <img class="wire-thumb" src="${escapeHtml(p.image || '')}" alt="${escapeHtml(p.title)}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80'">
+        <img class="feed-thumb" src="${escapeHtml(p.image || '')}" alt="${escapeHtml(p.title)}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80'">
       </a>
-      <div class="wire-body">
+      <div class="feed-details">
         <div>
           <div style="margin-bottom:6px">
-            ${p.isTop10Sponsored ? '<span class="badge badge-gold">SPOTLIGHT</span> ' : ''}
-            ${p.isBreaking ? '<span class="badge">BREAKING</span> ' : ''}
-            <span class="badge badge-alt">${escapeHtml(p.category || 'NEWS')}</span>
+            ${p.isTop10Sponsored ? '<span class="tag-badge tag-spotlight">SPOTLIGHT</span> ' : ''}
+            ${p.isBreaking ? '<span class="tag-badge">BREAKING</span> ' : ''}
+            <span class="tag-badge tag-alt">${escapeHtml(p.category || 'NEWS')}</span>
           </div>
           <a href="entry.html?id=${p.id}">
-            <h3 class="wire-headline">${escapeHtml(p.title)}</h3>
+            <h3 class="feed-headline">${escapeHtml(p.title)}</h3>
           </a>
-          <p class="wire-excerpt">${escapeHtml(p.excerpt || '')}</p>
+          <p class="feed-excerpt">${escapeHtml(p.excerpt || '')}</p>
         </div>
-        <div class="wire-meta">
+        <div class="feed-meta">
           <span>By ${escapeHtml(p.author || 'Wire Reporter')}</span>
           <span>•</span>
           <span>${formatDate(p.date)}</span>
@@ -360,11 +357,11 @@ function renderFeed(posts) {
   `).join('');
 }
 
-function renderAll() {
-  const posts = getPosts();
-  renderTicker(posts);
-  renderSpotlight(posts);
-  renderFeed(posts);
+function renderSite() {
+  const posts = fetchPosts();
+  buildTicker(posts);
+  buildSpotlight(posts);
+  buildFeed(posts);
 }
 
 function formatDate(dateStr) {
@@ -385,7 +382,7 @@ function escapeHtml(str) {
   }[tag] || tag));
 }
 
-document.addEventListener('DOMContentLoaded', renderAll);
+document.addEventListener('DOMContentLoaded', renderSite);
 </script>
 
 </body>

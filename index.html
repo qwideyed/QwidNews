@@ -135,6 +135,15 @@
             <span class="material-symbols-sharp absolute left-1.5 top-1/2 -translate-y-1/2 text-qn-muted text-[16px] pointer-events-none">search</span>
           </div>
 
+          <button 
+            onclick="openBookmarksModal()" 
+            class="hidden sm:flex items-center gap-1 bg-qn-black hover:bg-qn-card border border-qn-border px-2.5 py-1.5 text-xs text-qn-text hover:text-white transition"
+            title="View saved bookmarks"
+          >
+            <span class="material-symbols-sharp text-sm text-qn-red">bookmark</span>
+            <span id="savedCountBadge" class="font-mono text-[11px]">0</span>
+          </button>
+
           <div class="relative">
             <button 
               id="navMenuBtn"
@@ -154,6 +163,10 @@
                 <span class="material-symbols-sharp text-sm text-qn-red">edit_note</span>
                 <span>Post News</span>
               </a>
+              <button onclick="openBookmarksModal(); closeNavMenu();" class="w-full text-left flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
+                <span class="material-symbols-sharp text-sm text-qn-muted">bookmark</span>
+                <span>Saved Bookmarks</span>
+              </button>
               <div class="border-t border-qn-border/60 my-1"></div>
               <a href="wiki.html" class="flex items-center gap-2 px-3 py-1.5 text-qn-text hover:bg-qn-card hover:text-white font-medium transition">
                 <span class="material-symbols-sharp text-sm text-qn-muted">menu_book</span>
@@ -213,10 +226,25 @@
             <span class="text-[11px] font-mono text-qn-muted" id="resultsCount">(0)</span>
           </div>
 
-          <div class="flex items-center gap-2 text-[11px]">
-            <a href="post.html" class="text-qn-red hover:underline flex items-center gap-1 font-semibold">
-              <span class="material-symbols-sharp text-sm">add</span> File Dispatch
-            </a>
+          <div class="flex items-center gap-1.5">
+            <div class="bg-qn-black border border-qn-border p-0.5 flex items-center">
+              <button 
+                id="viewCardsBtn" 
+                onclick="setViewMode('cards')" 
+                class="p-1 text-white bg-qn-card transition" 
+                title="Magazine Cards View"
+              >
+                <span class="material-symbols-sharp text-sm block">view_agenda</span>
+              </button>
+              <button 
+                id="viewCompactBtn" 
+                onclick="setViewMode('compact')" 
+                class="p-1 text-qn-muted hover:text-white transition" 
+                title="Dense List View"
+              >
+                <span class="material-symbols-sharp text-sm block">view_list</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -238,38 +266,71 @@
         <div class="bg-qn-dark border border-qn-border">
           <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
             <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
-              <span class="text-qn-gold material-symbols-sharp text-sm">event_upcoming</span> Release Radar
+              <span class="text-qn-gold material-symbols-sharp text-sm">event_upcoming</span> Weekly Release Radar
             </h3>
-            <span class="text-[10px] text-qn-muted font-mono">FALL 2026</span>
+            <span class="text-[10px] text-qn-muted font-mono">THIS WEEK</span>
           </div>
           <div class="p-2.5 flex flex-col gap-2 text-xs">
             <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
               <div class="min-w-0 pr-2">
-                <div class="font-semibold text-white truncate text-[11px]">Metaphor: ReFantazio — Epilogue DLX</div>
+                <div class="font-semibold text-white truncate text-[11px]">Metaphor: ReFantazio DLX</div>
                 <div class="text-[10px] text-qn-muted font-mono uppercase">Gaming &bull; PC / PS5 / Xbox</div>
               </div>
-              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">OCT 11</span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold shrink-0">OUT NOW</span>
             </div>
             <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
               <div class="min-w-0 pr-2">
-                <div class="font-semibold text-white truncate text-[11px]">Chainsaw Man — Reze Arc Film</div>
-                <div class="text-[10px] text-qn-muted font-mono uppercase">Anime &bull; Theatrical Premiere</div>
+                <div class="font-semibold text-white truncate text-[11px]">Chainsaw Man — Reze Arc Premiere</div>
+                <div class="text-[10px] text-qn-muted font-mono uppercase">Anime &bull; Theatrical Film</div>
               </div>
-              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">NOV 04</span>
+              <span class="text-[10px] font-mono text-qn-gold font-bold shrink-0">TOMORROW</span>
             </div>
             <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
               <div class="min-w-0 pr-2">
-                <div class="font-semibold text-white truncate text-[11px]">Grand Theft Auto VI — Second Trailer</div>
-                <div class="text-[10px] text-qn-muted font-mono uppercase">Gaming &bull; Rockstar Broadcast</div>
+                <div class="font-semibold text-white truncate text-[11px]">Grand Theft Auto VI Trailer 2</div>
+                <div class="text-[10px] text-qn-muted font-mono uppercase">Gaming &bull; Rockstar Premiere</div>
               </div>
-              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">NOV 19</span>
+              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">FRIDAY</span>
             </div>
             <div class="flex items-center justify-between p-1.5 bg-qn-black border border-qn-border">
               <div class="min-w-0 pr-2">
-                <div class="font-semibold text-white truncate text-[11px]">Blade Runner 2099 — Season Premiere</div>
+                <div class="font-semibold text-white truncate text-[11px]">Blade Runner 2099 — Ep. 1-2</div>
                 <div class="text-[10px] text-qn-muted font-mono uppercase">TV Shows &bull; Prime Video</div>
               </div>
-              <span class="text-[10px] font-mono text-qn-red font-bold shrink-0">DEC 02</span>
+              <span class="text-[10px] font-mono text-cyan-400 font-bold shrink-0">SUNDAY</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-qn-dark border border-qn-border">
+          <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
+            <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Live Wire Quick Feed</span>
+            </h3>
+            <span class="text-[10px] text-qn-muted font-mono">MICRO UPDATES</span>
+          </div>
+          <div class="p-2.5 flex flex-col gap-2.5 divide-y divide-qn-border/40 font-mono text-[11px]">
+            <div class="pt-1.5 first:pt-0">
+              <div class="flex items-center justify-between text-[10px] text-qn-muted">
+                <span class="text-qn-red font-bold">ANIME WIRE</span>
+                <span>8m ago</span>
+              </div>
+              <div class="text-qn-text mt-0.5 leading-snug font-sans">MAPPA reveals visual boards for Culling Game production cycle.</div>
+            </div>
+            <div class="pt-2">
+              <div class="flex items-center justify-between text-[10px] text-qn-muted">
+                <span class="text-qn-gold font-bold">GAMING INTEL</span>
+                <span>24m ago</span>
+              </div>
+              <div class="text-qn-text mt-0.5 leading-snug font-sans">Steam concurrent users peak over 38 million during autumn festival.</div>
+            </div>
+            <div class="pt-2">
+              <div class="flex items-center justify-between text-[10px] text-qn-muted">
+                <span class="text-cyan-400 font-bold">CINEMA DESK</span>
+                <span>1h ago</span>
+              </div>
+              <div class="text-qn-text mt-0.5 leading-snug font-sans">Warner Bros sets principal camera dates across Abu Dhabi desert for Dune Messiah.</div>
             </div>
           </div>
         </div>
@@ -279,44 +340,15 @@
             <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
               <span class="text-cyan-400 material-symbols-sharp text-sm">how_to_vote</span> Community Poll
             </h3>
-            <span class="text-[10px] text-qn-muted font-mono" id="pollTotalVotes">1,482 VOTES</span>
+            <span class="text-[10px] text-qn-muted font-mono" id="pollTotalVotes">0 VOTES</span>
           </div>
           <div class="p-3 text-xs flex flex-col gap-2">
-            <p class="font-semibold text-white text-[12px] leading-snug">
+            <p class="font-semibold text-white text-[12px] leading-snug" id="pollQuestion">
               What is your most anticipated Fall anime adaptation or game launch?
             </p>
-            <div class="flex flex-col gap-1.5 pt-1 text-[11px]" id="pollOptionsContainer">
-              <button onclick="votePoll(0)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
-                <span class="text-qn-text group-hover:text-white font-medium">Jujutsu Kaisen: Culling Game</span>
-                <span class="text-qn-muted font-mono text-[10px]" id="votePct0">42%</span>
-              </button>
-              <button onclick="votePoll(1)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
-                <span class="text-qn-text group-hover:text-white font-medium">New FromSoftware Action Title</span>
-                <span class="text-qn-muted font-mono text-[10px]" id="votePct1">34%</span>
-              </button>
-              <button onclick="votePoll(2)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
-                <span class="text-qn-text group-hover:text-white font-medium">Dune Messiah Feature Film</span>
-                <span class="text-qn-muted font-mono text-[10px]" id="votePct2">16%</span>
-              </button>
-              <button onclick="votePoll(3)" class="w-full text-left p-2 bg-qn-black hover:bg-qn-card border border-qn-border flex items-center justify-between group transition">
-                <span class="text-qn-text group-hover:text-white font-medium">The Last of Us Part II Broadcast</span>
-                <span class="text-qn-muted font-mono text-[10px]" id="votePct3">8%</span>
-              </button>
-            </div>
+            <div class="flex flex-col gap-1.5 pt-1 text-[11px]" id="pollOptionsContainer"></div>
             <div id="voteStatus" class="text-[10px] font-mono text-qn-muted text-right pt-0.5">Click any option to cast ballot</div>
           </div>
-        </div>
-
-        <div class="bg-qn-card border border-qn-border p-3 flex flex-col gap-2">
-          <div class="font-display font-bold uppercase tracking-wider text-xs text-white flex items-center gap-1.5">
-            <span class="w-2 h-2 bg-qn-red"></span> Submit News Wire
-          </div>
-          <p class="text-[11px] text-qn-muted leading-relaxed">
-            Have a scoop regarding games, anime, upcoming films, or hardware filings? Publish directly to our client-stored index.
-          </p>
-          <a href="post.html" class="w-full py-1.5 bg-qn-red hover:bg-qn-redHover text-white font-bold text-center uppercase tracking-wider text-[11px] transition">
-            File New Article
-          </a>
         </div>
 
       </aside>
@@ -333,6 +365,7 @@
         <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
           <a href="index.html" class="hover:text-white">Home</a>
           <a href="post.html" class="hover:text-white">Post News</a>
+          <button onclick="openBookmarksModal()" class="hover:text-white">Bookmarks</button>
           <a href="wiki.html" class="hover:text-white">Wiki</a>
           <a href="account.html" class="hover:text-white">Account</a>
           <a href="setting.html" class="hover:text-white">Settings</a>
@@ -348,10 +381,40 @@
     </div>
   </footer>
 
+  <div id="bookmarksModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="w-full max-w-lg bg-qn-dark border border-qn-border shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+      <div class="bg-qn-black px-3.5 py-2.5 border-b border-qn-border flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-sharp text-qn-red text-base">bookmark</span>
+          <h3 class="font-display font-bold uppercase text-xs text-white">Your Saved Bookmarks</h3>
+        </div>
+        <button onclick="closeBookmarksModal()" class="text-qn-muted hover:text-white p-1">
+          <span class="material-symbols-sharp text-base">close</span>
+        </button>
+      </div>
+      <div id="bookmarksListContainer" class="p-3 overflow-y-auto flex flex-col gap-2"></div>
+    </div>
+  </div>
+
   <script>
     const STORAGE_KEY = 'qwidnews_posts';
+    const BOOKMARKS_KEY = 'qwidnews_saved';
+    const POLL_KEY = 'qwidnews_poll_data';
+
     let activeFilterCategory = 'ALL';
     let searchQuery = '';
+    let currentViewMode = localStorage.getItem('qwidnews_view_mode') || 'cards';
+
+    const defaultPoll = {
+      question: "What is your most anticipated Fall anime adaptation or game launch?",
+      options: [
+        { text: "Jujutsu Kaisen: Culling Game", votes: 43 },
+        { text: "New FromSoftware Action Title", votes: 34 },
+        { text: "Dune Messiah Feature Film", votes: 16 },
+        { text: "The Last of Us Part II Broadcast", votes: 8 }
+      ],
+      userVoted: false
+    };
 
     function getArticles() {
       try {
@@ -367,18 +430,51 @@
       refreshAll();
     }
 
+    function getSavedIds() {
+      try {
+        const data = localStorage.getItem(BOOKMARKS_KEY);
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function getPollData() {
+      try {
+        const raw = localStorage.getItem(POLL_KEY);
+        return raw ? JSON.parse(raw) : defaultPoll;
+      } catch (e) {
+        return defaultPoll;
+      }
+    }
+
+    function savePollData(data) {
+      localStorage.setItem(POLL_KEY, JSON.stringify(data));
+      renderPoll();
+    }
+
     function refreshAll() {
       const articles = getArticles();
       updateHeaderPostCount(articles);
+      updateBookmarksBadge();
       renderTicker(articles);
       renderTop5Spotlight(articles);
       renderMainFeed(articles);
       renderMostViewed(articles);
+      renderPoll();
     }
 
     function updateHeaderPostCount(articles) {
       const countEl = document.getElementById('headerPostCount');
       if (countEl) countEl.innerText = `${articles.length} STORIES FILED`;
+    }
+
+    function updateBookmarksBadge() {
+      const badge = document.getElementById('savedCountBadge');
+      if (badge) {
+        const saved = getSavedIds();
+        badge.innerText = saved.length;
+      }
     }
 
     function navigateToEntry(id) {
@@ -396,6 +492,23 @@
       if (menu && !menu.classList.contains('hidden')) {
         menu.classList.add('hidden');
       }
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      localStorage.setItem('qwidnews_view_mode', mode);
+      const cardsBtn = document.getElementById('viewCardsBtn');
+      const compactBtn = document.getElementById('viewCompactBtn');
+
+      if (mode === 'cards') {
+        cardsBtn.className = "p-1 text-white bg-qn-card transition";
+        compactBtn.className = "p-1 text-qn-muted hover:text-white transition";
+      } else {
+        compactBtn.className = "p-1 text-white bg-qn-card transition";
+        cardsBtn.className = "p-1 text-qn-muted hover:text-white transition";
+      }
+
+      renderMainFeed(getArticles());
     }
 
     function renderTicker(articles) {
@@ -573,6 +686,29 @@
         return;
       }
 
+      if (currentViewMode === 'compact') {
+        feedContainer.innerHTML = filtered.map(art => {
+          return `
+            <div class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition p-2 flex items-center justify-between gap-3 group cursor-pointer" onclick="navigateToEntry('${art.id}')">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 bg-qn-black text-white border border-qn-border shrink-0">
+                  ${escapeHtml(art.category)}
+                </span>
+                <h4 class="font-serif font-bold text-[13px] text-qn-text group-hover:text-qn-red transition truncate">
+                  ${escapeHtml(art.title)}
+                </h4>
+              </div>
+              <div class="flex items-center gap-3 text-[10px] font-mono text-qn-muted shrink-0">
+                <span>By ${escapeHtml(art.author)}</span>
+                <span>&bull;</span>
+                <span>${formatTime(art.timestamp)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return;
+      }
+
       feedContainer.innerHTML = filtered.map(art => {
         return `
           <article class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition-all p-2.5 sm:p-3 flex flex-col sm:flex-row gap-3 group cursor-pointer" onclick="navigateToEntry('${art.id}')">
@@ -610,7 +746,7 @@
 
               <div class="mt-2 pt-1.5 border-t border-qn-border/50 flex items-center justify-between text-[11px] text-qn-muted font-mono">
                 <span class="text-slate-300 font-sans">By ${escapeHtml(art.author)}</span>
-                <span class="text-qn-red group-hover:underline text-[11px] font-sans font-semibold uppercase">Read Dispatch &rarr;</span>
+                <span class="text-qn-red group-hover:underline text-[11px] font-sans font-semibold uppercase">Read Story &rarr;</span>
               </div>
             </div>
           </article>
@@ -644,6 +780,92 @@
       `).join('');
     }
 
+    function renderPoll() {
+      const poll = getPollData();
+      const questionEl = document.getElementById('pollQuestion');
+      const container = document.getElementById('pollOptionsContainer');
+      const totalVotesEl = document.getElementById('pollTotalVotes');
+      const statusEl = document.getElementById('voteStatus');
+
+      questionEl.innerText = poll.question;
+      const total = poll.options.reduce((sum, o) => sum + o.votes, 0);
+      totalVotesEl.innerText = `${total.toLocaleString()} VOTES`;
+
+      if (poll.userVoted) {
+        statusEl.innerText = "Ballot recorded. Thank you for voting.";
+        statusEl.classList.add("text-emerald-400");
+      }
+
+      container.innerHTML = poll.options.map((opt, i) => {
+        const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
+        return `
+          <div class="relative overflow-hidden bg-qn-black border border-qn-border">
+            <div class="absolute left-0 top-0 bottom-0 bg-qn-card/80 transition-all duration-500" style="width: ${pct}%"></div>
+            <button 
+              onclick="castVote(${i})" 
+              ${poll.userVoted ? 'disabled' : ''}
+              class="relative z-10 w-full text-left p-2 flex items-center justify-between group transition ${poll.userVoted ? 'cursor-default' : 'hover:border-qn-red'}"
+            >
+              <span class="text-qn-text ${poll.userVoted ? '' : 'group-hover:text-white'} font-medium truncate pr-2">${escapeHtml(opt.text)}</span>
+              <span class="text-qn-muted font-mono text-[10px] shrink-0">${pct}%</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function castVote(idx) {
+      const poll = getPollData();
+      if (poll.userVoted) return;
+      poll.options[idx].votes += 1;
+      poll.userVoted = true;
+      savePollData(poll);
+    }
+
+    function openBookmarksModal() {
+      const modal = document.getElementById('bookmarksModal');
+      const container = document.getElementById('bookmarksListContainer');
+      const savedIds = getSavedIds();
+      const articles = getArticles();
+      const savedArticles = articles.filter(a => savedIds.includes(a.id));
+
+      if (savedArticles.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-qn-muted text-xs font-mono">
+            No bookmarks saved yet. Use the Bookmark button on any article entry page to store reading material.
+          </div>
+        `;
+      } else {
+        container.innerHTML = savedArticles.map(a => `
+          <div class="p-2 bg-qn-black border border-qn-border flex items-center justify-between gap-3 group">
+            <div class="min-w-0 cursor-pointer flex-1" onclick="navigateToEntry('${a.id}')">
+              <span class="text-[9px] font-mono text-qn-red font-bold uppercase">[${escapeHtml(a.category)}]</span>
+              <h4 class="font-serif font-bold text-white text-xs leading-snug group-hover:text-qn-red transition truncate mt-0.5">${escapeHtml(a.title)}</h4>
+              <div class="text-[10px] text-qn-muted font-mono mt-0.5">By ${escapeHtml(a.author)}</div>
+            </div>
+            <button onclick="removeBookmark('${a.id}')" class="p-1 text-qn-muted hover:text-red-400 shrink-0" title="Remove bookmark">
+              <span class="material-symbols-sharp text-sm block">delete</span>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeBookmarksModal() {
+      const modal = document.getElementById('bookmarksModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function removeBookmark(id) {
+      let saved = getSavedIds();
+      saved = saved.filter(i => i !== id);
+      localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(saved));
+      updateBookmarksBadge();
+      openBookmarksModal();
+    }
+
     function filterNews(cat) {
       activeFilterCategory = cat;
       const tabs = document.querySelectorAll('.cat-tab');
@@ -670,21 +892,6 @@
       input.value = '';
       searchQuery = '';
       renderMainFeed(getArticles());
-    }
-
-    function votePoll(index) {
-      const status = document.getElementById('voteStatus');
-      status.innerText = 'Ballot counted. Thank you for voting.';
-      status.classList.add('text-qn-red');
-      const counts = [43, 33, 16, 8];
-      counts[index] += 1;
-      const total = counts.reduce((a, b) => a + b, 0);
-      document.getElementById('pollTotalVotes').innerText = `${(1483).toLocaleString()} VOTES`;
-      for (let i = 0; i < 4; i++) {
-        const pct = Math.round((counts[i] / total) * 100);
-        const el = document.getElementById(`votePct${i}`);
-        if (el) el.innerText = `${pct}%`;
-      }
     }
 
     function seedSampleNews() {
@@ -791,7 +998,10 @@
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeNavMenu();
+      if (e.key === 'Escape') {
+        closeNavMenu();
+        closeBookmarksModal();
+      }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -800,6 +1010,7 @@
         const now = new Date();
         dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
       }
+      setViewMode(currentViewMode);
       refreshAll();
     });
   </script>

@@ -184,16 +184,16 @@
               <select 
                 id="fCategory" 
                 class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red font-semibold uppercase text-xs"
-                onchange="updatePreview()"
+                onchange="handleCategoryChange()"
               >
                 <option value="GAMING">Gaming</option>
                 <option value="ANIME">Anime</option>
                 <option value="MOVIES">Movies</option>
                 <option value="TV SHOWS">TV Shows</option>
                 <option value="REVIEWS">Reviews</option>
+                <option value="TECH">Tech</option>
                 <option value="LEAKS">Leaks</option>
                 <option value="HARDWARE">Hardware</option>
-                <option value="INDUSTRY">Industry</option>
               </select>
             </div>
 
@@ -300,11 +300,49 @@
             ></textarea>
           </div>
 
-          <div class="flex items-center justify-between border-t border-qn-border pt-3">
+          <div class="flex flex-col gap-2.5 border-t border-qn-border pt-3">
             <label class="flex items-center gap-2 cursor-pointer select-none">
               <input type="checkbox" id="fBreaking" class="w-4 h-4 accent-qn-red cursor-pointer" onchange="updatePreview()">
               <span class="text-white font-semibold text-xs uppercase tracking-wide">Feature in Top Marquee Wire (Breaking)</span>
             </label>
+
+            <div class="border border-qn-border bg-qn-black/60 p-2.5 flex flex-col gap-2">
+              <label class="flex items-center justify-between cursor-pointer select-none">
+                <div class="flex items-center gap-2">
+                  <input type="checkbox" id="fTop10Sponsored" class="w-4 h-4 accent-amber-500 cursor-pointer" onchange="toggleSponsoredTier(this.checked)">
+                  <span class="text-amber-400 font-bold text-xs uppercase tracking-wider flex items-center gap-1">
+                    <span class="material-symbols-sharp text-sm">workspace_premium</span> Pin to Top 10 Spotlight Feed
+                  </span>
+                </div>
+                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono px-2 py-0.5 font-bold uppercase">$4.99 Wire Fee</span>
+              </label>
+
+              <div id="paymentBox" class="hidden border-t border-qn-border/70 pt-2 flex flex-col gap-2 text-xs">
+                <p class="text-[11px] text-qn-muted leading-relaxed">
+                  Pin your report directly into the frontpage Top 10 Leaderboard with priority indexing and a dedicated verified promotional badge.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div class="bg-qn-card border border-qn-border p-2 flex flex-col gap-1">
+                    <span class="text-[10px] font-mono uppercase text-qn-muted">Payment Method</span>
+                    <select id="payMethod" class="bg-qn-black border border-qn-border p-1 text-white text-[11px] focus:outline-none focus:border-amber-500 font-semibold">
+                      <option value="test_card">Sandbox Direct Card (•••• 4242)</option>
+                      <option value="sim_credits">Newsroom Editorial Credits</option>
+                      <option value="crypto_sim">Crypto Wire (BTC / SOL)</option>
+                    </select>
+                  </div>
+                  <div class="bg-qn-card border border-qn-border p-2 flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-[11px]">
+                      <span class="text-qn-muted">Spotlight Placement:</span>
+                      <span class="text-white font-mono font-bold">$4.99</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
+                      <span class="text-qn-muted">Wire Status:</span>
+                      <span class="text-emerald-400 font-bold uppercase text-[10px]">Ready to Authorize</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-qn-border pt-3">
@@ -353,7 +391,10 @@
             <div class="relative w-full aspect-[16/9] bg-qn-black border border-qn-border overflow-hidden">
               <img id="pCover" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Cover Preview" class="w-full h-full object-cover">
               <span id="pBadge" class="absolute top-2 left-2 bg-black/80 backdrop-blur text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border border-white/20">GAMING</span>
-              <span id="pBreakingTag" class="hidden absolute top-2 right-2 bg-qn-red text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">BREAKING</span>
+              <div class="absolute top-2 right-2 flex flex-col gap-1 items-end">
+                <span id="pBreakingTag" class="hidden bg-qn-red text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">BREAKING</span>
+                <span id="pSponsoredTag" class="hidden bg-amber-500 text-black text-[9px] font-black uppercase tracking-wider px-2 py-0.5 shadow">TOP 10 SPOTLIGHT</span>
+              </div>
             </div>
 
             <div class="flex items-center gap-2 text-[10px] text-qn-muted uppercase font-mono">
@@ -426,6 +467,22 @@
     const DRAFT_KEY = 'qwidnews_drafts';
     let currentImageBase64 = null;
     let editingPostId = null;
+
+    function handleCategoryChange() {
+      updatePreview();
+    }
+
+    function toggleSponsoredTier(isChecked) {
+      const box = document.getElementById('paymentBox');
+      const tag = document.getElementById('pSponsoredTag');
+      if (isChecked) {
+        box.classList.remove('hidden');
+        tag.classList.remove('hidden');
+      } else {
+        box.classList.add('hidden');
+        tag.classList.add('hidden');
+      }
+    }
 
     function getArticles() {
       try {
@@ -577,12 +634,14 @@
 
     function updatePreview() {
       const title = document.getElementById('fTitle').value.trim();
-      const cat = document.getElementById('fCategory').value;
+      const catSelect = document.getElementById('fCategory');
+      const cat = catSelect.options[catSelect.selectedIndex] ? catSelect.options[catSelect.selectedIndex].value : catSelect.value;
       const author = document.getElementById('fAuthor').value.trim();
       const excerpt = document.getElementById('fExcerpt').value.trim();
       const body = document.getElementById('fBody').value.trim();
       const tags = document.getElementById('fTags').value.trim();
       const isBreaking = document.getElementById('fBreaking').checked;
+      const isSponsored = document.getElementById('fTop10Sponsored').checked;
 
       document.getElementById('pTitle').innerText = title || 'Article headline will update dynamically as you draft...';
       document.getElementById('pBadge').innerText = cat;
@@ -594,6 +653,13 @@
         breakingTag.classList.remove('hidden');
       } else {
         breakingTag.classList.add('hidden');
+      }
+
+      const sponsoredTag = document.getElementById('pSponsoredTag');
+      if (isSponsored) {
+        sponsoredTag.classList.remove('hidden');
+      } else {
+        sponsoredTag.classList.add('hidden');
       }
 
       const tagsContainer = document.getElementById('pTags');
@@ -628,12 +694,14 @@
       e.preventDefault();
 
       const title = document.getElementById('fTitle').value.trim();
-      const category = document.getElementById('fCategory').value;
+      const catSelect = document.getElementById('fCategory');
+      const category = (catSelect.options[catSelect.selectedIndex] ? catSelect.options[catSelect.selectedIndex].value : catSelect.value) || 'GAMING';
       const author = document.getElementById('fAuthor').value.trim();
       const excerpt = document.getElementById('fExcerpt').value.trim();
       const body = document.getElementById('fBody').value.trim();
       const tagsRaw = document.getElementById('fTags').value.trim();
       const isBreaking = document.getElementById('fBreaking').checked;
+      const isTop10Sponsored = document.getElementById('fTop10Sponsored').checked;
       const urlInput = document.getElementById('fImageUrl').value.trim();
 
       if (!title || !category || !author || !excerpt || !body) {
@@ -659,18 +727,19 @@
               tags,
               image: finalImage,
               isBreaking,
+              isTop10Sponsored,
               editedAt: new Date().toISOString()
             };
           }
           return art;
         });
         saveArticles(articles);
-        showToast('Article update saved.');
+        showToast('Article update saved. Loading entry...');
         const targetId = editingPostId;
         editingPostId = null;
         setTimeout(() => {
           window.location.href = `entry.html?id=${encodeURIComponent(targetId)}`;
-        }, 800);
+        }, 500);
       } else {
         const newPost = {
           id: 'qn_' + Date.now(),
@@ -682,22 +751,24 @@
           tags,
           image: finalImage,
           isBreaking,
+          isTop10Sponsored,
           timestamp: new Date().toISOString()
         };
         articles.unshift(newPost);
         saveArticles(articles);
         localStorage.removeItem(DRAFT_KEY);
-        showToast('Dispatch published to wire.');
+        showToast(isTop10Sponsored ? 'Authorized $4.99 & published to Top 10!' : 'Dispatch published to wire!');
         setTimeout(() => {
           window.location.href = `entry.html?id=${encodeURIComponent(newPost.id)}`;
-        }, 800);
+        }, 600);
       }
     }
 
     function saveDraft() {
+      const catSelect = document.getElementById('fCategory');
       const draft = {
         title: document.getElementById('fTitle').value,
-        category: document.getElementById('fCategory').value,
+        category: (catSelect.options[catSelect.selectedIndex] ? catSelect.options[catSelect.selectedIndex].value : catSelect.value) || 'GAMING',
         author: document.getElementById('fAuthor').value,
         excerpt: document.getElementById('fExcerpt').value,
         body: document.getElementById('fBody').value,
@@ -705,6 +776,7 @@
         imageUrl: document.getElementById('fImageUrl').value,
         imageBase64: currentImageBase64,
         isBreaking: document.getElementById('fBreaking').checked,
+        isTop10Sponsored: document.getElementById('fTop10Sponsored').checked,
         savedAt: new Date().toISOString()
       };
 
@@ -728,6 +800,8 @@
         document.getElementById('fBody').value = d.body || '';
         document.getElementById('fTags').value = d.tags || '';
         document.getElementById('fBreaking').checked = !!d.isBreaking;
+        document.getElementById('fTop10Sponsored').checked = !!d.isTop10Sponsored;
+        toggleSponsoredTier(!!d.isTop10Sponsored);
 
         if (d.imageBase64) {
           currentImageBase64 = d.imageBase64;
@@ -764,6 +838,8 @@
       document.getElementById('fBody').value = art.body || '';
       document.getElementById('fTags').value = (art.tags || []).join(', ');
       document.getElementById('fBreaking').checked = !!art.isBreaking;
+      document.getElementById('fTop10Sponsored').checked = !!art.isTop10Sponsored;
+      toggleSponsoredTier(!!art.isTop10Sponsored);
 
       if (art.image) {
         if (art.image.startsWith('data:image')) {
@@ -783,22 +859,13 @@
       showToast('Loaded story into editor.');
     }
 
-    function deletePost(id) {
-      if (!window.confirm('Delete this article from local storage?')) return;
-      let articles = getArticles();
-      articles = articles.filter(a => a.id !== id);
-      saveArticles(articles);
-      if (editingPostId === id) {
-        clearForm();
-      }
-      showToast('Story removed from records.');
-    }
-
     function clearForm() {
       editingPostId = null;
       document.getElementById('articleForm').reset();
       document.getElementById('formHeaderTitle').innerText = 'Dispatch Authoring Desk';
       document.getElementById('submitBtnText').innerText = 'Publish Dispatch';
+      document.getElementById('fTop10Sponsored').checked = false;
+      toggleSponsoredTier(false);
       clearImage();
       updatePreview();
       updateWordCount('');

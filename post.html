@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QwidNews Desk — Publish Dispatch</title>
+  <title>QwidNews Desk — Editorial Publishing Terminal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
 
   <script>
@@ -32,6 +32,7 @@
               redHover: '#d62839',
               orange: '#f35b04',
               gold: '#f59e0b',
+              emerald: '#10b981',
               muted: '#8590a3',
               text: '#e2e8f0'
             }
@@ -76,30 +77,37 @@
 </head>
 <body class="min-h-screen flex flex-col text-[13px]">
 
+
   <div class="bg-[#07080b] border-b border-qn-border text-[11px] font-semibold text-qn-muted py-1 px-3">
-    <div class="max-w-[1400px] mx-auto flex items-center justify-between gap-3">
+    <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-2">
-        <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold">TERMINAL WIRE</span>
-        <span class="text-qn-text text-[11px] hidden sm:inline">QwidNews Internal Wire & Editorial Filing Terminal</span>
+        <span class="bg-qn-red text-white px-1.5 py-0.2 uppercase tracking-wider text-[9px] font-bold">TERMINAL DISPATCH</span>
+        <span class="text-qn-text text-[11px] hidden sm:inline">QwidNews Internal Wire Filing Terminal // V2.8 PRO</span>
       </div>
       <div class="flex items-center gap-3 font-mono text-[10px] text-qn-muted">
-        <span id="storageStats">0 STORIES STORED</span>
+        <span id="autoSaveIndicator">AUTOSAVE STANDBY</span>
+        <span id="storageStats">0 DISPATCHES</span>
         <span id="currentDateDisplay">SEP 2026</span>
       </div>
     </div>
   </div>
 
   <header class="bg-qn-dark border-b border-qn-border sticky top-0 z-40 shadow-md">
-    <div class="max-w-[1400px] mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-3">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <a href="index.html" class="flex items-baseline gap-1 group">
           <span class="font-display font-black text-2xl tracking-tight text-white uppercase group-hover:text-qn-red transition-colors">Qwid<span class="text-qn-red">News</span></span>
         </a>
         <div class="h-4 w-[1px] bg-qn-border hidden sm:block"></div>
-        <span class="font-mono text-[11px] uppercase tracking-wider text-qn-muted hidden sm:inline font-semibold">Publishing Desk</span>
+        <span class="font-mono text-[11px] uppercase tracking-wider text-qn-muted hidden sm:inline font-semibold">Authoring Desk</span>
       </div>
 
       <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 bg-qn-black border border-qn-border text-xs font-mono">
+          <span class="text-qn-muted uppercase text-[10px]">Wire Invoice:</span>
+          <span class="text-qn-gold font-bold font-display text-sm" id="navInvoiceBadge">$5.00</span>
+        </div>
+
         <button 
           type="button" 
           onclick="toggleMobileView()" 
@@ -152,7 +160,8 @@
     </div>
   </header>
 
-  <main class="max-w-[1400px] mx-auto px-3 sm:px-4 py-4 w-full flex-1">
+
+  <main class="max-w-[1440px] mx-auto px-3 sm:px-4 py-4 w-full flex-1">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
       <div id="editorPane" class="lg:col-span-7 flex flex-col gap-3">
@@ -164,8 +173,20 @@
               <h1 class="font-display font-bold uppercase tracking-wider text-sm sm:text-base text-white" id="formHeaderTitle">Dispatch Authoring Desk</h1>
             </div>
             <div class="flex items-center gap-1.5">
-              <span id="draftStatus" class="font-mono text-[10px] text-qn-muted">NO DRAFT LOADED</span>
-              <button type="button" onclick="loadDraft()" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-bold uppercase text-qn-muted hover:text-white transition">Load Draft</button>
+              <button type="button" onclick="loadDraft()" id="restoreDraftBtn" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-bold uppercase text-qn-muted hover:text-white transition">Restore Draft</button>
+              <button type="button" onclick="discardDraft()" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-[10px] font-bold uppercase text-qn-muted hover:text-red-400 transition">Discard</button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between bg-qn-black p-2 border border-qn-border text-[11px] font-mono">
+            <div class="flex items-center gap-3">
+              <span class="text-qn-muted uppercase">Headline Punchiness:</span>
+              <span id="headlineGradeBadge" class="px-1.5 py-0.2 font-bold text-[10px] uppercase bg-qn-card text-qn-muted border border-qn-border">Awaiting Title</span>
+            </div>
+            <div class="flex items-center gap-3 text-qn-muted text-[10px]">
+              <span id="liveReadTimeEstimate">0 min read</span>
+              <span>&bull;</span>
+              <span id="liveWordCount">0 words</span>
             </div>
           </div>
 
@@ -181,17 +202,17 @@
               maxlength="140"
               placeholder="e.g. FromSoftware Announces Brand New Dark Fantasy Action RPG" 
               class="w-full bg-qn-black border border-qn-border px-3 py-2 text-white font-serif text-base focus:outline-none focus:border-qn-red transition-colors"
-              oninput="updatePreview(); updateCount(this, 'titleCount', 140);"
+              oninput="handleTitleInput(this)"
             >
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Category *</label>
               <select 
                 id="fCategory" 
                 class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red font-semibold uppercase text-xs"
-                onchange="handleCategoryChange()"
+                onchange="updatePreview()"
               >
                 <option value="GAMING">Gaming</option>
                 <option value="ANIME">Anime</option>
@@ -199,6 +220,7 @@
                 <option value="TV SHOWS">TV Shows</option>
                 <option value="TECH">Tech</option>
                 <option value="REVIEWS">Reviews</option>
+                <option value="LEAKS">Leaks</option>
               </select>
             </div>
 
@@ -213,22 +235,26 @@
                 oninput="updatePreview()"
               >
             </div>
+          </div>
 
-            <div>
-              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Tags (Comma-separated)</label>
+
+          <div>
+            <label class="block text-white font-semibold uppercase text-[10px] tracking-wider mb-1">Interactive Topic Tags (Type & Press Enter or Comma)</label>
+            <div class="w-full bg-qn-black border border-qn-border p-1.5 flex flex-wrap items-center gap-1.5 min-h-[38px]">
+              <div id="tagsChipContainer" class="flex flex-wrap items-center gap-1"></div>
               <input 
                 type="text" 
-                id="fTags" 
-                placeholder="Elden Ring, PS5, Steam" 
-                class="w-full bg-qn-black border border-qn-border p-2 text-white focus:outline-none focus:border-qn-red text-xs"
-                oninput="updatePreview()"
+                id="tagInput" 
+                placeholder="Add tag (e.g. Elden Ring, PS5, Steam)..." 
+                class="bg-transparent border-0 text-white focus:outline-none text-xs flex-1 min-w-[140px] px-1"
+                onkeydown="handleTagKeydown(event)"
               >
             </div>
           </div>
 
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider">Excerpt / Wire Summary *</label>
+              <label class="block text-white font-semibold uppercase text-[10px] tracking-wider">Wire Excerpt / Lead Summary *</label>
               <span class="font-mono text-[10px] text-qn-muted" id="excerptCount">0 / 260</span>
             </div>
             <textarea 
@@ -280,6 +306,7 @@
             </div>
           </div>
 
+
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-white font-semibold uppercase text-[10px] tracking-wider">Article Content *</label>
@@ -293,6 +320,8 @@
               <button type="button" onclick="insertFormat('quote')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white" title="Blockquote">”Quote</button>
               <button type="button" onclick="insertFormat('bullet')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white" title="Bullet List">• List</button>
               <button type="button" onclick="insertFormat('link')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-white" title="Link">[Link]</button>
+              <button type="button" onclick="insertFormat('youtube')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-red font-bold" title="Trailer Embed">[Video Trailer]</button>
+              <button type="button" onclick="insertFormat('spoiler_box')" class="px-2 py-0.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-amber-400 font-bold" title="Spoiler Callout">[Spoiler Alert]</button>
             </div>
 
             <textarea 
@@ -301,9 +330,92 @@
               rows="10" 
               placeholder="Draft the complete news story here. Paragraph breaks are maintained..."
               class="w-full bg-qn-black border border-qn-border p-3 text-white focus:outline-none focus:border-qn-red text-xs font-mono leading-relaxed"
-              oninput="updatePreview(); updateWordCount(this.value);"
+              oninput="handleBodyInput(this.value)"
             ></textarea>
           </div>
+
+
+          <div class="border border-qn-border bg-qn-black/50 p-3 flex flex-col gap-2.5">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="fReviewToggle" class="w-4 h-4 accent-qn-red cursor-pointer" onchange="toggleReviewModule()">
+                <span class="text-white font-bold uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+                  <span class="material-symbols-sharp text-sm text-qn-gold">grade</span>
+                  <span>Attach Editorial Review Scorecard</span>
+                </span>
+              </label>
+              <span class="font-mono text-[10px] text-qn-muted uppercase">OPTIONAL MODULE</span>
+            </div>
+
+            <div id="reviewModuleFields" class="hidden flex-col gap-2.5 pt-2 border-t border-qn-border/60">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="sm:col-span-2">
+                  <label class="block text-qn-muted uppercase text-[9px] font-mono mb-1">Title Being Reviewed</label>
+                  <input type="text" id="fRevTitle" placeholder="e.g. Elden Ring: Shadow of the Erdtree" class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white" oninput="updatePreview()">
+                </div>
+                <div>
+                  <label class="block text-qn-muted uppercase text-[9px] font-mono mb-1">Numeric Score (0.0 - 10.0)</label>
+                  <input type="number" step="0.1" min="0" max="10" id="fRevScore" placeholder="9.5" class="w-full bg-qn-black border border-qn-border p-1.5 text-xs font-mono text-qn-gold font-bold" oninput="updatePreview()">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-qn-muted uppercase text-[9px] font-mono mb-1">Platforms (Comma-separated)</label>
+                <input type="text" id="fRevPlatforms" placeholder="PC, PS5, Xbox Series X, Nintendo Switch" class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white" oninput="updatePreview()">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-emerald-400 uppercase text-[9px] font-mono mb-1 font-bold">The Good (1 point per line)</label>
+                  <textarea id="fRevPros" rows="3" placeholder="Breath-taking open world&#10;Incredible boss encounters" class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white resize-none" oninput="updatePreview()"></textarea>
+                </div>
+                <div>
+                  <label class="block text-qn-red uppercase text-[9px] font-mono mb-1 font-bold">The Bad (1 point per line)</label>
+                  <textarea id="fRevCons" rows="3" placeholder="Performance dips in dense areas&#10;Obtuse quest triggers" class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white resize-none" oninput="updatePreview()"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="border border-qn-border bg-qn-black/40 p-3 flex flex-col gap-2">
+            <button type="button" onclick="toggleSeoDrawer()" class="flex items-center justify-between text-left select-none">
+              <span class="text-white font-bold uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+                <span class="material-symbols-sharp text-sm text-qn-muted">travel_explore</span>
+                <span>SEO Metadata & Source Attribution</span>
+              </span>
+              <span class="material-symbols-sharp text-sm text-qn-muted" id="seoDrawerIcon">expand_more</span>
+            </button>
+
+            <div id="seoDrawerFields" class="hidden flex-col gap-2 pt-2 border-t border-qn-border/60">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-qn-muted uppercase text-[9px] font-mono mb-1">Meta / Search Engine Title</label>
+                  <input type="text" id="fMetaTitle" placeholder="Custom SEO title override..." class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white">
+                </div>
+                <div>
+                  <label class="block text-qn-muted uppercase text-[9px] font-mono mb-1">Canonical / Source Link Attribution</label>
+                  <input type="url" id="fSourceUrl" placeholder="https://source.com/report/123" class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white" oninput="updatePreview()">
+                </div>
+              </div>
+              <div>
+                <label class="block text-qn-muted uppercase text-[9px] font-mono mb-1">Meta Description</label>
+                <input type="text" id="fMetaDesc" maxlength="160" placeholder="150-160 char preview appearing in search engine crawls..." class="w-full bg-qn-black border border-qn-border p-1.5 text-xs text-white">
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-qn-card/60 border border-qn-border p-2.5 flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="fSpoilerToggle" class="w-4 h-4 accent-amber-500 cursor-pointer" onchange="updatePreview()">
+              <span class="text-white text-xs font-bold uppercase flex items-center gap-1">
+                <span class="material-symbols-sharp text-sm text-amber-500">warning</span>
+                <span>Dispatch Contains Spoilers</span>
+              </span>
+            </label>
+            <span class="text-[10px] font-mono text-qn-muted uppercase">READ WARNING</span>
+          </div>
+
 
           <div class="border border-qn-border bg-qn-black/80 p-3.5 flex flex-col gap-3">
             <div class="flex items-center justify-between border-b border-qn-border pb-2">
@@ -373,7 +485,7 @@
             <div class="flex items-center gap-2 w-full sm:w-auto">
               <button 
                 type="button" 
-                onclick="saveDraft()"
+                onclick="manualSaveDraft()"
                 class="flex-1 sm:flex-initial px-3 py-1.5 bg-qn-card hover:bg-qn-cardHover border border-qn-border text-qn-text hover:text-white font-bold uppercase text-[11px] tracking-wider transition"
               >
                 Save Draft
@@ -402,6 +514,7 @@
         </form>
       </div>
 
+
       <div id="previewPane" class="lg:col-span-5 flex flex-col gap-3">
         
         <div class="bg-qn-dark border border-qn-border p-3 flex flex-col gap-2.5">
@@ -419,6 +532,7 @@
               <div class="absolute top-2 right-2 flex flex-col gap-1 items-end">
                 <span id="pBreakingTag" class="hidden bg-qn-red text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 shadow">BREAKING</span>
                 <span id="pSpotlightTag" class="hidden bg-qn-gold text-black text-[9px] font-black uppercase tracking-wider px-2 py-0.5 shadow">TOP 5 SPOTLIGHT</span>
+                <span id="pSpoilerTag" class="hidden bg-amber-600 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 shadow">SPOILER</span>
               </div>
             </div>
 
@@ -436,8 +550,26 @@
               Frontpage excerpt will appear here. It summarizes the core reporting context for our audience.
             </p>
 
+            <div id="pReviewScoreCard" class="hidden bg-qn-black border border-qn-border p-2.5 flex flex-col gap-2">
+              <div class="flex items-center justify-between border-b border-qn-border/60 pb-1.5">
+                <div>
+                  <div class="text-[9px] font-mono text-qn-muted uppercase">EDITORIAL VERDICT</div>
+                  <div class="text-xs font-bold text-white uppercase font-display" id="pRevTitleDisplay">Game Review</div>
+                </div>
+                <div class="flex items-center gap-1 bg-qn-card px-2 py-1 border border-qn-border">
+                  <span class="text-base font-black font-display text-qn-gold" id="pRevScoreDisplay">9.0</span>
+                  <span class="text-[9px] text-qn-muted font-mono">/ 10</span>
+                </div>
+              </div>
+              <div id="pRevPlatformBadges" class="flex flex-wrap gap-1"></div>
+            </div>
+
             <div id="pTags" class="flex flex-wrap gap-1 pt-1">
               <span class="text-[9px] font-mono bg-qn-black border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">GAMING</span>
+            </div>
+
+            <div id="pSourceCitation" class="hidden pt-1 border-t border-qn-border/50 text-[10px] font-mono text-qn-muted truncate">
+              <span class="text-white">SOURCE:</span> <a href="#" id="pSourceLink" target="_blank" class="text-qn-red hover:underline"></a>
             </div>
           </div>
 
@@ -445,7 +577,7 @@
             <div class="font-display font-bold uppercase tracking-wider text-[11px] text-white border-b border-qn-border pb-1">
               Article Body Preview
             </div>
-            <div id="pBody" class="font-serif text-[13px] text-slate-300 leading-relaxed space-y-2 max-h-48 overflow-y-auto pr-1">
+            <div id="pBody" class="font-serif text-[13px] text-slate-300 leading-relaxed space-y-2 max-h-56 overflow-y-auto pr-1">
               <p class="text-qn-muted italic font-sans text-xs">Body paragraphs will be rendered here...</p>
             </div>
           </div>
@@ -466,6 +598,7 @@
 
     </div>
   </main>
+
 
   <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
     <div class="relative w-full max-w-md bg-qn-dark border border-qn-border shadow-2xl overflow-hidden scale-95 transition-transform duration-200" id="checkoutModalCard">
@@ -514,7 +647,7 @@
             </button>
             <button type="button" onclick="setPaymentMethod('apple')" id="payBtnApple" class="py-2 px-1 bg-qn-black border border-qn-border text-qn-muted hover:text-white text-[11px] font-bold uppercase flex flex-col items-center gap-1">
               <span class="material-symbols-sharp text-base">phone_iphone</span>
-              <span>Apple Pay</span>
+              <span>Apple / Google</span>
             </button>
             <button type="button" onclick="setPaymentMethod('crypto')" id="payBtnCrypto" class="py-2 px-1 bg-qn-black border border-qn-border text-qn-muted hover:text-white text-[11px] font-bold uppercase flex flex-col items-center gap-1">
               <span class="material-symbols-sharp text-base">currency_bitcoin</span>
@@ -543,13 +676,13 @@
         <div id="applePaymentFields" class="hidden text-center p-4 bg-qn-black border border-qn-border flex flex-col items-center gap-2">
           <span class="material-symbols-sharp text-3xl text-white">fingerprint</span>
           <span class="text-xs text-white font-medium">Ready for Biometric Authorization</span>
-          <span class="text-[10px] text-qn-muted">Click authorize to simulate instant Apple Pay wire.</span>
+          <span class="text-[10px] text-qn-muted">Click authorize to simulate instant tokenized wire transfer.</span>
         </div>
 
         <div id="cryptoPaymentFields" class="hidden text-center p-3 bg-qn-black border border-qn-border flex flex-col items-center gap-1 font-mono text-[10px]">
           <span class="text-qn-gold uppercase font-bold">BTC / SOL Wire Network</span>
           <span class="text-qn-muted truncate max-w-[280px]">0x71C...b92F4A (Simulated Ledger)</span>
-          <span class="text-emerald-400 mt-1">Sufficient funds detected.</span>
+          <span class="text-emerald-400 mt-1">Sufficient gas and funds verified.</span>
         </div>
 
         <div class="pt-2 border-t border-qn-border flex items-center justify-end gap-2">
@@ -573,7 +706,7 @@
   </div>
 
   <footer class="bg-qn-black border-t border-qn-border mt-8 text-qn-muted text-xs">
-    <div class="max-w-[1400px] mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+    <div class="max-w-[1440px] mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
       <div class="flex items-center gap-2">
         <span class="font-display font-black text-base text-white tracking-tight uppercase">Qwid<span class="text-qn-red">News</span></span>
         <span class="text-qn-muted font-mono">/ NEWSROOM DESK</span>
@@ -592,14 +725,17 @@
     <span id="toastMsg">Action completed.</span>
   </div>
 
+
   <script>
     const STORAGE_KEY = 'qwidnews_posts';
-    const DRAFT_KEY = 'qwidnews_drafts';
+    const DRAFT_KEY = 'qwidnews_post_draft';
 
     let currentImageBase64 = null;
     let editingPostId = null;
     let currentTotalFee = 5;
     let selectedPayMethod = 'card';
+    let currentTags = [];
+    let autoSaveTimer = null;
 
     function getArticles() {
       try {
@@ -616,7 +752,87 @@
       updateStorageStat();
     }
 
-    function handleCategoryChange() {
+    function handleTagKeydown(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const input = document.getElementById('tagInput');
+        const val = input.value.replace(/,/g, '').trim();
+        if (val && !currentTags.includes(val)) {
+          currentTags.push(val);
+          renderTags();
+          updatePreview();
+        }
+        input.value = '';
+      }
+    }
+
+    function removeTag(tagToRemove) {
+      currentTags = currentTags.filter(t => t !== tagToRemove);
+      renderTags();
+      updatePreview();
+    }
+
+    function renderTags() {
+      const container = document.getElementById('tagsChipContainer');
+      container.innerHTML = currentTags.map(t => `
+        <span class="flex items-center gap-1 bg-qn-card border border-qn-border text-white text-[11px] px-2 py-0.5 font-mono uppercase">
+          <span>${escapeHtml(t)}</span>
+          <button type="button" onclick="removeTag('${escapeHtml(t)}')" class="hover:text-qn-red font-bold text-xs">&times;</button>
+        </span>
+      `).join('');
+    }
+
+    function toggleReviewModule() {
+      const checked = document.getElementById('fReviewToggle').checked;
+      const box = document.getElementById('reviewModuleFields');
+      if (checked) {
+        box.classList.remove('hidden');
+        box.classList.add('flex');
+      } else {
+        box.classList.add('hidden');
+        box.classList.remove('flex');
+      }
+      updatePreview();
+    }
+
+    function toggleSeoDrawer() {
+      const drawer = document.getElementById('seoDrawerFields');
+      const icon = document.getElementById('seoDrawerIcon');
+      if (drawer.classList.contains('hidden')) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+        icon.innerText = 'expand_less';
+      } else {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+        icon.innerText = 'expand_more';
+      }
+    }
+
+    function handleTitleInput(el) {
+      updateCount(el, 'titleCount', 140);
+      const val = el.value.trim();
+      const gradeBadge = document.getElementById('headlineGradeBadge');
+      
+      if (!val) {
+        gradeBadge.innerText = 'Awaiting Title';
+        gradeBadge.className = 'px-1.5 py-0.2 font-bold text-[10px] uppercase bg-qn-card text-qn-muted border border-qn-border';
+      } else if (val.length < 25) {
+        gradeBadge.innerText = 'Weak / Short';
+        gradeBadge.className = 'px-1.5 py-0.2 font-bold text-[10px] uppercase bg-red-950/60 text-red-400 border border-red-800';
+      } else if (val.length >= 25 && val.length < 80) {
+        gradeBadge.innerText = 'Viral Punch';
+        gradeBadge.className = 'px-1.5 py-0.2 font-bold text-[10px] uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-800';
+      } else {
+        gradeBadge.innerText = 'Optimal Editorial';
+        gradeBadge.className = 'px-1.5 py-0.2 font-bold text-[10px] uppercase bg-amber-950/60 text-amber-400 border border-amber-800';
+      }
+
+      updatePreview();
+    }
+
+    function handleBodyInput(val) {
+      updateWordCount(val);
       updatePreview();
     }
 
@@ -632,6 +848,7 @@
 
       const formatted = `$${total}.00`;
       document.getElementById('priceSummaryTotal').innerText = formatted;
+      document.getElementById('navInvoiceBadge').innerText = formatted;
       document.getElementById('submitBtnText').innerText = `Pay ${formatted} & Transmit Dispatch`;
 
       const pBreaking = document.getElementById('pBreakingTag');
@@ -766,6 +983,12 @@
         case 'link':
           replacement = `[${selected || 'Link Title'}](https://example.com)`;
           break;
+        case 'youtube':
+          replacement = `\n\n[TRAILER: https://www.youtube.com/watch?v=dQw4w9WgXcQ]\n`;
+          break;
+        case 'spoiler_box':
+          replacement = `\n\n[SPOILER: Major narrative revelation or twist occurs here.]\n`;
+          break;
       }
 
       textarea.setRangeText(replacement, start, end, 'end');
@@ -783,6 +1006,9 @@
       const trimmed = text.trim();
       const count = trimmed ? trimmed.split(/\s+/).length : 0;
       document.getElementById('wordCount').innerText = `${count} word${count === 1 ? '' : 's'}`;
+      document.getElementById('liveWordCount').innerText = `${count} words`;
+      const readMinutes = Math.max(1, Math.ceil(count / 200));
+      document.getElementById('liveReadTimeEstimate').innerText = `${readMinutes} min read`;
     }
 
     function updatePreview() {
@@ -792,21 +1018,58 @@
       const author = document.getElementById('fAuthor').value.trim();
       const excerpt = document.getElementById('fExcerpt').value.trim();
       const body = document.getElementById('fBody').value.trim();
-      const tags = document.getElementById('fTags').value.trim();
+      const hasSpoiler = document.getElementById('fSpoilerToggle').checked;
+      const sourceUrl = document.getElementById('fSourceUrl').value.trim();
 
       document.getElementById('pTitle').innerText = title || 'Article headline will update dynamically as you draft...';
       document.getElementById('pBadge').innerText = cat;
       document.getElementById('pAuthor').innerText = author ? `By ${author}` : 'By Reporter';
       document.getElementById('pExcerpt').innerText = excerpt || 'Frontpage excerpt will appear here. It summarizes the core reporting context for our audience.';
 
+      const pSpoiler = document.getElementById('pSpoilerTag');
+      if (hasSpoiler) pSpoiler.classList.remove('hidden');
+      else pSpoiler.classList.add('hidden');
+
       const tagsContainer = document.getElementById('pTags');
-      if (tags) {
-        const arr = tags.split(',').map(t => t.trim()).filter(Boolean);
-        tagsContainer.innerHTML = arr.map(t => `
+      if (currentTags.length > 0) {
+        tagsContainer.innerHTML = currentTags.map(t => `
           <span class="text-[9px] font-mono bg-qn-black border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">${escapeHtml(t)}</span>
         `).join('');
       } else {
         tagsContainer.innerHTML = `<span class="text-[9px] font-mono bg-qn-black border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">${cat}</span>`;
+      }
+
+      const revChecked = document.getElementById('fReviewToggle').checked;
+      const revCard = document.getElementById('pReviewScoreCard');
+      if (revChecked) {
+        revCard.classList.remove('hidden');
+        revCard.classList.add('flex');
+        const revTitle = document.getElementById('fRevTitle').value.trim() || 'Reviewed Title';
+        const revScore = document.getElementById('fRevScore').value.trim() || '9.0';
+        const revPlatforms = document.getElementById('fRevPlatforms').value.trim();
+        document.getElementById('pRevTitleDisplay').innerText = revTitle;
+        document.getElementById('pRevScoreDisplay').innerText = revScore;
+        const platBadges = document.getElementById('pRevPlatformBadges');
+        if (revPlatforms) {
+          platBadges.innerHTML = revPlatforms.split(',').map(p => `
+            <span class="bg-qn-card text-[9px] font-mono border border-qn-border px-1.5 py-0.2 text-qn-muted uppercase">${escapeHtml(p.trim())}</span>
+          `).join('');
+        } else {
+          platBadges.innerHTML = '';
+        }
+      } else {
+        revCard.classList.add('hidden');
+        revCard.classList.remove('flex');
+      }
+
+      const sourceContainer = document.getElementById('pSourceCitation');
+      const sourceLink = document.getElementById('pSourceLink');
+      if (sourceUrl) {
+        sourceContainer.classList.remove('hidden');
+        sourceLink.href = sourceUrl;
+        sourceLink.innerText = sourceUrl;
+      } else {
+        sourceContainer.classList.add('hidden');
       }
 
       const bodyContainer = document.getElementById('pBody');
@@ -819,6 +1082,12 @@
           }
           if (cleaned.startsWith('&gt; ') || cleaned.startsWith('> ')) {
             return `<blockquote class="border-l-2 border-qn-red pl-2.5 my-1 text-qn-text italic">${cleaned.replace(/^(&gt;|>)\s*/, '')}</blockquote>`;
+          }
+          if (cleaned.startsWith('[TRAILER:')) {
+            return `<div class="bg-qn-black border border-qn-red/50 p-2 text-center text-xs text-qn-red font-mono font-bold flex items-center justify-center gap-1.5"><span class="material-symbols-sharp text-sm">play_circle</span> Embedded Media Trailer Container</div>`;
+          }
+          if (cleaned.startsWith('[SPOILER:')) {
+            return `<div class="bg-amber-950/40 border border-amber-800/80 p-2 text-xs text-amber-300 font-sans italic flex items-center gap-1.5"><span class="material-symbols-sharp text-sm text-amber-500">warning</span> ${cleaned.replace('[SPOILER:', '').replace(']', '')}</div>`;
           }
           return `<p class="leading-relaxed">${cleaned.replace(/\n/g, '<br>')}</p>`;
         }).join('');
@@ -840,7 +1109,7 @@
       const body = document.getElementById('fBody').value.trim();
 
       if (!title || !category || !author || !excerpt || !body) {
-        showToast('Please fill out all required fields.');
+        showToast('Please fill out all required dispatch fields.');
         return;
       }
 
@@ -927,13 +1196,26 @@
       const author = document.getElementById('fAuthor').value.trim();
       const excerpt = document.getElementById('fExcerpt').value.trim();
       const body = document.getElementById('fBody').value.trim();
-      const tagsRaw = document.getElementById('fTags').value.trim();
       const isTop10Sponsored = document.getElementById('fSpotlightAddon').checked;
       const isBreaking = document.getElementById('fBreakingAddon').checked;
       const urlInput = document.getElementById('fImageUrl').value.trim();
+      const hasSpoiler = document.getElementById('fSpoilerToggle').checked;
+      const sourceUrl = document.getElementById('fSourceUrl').value.trim();
+
+      const isReview = document.getElementById('fReviewToggle').checked;
+      let reviewData = null;
+      if (isReview) {
+        reviewData = {
+          title: document.getElementById('fRevTitle').value.trim(),
+          score: document.getElementById('fRevScore').value.trim(),
+          platforms: document.getElementById('fRevPlatforms').value.trim(),
+          pros: document.getElementById('fRevPros').value.trim(),
+          cons: document.getElementById('fRevCons').value.trim()
+        };
+      }
 
       const finalImage = currentImageBase64 || urlInput || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80';
-      const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [category];
+      const tags = currentTags.length > 0 ? currentTags : [category];
 
       let articles = getArticles();
 
@@ -951,6 +1233,9 @@
               image: finalImage,
               isBreaking,
               isTop10Sponsored,
+              hasSpoiler,
+              sourceUrl,
+              review: reviewData,
               totalFeePaid: currentTotalFee,
               editedAt: new Date().toISOString()
             };
@@ -977,6 +1262,9 @@
           image: finalImage,
           isBreaking,
           isTop10Sponsored,
+          hasSpoiler,
+          sourceUrl,
+          review: reviewData,
           totalFeePaid: currentTotalFee,
           views: 1,
           timestamp: new Date().toISOString()
@@ -993,7 +1281,12 @@
       }
     }
 
-    function saveDraft() {
+    function manualSaveDraft() {
+      saveDraftData();
+      showToast('Draft manually preserved in browser storage.');
+    }
+
+    function saveDraftData() {
       const catSelect = document.getElementById('fCategory');
       const draft = {
         title: document.getElementById('fTitle').value,
@@ -1001,24 +1294,32 @@
         author: document.getElementById('fAuthor').value,
         excerpt: document.getElementById('fExcerpt').value,
         body: document.getElementById('fBody').value,
-        tags: document.getElementById('fTags').value,
+        tags: currentTags,
         imageUrl: document.getElementById('fImageUrl').value,
         imageBase64: currentImageBase64,
         isSpotlight: document.getElementById('fSpotlightAddon').checked,
         isBreaking: document.getElementById('fBreakingAddon').checked,
+        hasSpoiler: document.getElementById('fSpoilerToggle').checked,
+        sourceUrl: document.getElementById('fSourceUrl').value,
+        reviewToggle: document.getElementById('fReviewToggle').checked,
+        revTitle: document.getElementById('fRevTitle').value,
+        revScore: document.getElementById('fRevScore').value,
+        revPlatforms: document.getElementById('fRevPlatforms').value,
+        revPros: document.getElementById('fRevPros').value,
+        revCons: document.getElementById('fRevCons').value,
         savedAt: new Date().toISOString()
       };
 
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-      document.getElementById('draftStatus').innerText = 'DRAFT SAVED ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      showToast('Draft preserved in browser storage.');
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('autoSaveIndicator').innerText = 'DRAFT SYNCED ' + timeStr;
     }
 
     function loadDraft() {
       try {
         const raw = localStorage.getItem(DRAFT_KEY);
         if (!raw) {
-          showToast('No saved draft located.');
+          showToast('No saved draft located in browser storage.');
           return;
         }
         const d = JSON.parse(raw);
@@ -1027,9 +1328,21 @@
         document.getElementById('fAuthor').value = d.author || '';
         document.getElementById('fExcerpt').value = d.excerpt || '';
         document.getElementById('fBody').value = d.body || '';
-        document.getElementById('fTags').value = d.tags || '';
+        currentTags = Array.isArray(d.tags) ? d.tags : [];
+        renderTags();
         document.getElementById('fSpotlightAddon').checked = !!d.isSpotlight;
         document.getElementById('fBreakingAddon').checked = !!d.isBreaking;
+        document.getElementById('fSpoilerToggle').checked = !!d.hasSpoiler;
+        document.getElementById('fSourceUrl').value = d.sourceUrl || '';
+
+        const revToggle = document.getElementById('fReviewToggle');
+        revToggle.checked = !!d.reviewToggle;
+        document.getElementById('fRevTitle').value = d.revTitle || '';
+        document.getElementById('fRevScore').value = d.revScore || '';
+        document.getElementById('fRevPlatforms').value = d.revPlatforms || '';
+        document.getElementById('fRevPros').value = d.revPros || '';
+        document.getElementById('fRevCons').value = d.revCons || '';
+        toggleReviewModule();
 
         if (d.imageBase64) {
           currentImageBase64 = d.imageBase64;
@@ -1041,13 +1354,19 @@
           handleUrlImageInput(d.imageUrl);
         }
 
-        updatePreview();
-        updateWordCount(d.body || '');
-        document.getElementById('draftStatus').innerText = 'DRAFT RESTORED';
-        showToast('Draft loaded into editor desk.');
+        handleTitleInput(document.getElementById('fTitle'));
+        handleBodyInput(d.body || '');
+        document.getElementById('autoSaveIndicator').innerText = 'DRAFT RESTORED';
+        showToast('Draft restored into authoring desk.');
       } catch (e) {
-        showToast('Failed reading draft.');
+        showToast('Failed reading stored draft.');
       }
+    }
+
+    function discardDraft() {
+      localStorage.removeItem(DRAFT_KEY);
+      document.getElementById('autoSaveIndicator').innerText = 'DRAFT PURGED';
+      showToast('Saved draft cleared.');
     }
 
     function editPost(id) {
@@ -1063,9 +1382,26 @@
       document.getElementById('fAuthor').value = art.author || '';
       document.getElementById('fExcerpt').value = art.excerpt || '';
       document.getElementById('fBody').value = art.body || '';
-      document.getElementById('fTags').value = (art.tags || []).join(', ');
+      currentTags = Array.isArray(art.tags) ? [...art.tags] : [];
+      renderTags();
+
       document.getElementById('fSpotlightAddon').checked = !!art.isTop10Sponsored;
       document.getElementById('fBreakingAddon').checked = !!art.isBreaking;
+      document.getElementById('fSpoilerToggle').checked = !!art.hasSpoiler;
+      document.getElementById('fSourceUrl').value = art.sourceUrl || '';
+
+      if (art.review) {
+        document.getElementById('fReviewToggle').checked = true;
+        document.getElementById('fRevTitle').value = art.review.title || '';
+        document.getElementById('fRevScore').value = art.review.score || '';
+        document.getElementById('fRevPlatforms').value = art.review.platforms || '';
+        document.getElementById('fRevPros').value = art.review.pros || '';
+        document.getElementById('fRevCons').value = art.review.cons || '';
+        toggleReviewModule();
+      } else {
+        document.getElementById('fReviewToggle').checked = false;
+        toggleReviewModule();
+      }
 
       if (art.image) {
         if (art.image.startsWith('data:image')) {
@@ -1079,8 +1415,8 @@
         }
       }
 
-      updatePreview();
-      updateWordCount(art.body || '');
+      handleTitleInput(document.getElementById('fTitle'));
+      handleBodyInput(art.body || '');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       showToast('Loaded story into editor.');
     }
@@ -1098,10 +1434,14 @@
       document.getElementById('formHeaderTitle').innerText = 'Dispatch Authoring Desk';
       document.getElementById('fSpotlightAddon').checked = false;
       document.getElementById('fBreakingAddon').checked = false;
+      document.getElementById('fSpoilerToggle').checked = false;
+      document.getElementById('fReviewToggle').checked = false;
+      currentTags = [];
+      renderTags();
+      toggleReviewModule();
       clearImage();
-      updatePreview();
-      updateWordCount('');
-      document.getElementById('titleCount').innerText = '0 / 140';
+      handleTitleInput(document.getElementById('fTitle'));
+      handleBodyInput('');
       document.getElementById('excerptCount').innerText = '0 / 260';
     }
 
@@ -1130,6 +1470,7 @@
               <span>${formatTime(a.timestamp)}</span>
               ${a.isTop10Sponsored ? '<span class="text-qn-gold font-bold">&bull; SPOTLIGHT</span>' : ''}
               ${a.isBreaking ? '<span class="text-qn-red font-bold">&bull; BREAKING</span>' : ''}
+              ${a.review ? '<span class="text-emerald-400 font-bold">&bull; REVIEW</span>' : ''}
             </div>
             <div class="font-semibold text-white truncate text-[12px]">${escapeHtml(a.title)}</div>
             <div class="text-[10px] text-qn-muted truncate">By ${escapeHtml(a.author)}</div>
@@ -1152,7 +1493,7 @@
     function updateStorageStat() {
       const articles = getArticles();
       const el = document.getElementById('storageStats');
-      if (el) el.innerText = `${articles.length} STORIES STORED`;
+      if (el) el.innerText = `${articles.length} DISPATCHES`;
     }
 
     function formatTime(isoString) {
@@ -1213,6 +1554,14 @@
       updateStorageStat();
       updatePreview();
       calculatePricing();
+
+      autoSaveTimer = setInterval(() => {
+        const title = document.getElementById('fTitle').value.trim();
+        const body = document.getElementById('fBody').value.trim();
+        if (title || body) {
+          saveDraftData();
+        }
+      }, 5000);
     });
   </script>
 </body>

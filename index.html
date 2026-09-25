@@ -202,7 +202,7 @@
 
   <main class="max-w-[1440px] mx-auto px-3 sm:px-4 py-3.5 w-full flex-1">
 
-    <section id="top5SpotlightSection" class="mb-4">
+    <section id="top5SpotlightSection" class="mb-4 hidden">
       <div class="bg-qn-dark border border-qn-border">
         <div class="bg-qn-black px-3 py-2 border-b border-qn-border flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -456,6 +456,7 @@
     }
 
     function navigateToEntry(id) {
+      if (!id) return;
       window.location.href = `entry.html?id=${encodeURIComponent(id)}`;
     }
 
@@ -516,7 +517,7 @@
 
       const itemsHtml = displayList.map(a => `
         <span class="cursor-pointer hover:text-qn-red mx-4 inline-flex items-center gap-1" onclick="navigateToEntry('${a.id}')">
-          <span class="text-qn-red font-bold font-mono">• [${escapeHtml(a.category)}]</span> 
+          <span class="text-qn-red font-bold font-mono">• [${escapeHtml(a.category || 'WIRE')}]</span> 
           ${escapeHtml(a.title)}
         </span>
       `).join('');
@@ -528,26 +529,27 @@
       if (articles.length === 0) return [];
       const pool = [...articles];
       pool.sort((a, b) => {
-        const aScore = (a.isTop10Sponsored ? 1000 : 0) + (a.isBreaking ? 300 : 0) + (a.views || 0);
-        const bScore = (b.isTop10Sponsored ? 1000 : 0) + (b.isBreaking ? 300 : 0) + (b.views || 0);
+        const aScore = (a.isTop10Sponsored ? 1000 : 0) + (a.isBreaking ? 300 : 0) + (parseInt(a.views, 10) || 0);
+        const bScore = (b.isTop10Sponsored ? 1000 : 0) + (b.isBreaking ? 300 : 0) + (parseInt(b.views, 10) || 0);
         if (bScore !== aScore) return bScore - aScore;
-        return new Date(b.timestamp || 0) - new Date(a.timestamp || 0);
+        const dateA = new Date(a.timestamp || a.date || 0).getTime();
+        const dateB = new Date(b.timestamp || b.date || 0).getTime();
+        return dateB - dateA;
       });
       return pool.slice(0, 5);
     }
 
     function renderTop5Spotlight(articles) {
+      const section = document.getElementById('top5SpotlightSection');
       const container = document.getElementById('spotlightCardsGrid');
       const spotlightStories = getTop5SpotlightStories(articles);
 
       if (spotlightStories.length === 0) {
-        container.innerHTML = `
-          <div class="p-6 text-center text-qn-muted font-mono text-xs">
-            No spotlight articles available. Submit dispatches to populate the top wire showcase.
-          </div>
-        `;
+        section.classList.add('hidden');
         return;
       }
+
+      section.classList.remove('hidden');
 
       const lead = spotlightStories[0];
       const sideFour = spotlightStories.slice(1, 5);
@@ -560,17 +562,17 @@
           <div class="lg:col-span-7 bg-qn-black border border-qn-border group cursor-pointer overflow-hidden flex flex-col justify-between" onclick="navigateToEntry('${lead.id}')">
             <div class="relative w-full aspect-[16/9] sm:aspect-[21/11] overflow-hidden bg-qn-black">
               <img 
-                src="${lead.image || 'https://placehold.co/1200x630/11141a/e63946?text=Spotlight'}" 
+                src="${lead.image || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80'}" 
                 alt="${escapeHtml(lead.title)}" 
                 class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                onerror="this.src='https://placehold.co/1200x630/11141a/e63946?text=Spotlight'"
+                onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80'"
               >
               <div class="absolute inset-0 bg-gradient-to-t from-[#0a0c0f] via-[#0a0c0f]/50 to-transparent"></div>
               <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
                 <span class="bg-qn-gold text-black text-[10px] font-black uppercase px-2 py-0.5 font-display flex items-center gap-1 shadow">
                   <span class="material-symbols-sharp text-xs">workspace_premium</span> #1 SPOTLIGHT
                 </span>
-                <span class="bg-black/80 backdrop-blur text-white text-[10px] font-mono px-2 py-0.5 border border-white/20 uppercase">${escapeHtml(lead.category)}</span>
+                <span class="bg-black/80 backdrop-blur text-white text-[10px] font-mono px-2 py-0.5 border border-white/20 uppercase">${escapeHtml(lead.category || 'WIRE')}</span>
                 ${lead.isBreaking ? '<span class="bg-qn-red text-white text-[10px] font-bold px-1.5 py-0.5 uppercase shadow">BREAKING</span>' : ''}
                 ${lead.review ? `
                   <span class="bg-emerald-950/90 text-emerald-400 border border-emerald-700/60 text-[10px] font-mono font-bold px-1.5 py-0.5 uppercase flex items-center gap-1">
@@ -583,12 +585,12 @@
                   ${escapeHtml(lead.title)}
                 </h3>
                 <p class="text-xs text-gray-300 mt-1.5 line-clamp-2 leading-relaxed">
-                  ${escapeHtml(lead.excerpt)}
+                  ${escapeHtml(lead.excerpt || '')}
                 </p>
                 <div class="flex items-center gap-3 text-[10px] font-mono text-qn-muted mt-2">
-                  <span class="text-white font-medium">BY ${escapeHtml(lead.author).toUpperCase()}</span>
+                  <span class="text-white font-medium">BY ${escapeHtml(lead.author || 'Staff').toUpperCase()}</span>
                   <span>&bull;</span>
-                  <span>${formatTime(lead.timestamp)}</span>
+                  <span>${formatTime(lead.timestamp || lead.date)}</span>
                   <span>&bull;</span>
                   <span>${leadReadMin} MIN READ</span>
                   <span>&bull;</span>
@@ -603,25 +605,25 @@
               <div class="p-2 bg-qn-black border border-qn-border hover:border-qn-borderLight transition cursor-pointer flex gap-2.5 group" onclick="navigateToEntry('${item.id}')">
                 <div class="relative w-20 h-16 shrink-0 bg-qn-card overflow-hidden border border-qn-border/60">
                   <img 
-                    src="${item.image || 'https://placehold.co/160x120/11141a/e63946?text=Wire'}" 
+                    src="${item.image || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80'}" 
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
                     alt="${escapeHtml(item.title)}"
-                    onerror="this.src='https://placehold.co/160x120/11141a/e63946?text=Wire'"
+                    onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80'"
                   >
                   <span class="absolute top-0 left-0 bg-qn-gold text-black text-[9px] font-black px-1 font-display">#${idx + 2}</span>${item.review ? `<span class="absolute bottom-0 right-0 bg-black/90 text-qn-gold text-[8px] font-mono px-1 font-bold">${item.review.score}</span>` : ''}
                 </div>
                 <div class="min-w-0 flex-1 flex flex-col justify-between">
                   <div>
                     <div class="flex items-center gap-1.5 text-[9px] font-mono text-qn-muted uppercase">
-                      <span class="text-qn-red font-bold">${escapeHtml(item.category)}</span>
+                      <span class="text-qn-red font-bold">${escapeHtml(item.category || 'WIRE')}</span>
                       <span>&bull;</span>
-                      <span>${formatTime(item.timestamp)}</span>${item.isBreaking ? '<span class="text-qn-red font-bold">&bull; BREAKING</span>' : ''}
+                      <span>${formatTime(item.timestamp \vert{}\vert{} item.date)}</span>${item.isBreaking ? '<span class="text-qn-red font-bold">&bull; BREAKING</span>' : ''}
                     </div>
                     <h4 class="text-[12px] font-serif font-bold text-qn-text leading-snug group-hover:text-qn-red transition line-clamp-2 mt-0.5">
                       ${escapeHtml(item.title)}
                     </h4>
                   </div>
-                  <div class="text-[10px] text-qn-muted truncate">By ${escapeHtml(item.author)}</div>
+                  <div class="text-[10px] text-qn-muted truncate">By ${escapeHtml(item.author || 'Staff')}</div>
                 </div>
               </div>
             `).join('')}
@@ -641,9 +643,10 @@
       const savedIds = getSavedIds();
 
       let filtered = articles.filter(art => {
+        const cat = (art.category || '').toUpperCase();
         if (activeFilterCategory === 'REVIEWS') {
-          if (!art.review && art.category !== 'REVIEWS') return false;
-        } else if (activeFilterCategory !== 'ALL' && art.category !== activeFilterCategory) {
+          if (!art.review && cat !== 'REVIEWS') return false;
+        } else if (activeFilterCategory !== 'ALL' && cat !== activeFilterCategory) {
           return false;
         }
 
@@ -653,7 +656,7 @@
           const matchExcerpt = (art.excerpt || '').toLowerCase().includes(q);
           const matchBody = (art.body || '').toLowerCase().includes(q);
           const matchAuthor = (art.author || '').toLowerCase().includes(q);
-          const matchTags = (art.tags || []).some(t => t.toLowerCase().includes(q));
+          const matchTags = Array.isArray(art.tags) && art.tags.some(t => t.toLowerCase().includes(q));
           if (!matchTitle && !matchExcerpt && !matchBody && !matchAuthor && !matchTags) return false;
         }
         return true;
@@ -697,17 +700,17 @@
             <div class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition p-2 flex items-center justify-between gap-3 group cursor-pointer" onclick="navigateToEntry('${art.id}')">
               <div class="flex items-center gap-2.5 min-w-0">
                 <span class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 bg-qn-black text-white border border-qn-border shrink-0">
-                  ${escapeHtml(art.category)}
+                  ${escapeHtml(art.category || 'NEWS')}
                 </span>
                 <h4 class="font-serif font-bold text-[13px] text-qn-text group-hover:text-qn-red transition truncate">
                   ${escapeHtml(art.title)}
                 </h4>
               </div>
               <div class="flex items-center gap-3 text-[10px] font-mono text-qn-muted shrink-0">
-                ${art.review ? `<span class="text-qn-gold font-bold font-display">${art.review.score}/10</span>` : ''}
-                <span>By ${escapeHtml(art.author)}</span>
+                ${art.review ? `<span class="text-qn-gold font-bold font-display">${escapeHtml(art.review.score)}/10</span>` : ''}
+                <span>By ${escapeHtml(art.author || 'Staff')}</span>
                 <span>&bull;</span>
-                <span>${formatTime(art.timestamp)}</span>
+                <span>${formatTime(art.timestamp || art.date)}</span>
                 <button onclick="toggleBookmark(event, '${art.id}')" class="text-qn-muted hover:text-qn-red" title="Bookmark">
                   <span class="material-symbols-sharp text-sm block">${isSaved ? 'bookmark' : 'bookmark_border'}</span>
                 </button>
@@ -720,20 +723,20 @@
 
       feedContainer.innerHTML = filtered.map(art => {
         const isSaved = savedIds.includes(art.id);
-        const tags = Array.isArray(art.tags) && art.tags.length > 0 ? art.tags : [art.category];
+        const tags = Array.isArray(art.tags) && art.tags.length > 0 ? art.tags : [art.category || 'NEWS'];
 
         return `
           <article class="bg-qn-card border border-qn-border hover:border-qn-borderLight transition-all p-3 flex flex-col sm:flex-row gap-3.5 group cursor-pointer" onclick="navigateToEntry('${art.id}')">
             <div class="w-full sm:w-52 h-40 sm:h-32 shrink-0 bg-qn-black overflow-hidden relative border border-qn-border/60">
               <img 
-                src="${art.image || 'https://placehold.co/400x250/11141a/e63946?text=QwidNews'}" 
+                src="${art.image || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80'}" 
                 alt="${escapeHtml(art.title)}" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onerror="this.src='https://placehold.co/400x250/11141a/e63946?text=QwidNews'"
+                onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80'"
                 loading="lazy"
               >
               <span class="absolute top-1 left-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 bg-black/85 text-white border border-white/20">
-                ${escapeHtml(art.category)}
+                ${escapeHtml(art.category || 'NEWS')}
               </span>
               <div class="absolute bottom-1 left-1 flex gap-1 items-center">
                 ${art.isTop10Sponsored ? '<span class="text-[9px] font-black uppercase px-1.5 py-0.2 bg-qn-gold text-black font-display shadow">TOP 10</span>' : ''}
@@ -745,9 +748,9 @@
               <div>
                 <div class="flex items-center justify-between gap-2 text-[10px] text-qn-muted uppercase font-mono mb-0.5">
                   <div class="flex items-center gap-1.5 truncate">
-                    <span class="text-white font-semibold">${escapeHtml(art.category)}</span>
+                    <span class="text-white font-semibold">${escapeHtml(art.category || 'NEWS')}</span>
                     <span>&bull;</span>
-                    <span>${formatTime(art.timestamp)}</span>
+                    <span>${formatTime(art.timestamp || art.date)}</span>
                     ${art.hasSpoiler ? '<span class="text-amber-400 font-bold">&bull; SPOILER</span>' : ''}
                   </div>
                   <button onclick="toggleBookmark(event, '${art.id}')" class="text-qn-muted hover:text-qn-red p-0.5" title="${isSaved ? 'Remove bookmark' : 'Bookmark story'}">
@@ -760,7 +763,7 @@
                 </h3>
 
                 <p class="text-xs text-qn-muted mt-1 line-clamp-2 leading-relaxed">
-                  ${escapeHtml(art.excerpt)}
+                  ${escapeHtml(art.excerpt || '')}
                 </p>
 
                 ${art.review ? `
@@ -784,7 +787,7 @@
               </div>
 
               <div class="mt-2.5 pt-1.5 border-t border-qn-border/50 flex items-center justify-between text-[11px] text-qn-muted font-mono">
-                <span class="text-slate-300 font-sans">By ${escapeHtml(art.author)}</span>
+                <span class="text-slate-300 font-sans">By ${escapeHtml(art.author || 'Staff')}</span>
                 <span class="text-qn-red group-hover:underline text-[11px] font-sans font-semibold uppercase">Read Story &rarr;</span>
               </div>
             </div>
@@ -805,7 +808,7 @@
       container.innerHTML = reviewArticles.map(a => `
         <div class="p-2 bg-qn-black border border-qn-border flex items-center justify-between gap-2.5 cursor-pointer hover:border-qn-borderLight transition group" onclick="navigateToEntry('${a.id}')">
           <div class="min-w-0 flex-1">
-            <div class="text-[9px] font-mono text-qn-muted uppercase">${escapeHtml(a.category)} &bull; ${formatTime(a.timestamp)}</div>
+            <div class="text-[9px] font-mono text-qn-muted uppercase">${escapeHtml(a.category || 'REVIEW')} &bull; ${formatTime(a.timestamp || a.date)}</div>
             <div class="text-xs font-bold text-white group-hover:text-qn-red transition truncate font-serif mt-0.5">${escapeHtml(a.review.title || a.title)}</div>
             <div class="text-[10px] text-qn-muted font-mono truncate">${escapeHtml(a.review.platforms || 'Multiplatform')}</div>
           </div>
@@ -824,14 +827,14 @@
         return;
       }
 
-      const sorted = [...articles].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+      const sorted = [...articles].sort((a, b) => (parseInt(b.views, 10) || 0) - (parseInt(a.views, 10) || 0)).slice(0, 5);
 
       container.innerHTML = sorted.map((item, idx) => `
         <div class="pt-2 first:pt-0 cursor-pointer group flex items-start gap-2.5" onclick="navigateToEntry('${item.id}')">
           <span class="font-display font-black text-sm text-qn-red w-4 text-center shrink-0">#${idx + 1}</span>
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-1.5 text-[9px] font-mono text-qn-muted uppercase mb-0.5">
-              <span class="text-qn-red font-bold">${escapeHtml(item.category)}</span>
+              <span class="text-qn-red font-bold">${escapeHtml(item.category || 'WIRE')}</span>
               <span>&bull;</span>
               <span>${item.views || 0} READS</span>
             </div>
@@ -852,11 +855,11 @@
         return;
       }
 
-      container.innerHTML = recent.map((item, idx) => `
+      container.innerHTML = recent.map(item => `
         <div class="pt-2 first:pt-0 cursor-pointer group" onclick="navigateToEntry('${item.id}')">
           <div class="flex items-center justify-between text-[10px] text-qn-muted">
-            <span class="text-qn-red font-bold uppercase">${escapeHtml(item.category)}</span>
-            <span>${formatTime(item.timestamp)}</span>
+            <span class="text-qn-red font-bold uppercase">${escapeHtml(item.category || 'WIRE')}</span>
+            <span>${formatTime(item.timestamp || item.date)}</span>
           </div>
           <div class="text-qn-text mt-0.5 leading-snug font-sans text-xs group-hover:text-qn-red transition line-clamp-2">
             ${escapeHtml(item.title)}
@@ -873,7 +876,7 @@
       const statusEl = document.getElementById('voteStatus');
 
       questionEl.innerText = poll.question;
-      const total = poll.options.reduce((sum, o) => sum + o.votes, 0);
+      const total = poll.options.reduce((sum, o) => sum + (o.votes || 0), 0);
       totalVotesEl.innerText = `${total.toLocaleString()} VOTES`;
 
       if (poll.userVoted) {
@@ -882,7 +885,7 @@
       }
 
       container.innerHTML = poll.options.map((opt, i) => {
-        const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
+        const pct = total > 0 ? Math.round(((opt.votes || 0) / total) * 100) : 0;
         return `
           <div class="relative overflow-hidden bg-qn-black border border-qn-border">
             <div class="absolute left-0 top-0 bottom-0 bg-qn-card/80 transition-all duration-500" style="width: ${pct}%"></div>
@@ -902,7 +905,7 @@
     function castVote(idx) {
       const poll = getPollData();
       if (poll.userVoted) return;
-      poll.options[idx].votes += 1;
+      poll.options[idx].votes = (poll.options[idx].votes || 0) + 1;
       poll.userVoted = true;
       savePollData(poll);
     }
@@ -932,9 +935,9 @@
         container.innerHTML = savedArticles.map(a => `
           <div class="p-2.5 bg-qn-black border border-qn-border flex items-center justify-between gap-3 group">
             <div class="min-w-0 cursor-pointer flex-1" onclick="navigateToEntry('${a.id}')">
-              <span class="text-[9px] font-mono text-qn-red font-bold uppercase">[${escapeHtml(a.category)}]</span>
+              <span class="text-[9px] font-mono text-qn-red font-bold uppercase">[${escapeHtml(a.category || 'WIRE')}]</span>
               <h4 class="font-serif font-bold text-white text-xs leading-snug group-hover:text-qn-red transition truncate mt-0.5">${escapeHtml(a.title)}</h4>
-              <div class="text-[10px] text-qn-muted font-mono mt-0.5">By ${escapeHtml(a.author)}</div>
+              <div class="text-[10px] text-qn-muted font-mono mt-0.5">By ${escapeHtml(a.author || 'Staff')}</div>
             </div>
             <button onclick="removeBookmark('${a.id}')" class="p-1 text-qn-muted hover:text-red-400 shrink-0" title="Remove bookmark">
               <span class="material-symbols-sharp text-sm block">delete</span>
@@ -991,6 +994,7 @@
     function formatTime(isoString) {
       if (!isoString) return 'Just now';
       const date = new Date(isoString);
+      if (isNaN(date.getTime())) return 'Recently';
       const diffMs = Date.now() - date.getTime();
       const diffMins = Math.floor(diffMs / 60000);
       if (diffMins < 1) return 'Just now';
@@ -1025,8 +1029,10 @@
       }, 2500);
     }
 
-    window.addEventListener('click', () => {
-      closeNavMenu();
+    window.addEventListener('click', (e) => {
+      if (!e.target.closest('#navMenuBtn') && !e.target.closest('#navDropdownMenu')) {
+        closeNavMenu();
+      }
     });
 
     window.addEventListener('keydown', (e) => {
